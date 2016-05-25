@@ -28,8 +28,10 @@ void parseLine(variable String line, Block parent = document) {
 	line = trimSpaces(line); //trim first 3 spaces in the beginning
 	
 	if (line.startsWith(" ")) {
-		lineBlock = Code();
-		line = line[1...]; //trim the leading space
+		line = line.trimLeading(' '.equals);
+		line = line.trimTrailing(' '.equals);
+		lineBlock = Code(line);
+		line = "";
 	} else if (line.startsWith("> ")) {
 		lineBlock = BlockQuote();
 		line = line[2...]; //trim the starting "> "
@@ -39,6 +41,7 @@ void parseLine(variable String line, Block parent = document) {
 	} else {
 		line = line.trimLeading(' '.equals);
 		line = line.trimTrailing(' '.equals);
+		
 		if (parent is List) {
 			lineBlock = ListItem();
 			Block p = Paragraph();
@@ -51,11 +54,9 @@ void parseLine(variable String line, Block parent = document) {
 		line = "";
 	}
 	
-	/*
-	         Check if block is already open
-	      */
+	//Check if block is already open
 	while (is Block block = lastBlock) {
-		if (sameType(block, lineBlock), !is ListItem block, !is Paragraph block) {
+		if (sameType(block, lineBlock), !is ListItem|Paragraph|Code block) {
 			parseLine(line, block);
 			noLastBlock = false;
 		} else if (is Paragraph block) {
@@ -66,7 +67,10 @@ void parseLine(variable String line, Block parent = document) {
 				text.text += " "+last.text;
 				noLastBlock = false;
 			}
-		}
+		} else if (is Code block, is Code lineBlock) {
+			block.text += "\n"+lineBlock.text;
+			noLastBlock = false;
+		} 
 		
 		lastBlock = block.children.last;
 	}
