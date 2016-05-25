@@ -1,3 +1,6 @@
 shared void run() {
-	value tree = parse("This is some *sample* text");
+	value tree = parse("> Lorem ipsum dolor 
+	                    sit amet.
+	                    > - Qui *quodsi iracundia*
+	                    > - aliquando id");
 }

@@ -1,4 +1,4 @@
-shared class Document() extends Block() {
+shared class Paragraph() extends Block() {
 	shared actual variable Node[] children = [];
 	
 }
