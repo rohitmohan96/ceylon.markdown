@@ -27,7 +27,10 @@ void parseLine(variable String line, Block parent = document) {
 	
 	line = trimSpaces(line); //trim first 3 spaces in the beginning
 	
-	if (line.startsWith("> ")) {
+	if (line.startsWith(" ")) {
+		lineBlock = Code();
+		line = line[1...]; //trim the leading space
+	} else if (line.startsWith("> ")) {
 		lineBlock = BlockQuote();
 		line = line[2...]; //trim the starting "> "
 	} else if (line.startsWith("- ")) {
@@ -49,8 +52,8 @@ void parseLine(variable String line, Block parent = document) {
 	}
 	
 	/*
-	          Check if block is already open
-	          */
+	         Check if block is already open
+	      */
 	while (is Block block = lastBlock) {
 		if (sameType(block, lineBlock), !is ListItem block, !is Paragraph block) {
 			parseLine(line, block);
