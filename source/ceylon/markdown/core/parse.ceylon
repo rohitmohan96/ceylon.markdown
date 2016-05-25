@@ -1,14 +1,18 @@
 Document document = Document();
 
 String trimSpaces(String line) {
-	variable String string = line;
+	variable Integer count = 0;
 	
-	for (i in 0..2) {
-		if (line.startsWith(" ")) {
-			string = line[i+1 ...];
+	//check for 3 spaces
+	for (ch in line) {
+		if (ch==' ' && count<3) {
+			count++;
+		} else {
+			break;
 		}
 	}
-	return string;
+	
+	return line[count...];
 }
 
 void parseLine(variable String line, Block parent = document) {
@@ -45,8 +49,8 @@ void parseLine(variable String line, Block parent = document) {
 	}
 	
 	/*
-	       Check if block is already open
-	       */
+	          Check if block is already open
+	          */
 	while (is Block block = lastBlock) {
 		if (sameType(block, lineBlock), !is ListItem block, !is Paragraph block) {
 			parseLine(line, block);
