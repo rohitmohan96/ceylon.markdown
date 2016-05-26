@@ -35,7 +35,7 @@ void parseLine(variable String line, Block parent = document) {
 	} else if (line.startsWith("> ")) {
 		lineBlock = BlockQuote();
 		line = line[2...]; //trim the starting "> "
-	} else if (line.startsWith("- ") || line.startsWith("* ")) {
+	} else if (line.startsWith("- ") || line.startsWith("* ") || line.startsWith("+ ")) {
 		lineBlock = List("bullet");
 		line = line[2...]; //trim the starting "- "
 	} else {
