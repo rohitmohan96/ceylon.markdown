@@ -35,7 +35,7 @@ void parseLine(variable String line, Block parent = document) {
 	} else if (line.startsWith("> ")) {
 		lineBlock = BlockQuote();
 		line = line[2...]; //trim the starting "> "
-	} else if (line.startsWith("- ")) {
+	} else if (line.startsWith("- ") || line.startsWith("* ")) {
 		lineBlock = List("bullet");
 		line = line[2...]; //trim the starting "- "
 	} else {
@@ -64,13 +64,13 @@ void parseLine(variable String line, Block parent = document) {
 			Node? text = block.children.last;
 			Node? last = lineBlock.children.last;
 			if (is Text text, is Text last) {
-				text.text += " "+last.text;
+				text.text += "\n"+last.text;
 				noLastBlock = false;
 			}
 		} else if (is Code block, is Code lineBlock) {
 			block.text += "\n"+lineBlock.text;
 			noLastBlock = false;
-		} 
+		}
 		
 		lastBlock = block.children.last;
 	}
