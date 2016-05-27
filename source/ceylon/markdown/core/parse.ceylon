@@ -28,19 +28,17 @@ void parseLine(variable String line, Block parent = document) {
 	line = trimSpaces(line); //trim first 3 spaces in the beginning
 	
 	if (line.startsWith(" ")) {
-		line = line.trimLeading(' '.equals);
-		line = line.trimTrailing(' '.equals);
+		line = line.trimLeading(' '.equals).trimTrailing(' '.equals);
 		lineBlock = Code(line);
 		line = "";
 	} else if (line.startsWith("> ")) {
 		lineBlock = BlockQuote();
 		line = line[2...]; //trim the starting "> "
 	} else if (line.startsWith("- ") || line.startsWith("* ") || line.startsWith("+ ")) {
-		lineBlock = List("bullet");
+		lineBlock = List("bullet", line.get(0) else ' ');
 		line = line[2...]; //trim the starting "- "
 	} else {
-		line = line.trimLeading(' '.equals);
-		line = line.trimTrailing(' '.equals);
+		line = line.trimLeading(' '.equals).trimTrailing(' '.equals);
 		
 		if (parent is List) {
 			lineBlock = ListItem();
@@ -59,7 +57,7 @@ void parseLine(variable String line, Block parent = document) {
 		if (sameType(block, lineBlock), !is ListItem|Paragraph|Code block) {
 			parseLine(line, block);
 			noLastBlock = false;
-		} else if (is Paragraph block) {
+		} else if (is Paragraph block, is Paragraph lineBlock) {
 			//for paragraph, append the text to previous paragraph node
 			Node? text = block.children.last;
 			Node? last = lineBlock.children.last;
@@ -81,7 +79,10 @@ void parseLine(variable String line, Block parent = document) {
 	}
 }
 
-Boolean sameType(Block b1, Block b2) => className(b1).equals(className(b2));
+Boolean sameType(Block b1, Block b2) => className(b1).equals(className(b2)) && sameListType(b1, b2);
+
+Boolean sameListType(Block b1, Block b2) =>
+	if (is List b1, is List b2) then b1.bulletChar == b2.bulletChar else true;
 
 shared Document parse(String text) {
 	value lines = text.split('\n'.equals);
