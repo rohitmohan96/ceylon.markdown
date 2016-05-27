@@ -37,7 +37,13 @@ void parseLine(variable String line, Block parent = document) {
 	line = trimSpaces(line); //trim first 3 spaces in the beginning
 	
 	if (pattern.test(line)) {
-		lineBlock = List("ordered", 'o', regex("[.)]").split(line)[0]); //get list number
+		
+		lineBlock = List {
+			type = "ordered";
+			bulletChar = 'o';
+			startsWith = parseInteger(regex("[.)]").split(line)[0] else "0"); //get list number
+		}; 
+		
 		line = line[2...]; //trim the starting "- "
 	} else if (line.startsWith(" ")) {
 		line = line.trimLeading(' '.equals).trimTrailing(' '.equals);
