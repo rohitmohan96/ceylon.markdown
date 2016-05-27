@@ -1,4 +1,13 @@
+import ceylon.regex {
+	regex,
+	Regex
+}
+
 Document document = Document();
+
+String orderedListPattern = "^\\d+[.)]";
+
+Regex pattern = regex(orderedListPattern);
 
 String trimSpaces(String line) {
 	variable Integer count = 0;
@@ -27,7 +36,10 @@ void parseLine(variable String line, Block parent = document) {
 	
 	line = trimSpaces(line); //trim first 3 spaces in the beginning
 	
-	if (line.startsWith(" ")) {
+	if (pattern.test(line)) {
+		lineBlock = List("ordered", 'o', regex("[.)]").split(line)[0]); //get list number
+		line = line[2...]; //trim the starting "- "
+	} else if (line.startsWith(" ")) {
 		line = line.trimLeading(' '.equals).trimTrailing(' '.equals);
 		lineBlock = Code(line);
 		line = "";
@@ -81,6 +93,7 @@ void parseLine(variable String line, Block parent = document) {
 
 Boolean sameType(Block b1, Block b2) => className(b1).equals(className(b2)) && sameListType(b1, b2);
 
+//Check if lists have the same bullet character
 Boolean sameListType(Block b1, Block b2) =>
 	if (is List b1, is List b2) then b1.bulletChar == b2.bulletChar else true;
 
