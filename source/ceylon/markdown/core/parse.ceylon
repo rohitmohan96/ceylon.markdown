@@ -7,6 +7,8 @@ Document document = Document();
 
 String orderedListPattern = "^\\d+[.)]";
 
+Regex atxHeadingPattern = regex("^[#]{1,6} ");
+
 Regex pattern = regex(orderedListPattern);
 
 String trimSpaces(String line) {
@@ -36,13 +38,21 @@ void parseLine(variable String line, Block parent = document) {
 	
 	line = trimSpaces(line); //trim first 3 spaces in the beginning
 	
-	if (pattern.test(line)) {
+	if (atxHeadingPattern.test(line)) {
+		
+		lineBlock = ATXHeading {
+			text = atxHeadingPattern.split(line)[1] else "";
+			level = (regex(" ").split(line)[0] else "").count('#'.equals);
+		};
+		
+		line = "";
+	} else if (pattern.test(line)) {
 		
 		lineBlock = List {
 			type = "ordered";
 			bulletChar = 'o';
 			startsWith = parseInteger(regex("[.)]").split(line)[0] else "0"); //get list number
-		}; 
+		};
 		
 		line = line[2...]; //trim the starting "- "
 	} else if (line.startsWith(" ")) {
@@ -72,7 +82,7 @@ void parseLine(variable String line, Block parent = document) {
 	
 	//Check if block is already open
 	while (is Block block = lastBlock) {
-		if (sameType(block, lineBlock), !is ListItem|Paragraph|Code block) {
+		if (sameType(block, lineBlock), !is ListItem|Paragraph|Code|ATXHeading block) {
 			parseLine(line, block);
 			noLastBlock = false;
 		} else if (is Paragraph block, is Paragraph lineBlock) {
