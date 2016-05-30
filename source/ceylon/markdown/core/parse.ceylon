@@ -5,11 +5,9 @@ import ceylon.regex {
 
 Document document = Document();
 
-String orderedListPattern = "^\\d+[.)]";
-
 Regex atxHeadingPattern = regex("^[#]{1,6} ");
 
-Regex pattern = regex(orderedListPattern);
+Regex orderedListPattern = regex("^\\d+[.)]");
 
 String trimSpaces(String line) {
 	variable Integer count = 0;
@@ -39,14 +37,15 @@ void parseLine(variable String line, Block parent = document) {
 	line = trimSpaces(line); //trim first 3 spaces in the beginning
 	
 	if (atxHeadingPattern.test(line)) {
+		value text = atxHeadingPattern.split(line)[1] else "";
 		
 		lineBlock = ATXHeading {
-			text = atxHeadingPattern.split(line)[1] else "";
+			text = text;
 			level = (regex(" ").split(line)[0] else "").count('#'.equals);
 		};
 		
 		line = "";
-	} else if (pattern.test(line)) {
+	} else if (orderedListPattern.test(line)) {
 		
 		lineBlock = List {
 			type = "ordered";
