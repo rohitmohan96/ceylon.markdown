@@ -38,7 +38,7 @@ void parseLine(variable String line, Block parent = document) {
 	
 	line = trimSpaces(line); //trim first 3 spaces in the beginning
 	
-	if (is Paragraph block = lastBlock, setextHeadingPattern.test(line), exists last = block.children.last, is Text last) {
+	if (is Paragraph block = lastBlock, setextHeadingPattern.test(line), is Text last = block.children.last) {
 		
 		lineBlock = Heading {
 			text = last.text;
