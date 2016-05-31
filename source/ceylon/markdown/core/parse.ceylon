@@ -9,6 +9,8 @@ Regex atxHeadingPattern = regex("^[#]{1,6} ");
 
 Regex orderedListPattern = regex("^\\d+[.)]");
 
+Regex setextHeadingPattern = regex("^[=-]{3,}$");
+
 String trimSpaces(String line) {
 	variable Integer count = 0;
 	
@@ -36,10 +38,20 @@ void parseLine(variable String line, Block parent = document) {
 	
 	line = trimSpaces(line); //trim first 3 spaces in the beginning
 	
-	if (atxHeadingPattern.test(line)) {
+	if (is Paragraph block = lastBlock, setextHeadingPattern.test(line), exists last = block.children.last, is Text last) {
+		
+		lineBlock = Heading {
+			text = last.text;
+			level = if (line.startsWith("===")) then 1 else 2;
+		};
+		
+		parent.children = [for (e in parent.children) e == block then lineBlock else e];
+		
+		return;
+	} else if (atxHeadingPattern.test(line)) {
 		value text = atxHeadingPattern.split(line)[1] else "";
 		
-		lineBlock = ATXHeading {
+		lineBlock = Heading {
 			text = text;
 			level = (regex(" ").split(line)[0] else "").count('#'.equals);
 		};
@@ -81,7 +93,7 @@ void parseLine(variable String line, Block parent = document) {
 	
 	//Check if block is already open
 	while (is Block block = lastBlock) {
-		if (sameType(block, lineBlock), !is ListItem|Paragraph|Code|ATXHeading block) {
+		if (sameType(block, lineBlock), !is ListItem|Paragraph|Code|Heading block) {
 			parseLine(line, block);
 			noLastBlock = false;
 		} else if (is Paragraph block, is Paragraph lineBlock) {
