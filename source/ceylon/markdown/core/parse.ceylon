@@ -3,7 +3,7 @@ import ceylon.regex {
 	Regex
 }
 
-Document document = Document();
+Document internalDoc = Document();
 
 Regex atxHeadingPattern = regex("^[#]{1,6} ");
 
@@ -26,7 +26,7 @@ String trimSpaces(String line) {
 	return line[count...];
 }
 
-void parseLine(variable String line, Block parent = document) {
+void parseLine(variable String line, Block parent = internalDoc) {
 	variable Boolean noLastBlock = true;
 	
 	if (line.equals("")) {
@@ -130,6 +130,8 @@ shared Document parse(String text) {
 	for (line in lines) {
 		parseLine(line);
 	}
+	
+	value document = inlineParser(internalDoc);
 	
 	return document;
 }
