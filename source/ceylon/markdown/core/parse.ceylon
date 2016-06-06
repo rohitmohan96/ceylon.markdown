@@ -7,7 +7,7 @@ Document internalDoc = Document();
 
 Regex atxHeadingPattern = regex("^[#]{1,6} ");
 
-Regex orderedListPattern = regex("^\\d+[.)]");
+Regex orderedListPattern = regex("^\\d+[.)](|\\s.*)$");
 
 Regex setextHeadingPattern = regex("^[=-]{3,}$");
 
@@ -29,7 +29,7 @@ String trimSpaces(String line) {
 void parseLine(variable String line, Block parent = internalDoc) {
 	variable Boolean noLastBlock = true;
 	
-	if (line.equals("")) {
+	if (line.equals(""), !is List parent) {
 		return;
 	}
 	
@@ -65,14 +65,14 @@ void parseLine(variable String line, Block parent = internalDoc) {
 			startsWith = parseInteger(regex("[.)]").split(line)[0] else "0"); //get list number
 		};
 		
-		line = line[2...]; //trim the starting "- "
+		line = regex("[.)]").split(line)[1] else "";
 	} else if (line.startsWith(" ")) {
 		line = line.trimLeading(' '.equals).trimTrailing(' '.equals);
 		lineBlock = Code(line);
 		line = "";
-	} else if (line.startsWith("> ")) {
+	} else if (line.startsWith(">")) {
 		lineBlock = BlockQuote();
-		line = line[2...]; //trim the starting "> "
+		line = line[1...]; //trim the starting ">"
 	} else if (line.startsWith("- ") || line.startsWith("* ") || line.startsWith("+ ")) {
 		lineBlock = List("bullet", line.get(0) else ' ');
 		line = line[2...]; //trim the starting "- "
@@ -81,9 +81,12 @@ void parseLine(variable String line, Block parent = internalDoc) {
 		
 		if (parent is List) {
 			lineBlock = ListItem();
-			Block p = Paragraph();
-			p.appendChild(Text(line));
-			lineBlock.appendChild(p);
+			
+			if (!line.equals("")) {
+				Block p = Paragraph();
+				p.appendChild(Text(line));
+				lineBlock.appendChild(p);
+			}
 		} else {
 			lineBlock = Paragraph();
 			lineBlock.appendChild(Text(line));
