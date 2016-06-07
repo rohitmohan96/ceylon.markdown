@@ -28,14 +28,14 @@ String trimSpaces(String line) {
 
 void parseLine(variable String line, Block parent = internalDoc) {
 	variable Boolean noLastBlock = true;
-	
+
 	if (line.equals(""), !is List parent) {
 		return;
 	}
-	
+
 	Block lineBlock;
 	variable Node? lastBlock = parent.children.last;
-	
+
 	line = trimSpaces(line); //trim first 3 spaces in the beginning
 	
 	if (is Paragraph block = lastBlock, setextHeadingPattern.test(line), is Text last = block.children.last) {
@@ -66,8 +66,7 @@ void parseLine(variable String line, Block parent = internalDoc) {
 		};
 		
 		line = regex("[.)]").split(line)[1] else "";
-	} else if (line.startsWith(" ")) {
-		line = line.trimLeading(' '.equals).trimTrailing(' '.equals);
+	} else if (line.startsWith(" "), (line = line.trimLeading(' '.equals).trimTrailing(' '.equals)) != "") {
 		lineBlock = Code(line);
 		line = "";
 	} else if (line.startsWith(">")) {
