@@ -69,7 +69,7 @@ void parseLine(variable String line, Block parent = internalDoc) {
 		
 		line = regex("[.)]").split(line)[1] else "";
 	} else if (line.startsWith(" "), (line = line.trimLeading(' '.equals).trimTrailing(' '.equals)) != "") {
-		lineBlock = Code(line);
+		lineBlock = Code(line, "indented");
 		line = "";
 	} else if (line.startsWith(">")) {
 		lineBlock = BlockQuote();
@@ -122,11 +122,16 @@ void parseLine(variable String line, Block parent = internalDoc) {
 	}
 }
 
-Boolean sameType(Block b1, Block b2) => className(b1).equals(className(b2)) && sameListType(b1, b2);
+Boolean sameType(Block b1, Block b2) => className(b1).equals(className(b2))
+											&& sameListType(b1, b2)
+											&& sameCodeType(b1, b2);
 
-//Check if lists have the same bullet character
+//Check if lists have the same bullet character, if not lists, then return true
 Boolean sameListType(Block b1, Block b2) =>
 	if (is List b1, is List b2) then b1.bulletChar == b2.bulletChar else true;
+
+Boolean sameCodeType(Block b1, Block b2) =>
+	if(is Code b1, is Code b2) then b1.type == b2.type else true;
 
 shared Document parse(String text) {
 	value lines = text.split('\n'.equals);
