@@ -9,7 +9,9 @@ Regex atxHeadingPattern = regex("^[#]{1,6} ");
 
 Regex orderedListPattern = regex("^\\d+[.)](|\\s.*)$");
 
-Regex setextHeadingPattern = regex("^[=-]{3,}$");
+Regex setextHeadingPattern = regex("^(={3,}|-{3,})$");
+
+Regex fencedCodeblockPattern = regex("^`{3,}(?!.*`)|^~{3,}(?!.*~)");
 
 String trimSpaces(String line) {
 	variable Integer count = 0;
@@ -37,7 +39,7 @@ void parseLine(variable String line, Block parent = internalDoc) {
 	variable Node? lastBlock = parent.children.last;
 
 	line = trimSpaces(line); //trim first 3 spaces in the beginning
-	
+
 	if (is Paragraph block = lastBlock, setextHeadingPattern.test(line), is Text last = block.children.last) {
 		
 		lineBlock = Heading {
