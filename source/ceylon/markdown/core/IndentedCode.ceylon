@@ -1,0 +1,1 @@
+shared class IndentedCode(String text) extends Code(text) {}

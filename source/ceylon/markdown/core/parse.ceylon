@@ -13,6 +13,8 @@ Regex setextHeadingPattern = regex("^(={3,}|-{3,})$");
 
 Regex fencedCodeblockPattern = regex("^`{3,}(?!.*`)|^~{3,}(?!.*~)");
 
+Regex closingCodeblockPattern = regex("^(?:\`{3,}|~{3,})(?= *$)");
+
 String trimSpaces(String line) {
 	variable Integer count = 0;
 	
@@ -30,17 +32,31 @@ String trimSpaces(String line) {
 
 void parseLine(variable String line, Block parent = internalDoc) {
 	variable Boolean noLastBlock = true;
-
-	if (line.equals(""), !is List parent) {
-		return;
-	}
-
+	
 	Block lineBlock;
 	variable Node? lastBlock = parent.children.last;
-
-	line = trimSpaces(line); //trim first 3 spaces in the beginning
-
-	if (is Paragraph block = lastBlock, setextHeadingPattern.test(line), is Text last = block.children.last) {
+	
+	if (line.equals(""), !is List parent) {
+		if (lastBlock is Paragraph) {
+			parent.appendChild(Break());
+		}
+		
+		return;
+	}
+	
+	if (!lastBlock is Code) {
+		line = trimSpaces(line); //trim first 3 spaces in the beginning
+	}
+	
+	if(is FencedCode block = lastBlock, closingCodeblockPattern.test(line), block.fenceLevel == line.count('\`'.equals)) {
+		parent.appendChild(Break());
+		return;
+	}
+	
+	if (!lastBlock is FencedCode, fencedCodeblockPattern.test(line)) {
+		lineBlock = FencedCode("", line.count(('\`'.equals)));
+		line = "";
+	} else if (is Paragraph block = lastBlock, setextHeadingPattern.test(line), is Text last = block.children.last) {
 		
 		lineBlock = Heading {
 			text = last.text;
@@ -69,7 +85,7 @@ void parseLine(variable String line, Block parent = internalDoc) {
 		
 		line = regex("[.)]").split(line)[1] else "";
 	} else if (line.startsWith(" "), (line = line.trimLeading(' '.equals).trimTrailing(' '.equals)) != "") {
-		lineBlock = Code(line, "indented");
+		lineBlock = IndentedCode(line);
 		line = "";
 	} else if (line.startsWith(">")) {
 		lineBlock = BlockQuote();
@@ -77,21 +93,25 @@ void parseLine(variable String line, Block parent = internalDoc) {
 	} else if (line.startsWith("- ") || line.startsWith("* ") || line.startsWith("+ ")) {
 		lineBlock = List("bullet", line.get(0) else ' ');
 		line = line[2...]; //trim the starting "- "
-	} else {
+	} else if (parent is List) {
 		line = line.trimLeading(' '.equals).trimTrailing(' '.equals);
+		lineBlock = ListItem();
 		
-		if (parent is List) {
-			lineBlock = ListItem();
-			
-			if (!line.equals("")) {
-				Block p = Paragraph();
-				p.appendChild(Text(line));
-				lineBlock.appendChild(p);
-			}
-		} else {
-			lineBlock = Paragraph();
-			lineBlock.appendChild(Text(line));
+		if (!line.equals("")) {
+			Block p = Paragraph();
+			p.appendChild(Text(line));
+			lineBlock.appendChild(p);
 		}
+		
+		line = "";
+	} else if (is FencedCode block = lastBlock) {
+		lineBlock = FencedCode(line, block.fenceLevel);
+		
+		line = "";
+	} else {
+		lineBlock = Paragraph();
+		lineBlock.appendChild(Text(line));
+		
 		line = "";
 	}
 	
@@ -118,20 +138,17 @@ void parseLine(variable String line, Block parent = internalDoc) {
 	
 	if (noLastBlock) {
 		parent.appendChild(lineBlock);
+		
 		parseLine(line, lineBlock);
 	}
 }
 
 Boolean sameType(Block b1, Block b2) => className(b1).equals(className(b2))
-											&& sameListType(b1, b2)
-											&& sameCodeType(b1, b2);
+		&& sameListType(b1, b2);
 
 //Check if lists have the same bullet character, if not lists, then return true
 Boolean sameListType(Block b1, Block b2) =>
 	if (is List b1, is List b2) then b1.bulletChar == b2.bulletChar else true;
-
-Boolean sameCodeType(Block b1, Block b2) =>
-	if(is Code b1, is Code b2) then b1.type == b2.type else true;
 
 shared Document parse(String text) {
 	value lines = text.split('\n'.equals);
