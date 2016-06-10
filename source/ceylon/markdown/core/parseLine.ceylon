@@ -3,8 +3,21 @@ import ceylon.regex {
 	Regex
 }
 
-String openTag = "<[A-Za-z][A-Za-z0-9-]*[a-zA-Z_:][a-zA-Z0-9:._-]**\\s*/?>";
-String closeTag = "</[A-Za-z][A-Za-z0-9-]*\\s*[>]";
+String tagName = "[A-Za-z][A-Za-z0-9-]*";
+String attributeName = "[a-zA-Z_:][a-zA-Z0-9:._-]*";
+
+String unQuotedValue = "[^\"'=<>`\\x00-\\x20]+";
+String singleQuotedValue = "'[^']*'";
+String doubleQuotedValue = "\"[^\"]*\"";
+String attributeValue = "(?:" + unQuotedValue + "|" + singleQuotedValue
+		+ "|" + doubleQuotedValue + ")";
+String attributeValueSpec = "(?:" + "\\s*=" + "\\s*" + attributeValue
+		+ ")";
+String attribute = "(?:" + "\\s+" + attributeName + attributeValueSpec
+		+ "?)";
+
+String openTag = "<" + tagName + attribute + "*" + "\\s*/?>";
+String closeTag = "</" + tagName + "\\s*[>]";
 
 Regex atxHeadingPattern = regex("^[#]{1,6} ");
 
@@ -17,7 +30,7 @@ Regex fencedCodeblockPattern = regex("^`{3,}(?!.*`)|^~{3,}(?!.*~)");
 Regex closingCodeblockPattern = regex("^(?:\`{3,}|~{3,})(?= *$)");
 
 Regex[] htmlBlockOpen = [
-	regex { expression = "^<(?:script|pre|style)(?:\\s|>|$"; ignoreCase = true; },
+	regex { expression = "^<(?:script|pre|style)(?:\\s|>|$)"; ignoreCase = true; },
 	regex("^<!--"),
 	regex("^<[?]"),
 	regex("^<![A-Z]"),
@@ -40,7 +53,7 @@ Regex[] htmlBlockOpen = [
 				"source|title|summary|" +
 				"table|tbody|td|tfoot|" +
 				"th|thead|title|tr|track|ul)" +
-				"(?:\\s|[/]?[>]|$";
+				"(?:\\s|[/]?[>]|$)";
 		ignoreCase = true; },
 	regex { expression = "^(?:" + openTag + "|" + closeTag + ")\\s*$"; ignoreCase = true; }
 ];
@@ -78,6 +91,13 @@ void parseLine(variable String line, Block parent = internalDoc) {
 		if (lastBlock is Paragraph) {
 			parent.appendChild(Break());
 		}
+		if(is HtmlBlock block = lastBlock) {
+			if(block.type >= 5) {
+				parent.appendChild(Break());
+			} else {
+				block.text += "\n";
+			}
+	}
 		
 		return;
 	}
@@ -91,7 +111,22 @@ void parseLine(variable String line, Block parent = internalDoc) {
 		return;
 	}
 	
-	if (!lastBlock is FencedCode, fencedCodeblockPattern.test(line)) {
+	if (line.startsWith("<")) {
+		for (i in 0:7) {
+			if(is HtmlBlock block = lastBlock, exists htmlTest = htmlBlockClose[i], htmlTest.test(line), block.type == i) {
+				block.text += "\n" + line;
+				parent.appendChild(Break());
+				return;
+			} else if (exists htmlTest = htmlBlockOpen[i], htmlTest.test(line)) {
+				lineBlock = HtmlBlock(line, i);
+				break;
+			}
+		} else {
+			lineBlock = Paragraph();
+			lineBlock.appendChild(Text(line));
+		}
+		line = "";
+	} else if (!lastBlock is FencedCode, fencedCodeblockPattern.test(line)) {
 		lineBlock = FencedCode("", line.count(('\`'.equals)));
 		line = "";
 	} else if (is Paragraph block = lastBlock, setextHeadingPattern.test(line), is Text last = block.children.last) {
@@ -145,6 +180,9 @@ void parseLine(variable String line, Block parent = internalDoc) {
 		}
 		
 		line = "";
+	} else if(is HtmlBlock block = lastBlock) {
+		lineBlock = HtmlBlock(line, block.type);
+		line = "";
 	} else if (is FencedCode block = lastBlock) {
 		lineBlock = FencedCode(line, block.fenceLevel);
 		
@@ -158,7 +196,7 @@ void parseLine(variable String line, Block parent = internalDoc) {
 	
 	//Check if block is already open
 	while (is Block block = lastBlock) {
-		if (sameType(block, lineBlock), !is ListItem|Paragraph|Code|Heading block) {
+		if (sameType(block, lineBlock), !is ListItem|Paragraph|Code|Heading|HtmlBlock block) {
 			parseLine(line, block);
 			noLastBlock = false;
 		} else if (is Paragraph block, is Paragraph lineBlock) {
@@ -171,6 +209,9 @@ void parseLine(variable String line, Block parent = internalDoc) {
 			}
 		} else if (is Code block, is Code lineBlock) {
 			block.text += "\n"+lineBlock.text;
+			noLastBlock = false;
+		} else if(is HtmlBlock block, is HtmlBlock lineBlock) {
+			block.text += "\n" + lineBlock.text;
 			noLastBlock = false;
 		}
 		
