@@ -6,9 +6,7 @@ Document internalDoc = Document();
 HashMap<String, Link> referenceMap = HashMap<String, Link>();
 
 shared Document parse(String text) {
-	value lines = text.split { splitting = '\n'.equals; groupSeparators = false; };
-
-	for (line in lines) {
+	for (line in text.lines) {
 		parseLine(line);
 	}
 	
