@@ -3,6 +3,7 @@ import ceylon.regex {
 }
 
 String trimSpaces(String line) {
+	
 	variable Integer count = 0;
 	
 	//check for 3 spaces
@@ -24,12 +25,12 @@ void parseLine(variable String line, Block parent = internalDoc) {
 	variable Node? lastBlock = parent.children.last;
 	
 	if (line.equals(""), !is List parent) {
-		if (lastBlock is Paragraph) {
-			parent.appendChild(Break());
+		if (is Paragraph block = lastBlock) {
+			block.closeBlock();
 		}
 		if(is HtmlBlock block = lastBlock) {
 			if(block.type >= 5) {
-				parent.appendChild(Break());
+				block.closeBlock();
 			} else {
 				block.text += "\n";
 			}
@@ -43,7 +44,8 @@ void parseLine(variable String line, Block parent = internalDoc) {
 	}
 	
 	if (is FencedCode block = lastBlock, closingCodeblockPattern.test(line), block.fenceLevel >= line.count('\`'.equals)) {
-		parent.appendChild(Break());
+		block.closeBlock();
+		
 		return;
 	}
 	
@@ -51,7 +53,7 @@ void parseLine(variable String line, Block parent = internalDoc) {
 		for (i in 0:7) {
 			if(is HtmlBlock block = lastBlock, exists htmlTest = htmlBlockClose[i], htmlTest.test(line), block.type == i) {
 				block.text += "\n" + line;
-				parent.appendChild(Break());
+				block.closeBlock();
 				return;
 			} else if (exists htmlTest = htmlBlockOpen[i], htmlTest.test(line)) {
 				lineBlock = HtmlBlock(line, i);
@@ -135,7 +137,7 @@ void parseLine(variable String line, Block parent = internalDoc) {
 		if (sameType(block, lineBlock), !is ListItem|Paragraph|Code|Heading|HtmlBlock block) {
 			parseLine(line, block);
 			noLastBlock = false;
-		} else if (is Paragraph block, is Paragraph lineBlock) {
+		} else if (is Paragraph block, is Paragraph lineBlock, block.open) {
 			//for paragraph, append the text to previous paragraph node
 			Node? text = block.children.last;
 			Node? last = lineBlock.children.last;
@@ -143,10 +145,10 @@ void parseLine(variable String line, Block parent = internalDoc) {
 				text.text += "\n"+last.text;
 				noLastBlock = false;
 			}
-		} else if (is Code block, is Code lineBlock) {
+		} else if (is Code block, is Code lineBlock, block.open) {
 			block.text += "\n"+lineBlock.text;
 			noLastBlock = false;
-		} else if(is HtmlBlock block, is HtmlBlock lineBlock) {
+		} else if(is HtmlBlock block, is HtmlBlock lineBlock, block.open) {
 			block.text += "\n" + lineBlock.text;
 			noLastBlock = false;
 		}
