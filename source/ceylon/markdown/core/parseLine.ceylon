@@ -3,6 +3,9 @@ import ceylon.regex {
 	Regex
 }
 
+String openTag = "<[A-Za-z][A-Za-z0-9-]*[a-zA-Z_:][a-zA-Z0-9:._-]**\\s*/?>";
+String closeTag = "</[A-Za-z][A-Za-z0-9-]*\\s*[>]";
+
 Regex atxHeadingPattern = regex("^[#]{1,6} ");
 
 Regex orderedListPattern = regex("^\\d+[.)](|\\s.*)$");
@@ -12,6 +15,43 @@ Regex setextHeadingPattern = regex("^(={3,}|-{3,})$");
 Regex fencedCodeblockPattern = regex("^`{3,}(?!.*`)|^~{3,}(?!.*~)");
 
 Regex closingCodeblockPattern = regex("^(?:\`{3,}|~{3,})(?= *$)");
+
+Regex[] htmlBlockOpen = [
+	regex { expression = "^<(?:script|pre|style)(?:\\s|>|$"; ignoreCase = true; },
+	regex("^<!--"),
+	regex("^<[?]"),
+	regex("^<![A-Z]"),
+	regex("^<!\\[CDATA\\["),
+	regex { expression = "^<[/]?(?:" +
+				"address|article|aside|" +
+				"base|basefont|blockquote|" +
+				"body|caption|center|" +
+				"col|colgroup|dd|" +
+				"details|dialog|dir" +
+				"|div|dl|dt|fieldset|" +
+				"figcaption|figure|footer|" +
+				"form|frame|frameset|" +
+				"h1|head|header|hr|" +
+				"html|iframe|legend|" +
+				"li|link|main|menu|" +
+				"menuitem|meta|nav|" +
+				"noframes|ol|optgroup|" +
+				"option|p|param|section|" +
+				"source|title|summary|" +
+				"table|tbody|td|tfoot|" +
+				"th|thead|title|tr|track|ul)" +
+				"(?:\\s|[/]?[>]|$";
+		ignoreCase = true; },
+	regex { expression = "^(?:" + openTag + "|" + closeTag + ")\\s*$"; ignoreCase = true; }
+];
+
+Regex[] htmlBlockClose = [
+	regex { expression = "<\\/(?:script|pre|style)>"; ignoreCase = true; },
+	regex("-->"),
+	regex("\\?>"),
+	regex(">"),
+	regex("\\]\\]>")
+];
 
 String trimSpaces(String line) {
 	variable Integer count = 0;
@@ -88,7 +128,6 @@ void parseLine(variable String line, Block parent = internalDoc) {
 		
 		lineBlock = IndentedCode(line);
 		line = "";
-		
 	} else if (line.startsWith(">")) {
 		lineBlock = BlockQuote();
 		line = line[1...]; //trim the starting ">"
@@ -150,4 +189,4 @@ Boolean sameType(Block b1, Block b2) => className(b1).equals(className(b2))
 
 //Check if lists have the same bullet character, if not lists, then return true
 Boolean sameListType(Block b1, Block b2) =>
-		if (is List b1, is List b2) then b1.bulletChar == b2.bulletChar else true;
+	if (is List b1, is List b2) then b1.bulletChar == b2.bulletChar else true;
