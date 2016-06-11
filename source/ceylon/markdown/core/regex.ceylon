@@ -2,6 +2,7 @@ import ceylon.regex {
 	regex,
 	Regex
 }
+
 String escapable = "[!\"#$%&\'()*+,./:;<=>?@\\[\\\\\\]^_`{|}~-]";
 
 String escapedChar = "\\\\" + escapable;
@@ -26,7 +27,9 @@ String attribute = "(?:" + "\\s+" + attributeName + attributeValueSpec
 String openTag = "<" + tagName + attribute + "*" + "\\s*/?>";
 String closeTag = "</" + tagName + "\\s*[>]";
 
-Regex atxHeadingPattern = regex("^[#]{1,6} ");
+Regex atxHeadingPattern = regex("^#{1,6}(?: +|$)");
+
+Regex atxTrailingPattern = regex("(^| ) *#+ *$");
 
 Regex orderedListPattern = regex("^\\d+[.)](|\\s.*)$");
 
@@ -37,38 +40,38 @@ Regex fencedCodeblockPattern = regex("^`{3,}(?!.*`)|^~{3,}(?!.*~)");
 Regex closingCodeblockPattern = regex("^(?:\`{3,}|~{3,})(?= *$)");
 
 Regex[] htmlBlockOpen = [
-regex { expression = "^<(?:script|pre|style)(?:\\s|>|$)"; ignoreCase = true; },
-regex("^<!--"),
-regex("^<[?]"),
-regex("^<![A-Z]"),
-regex("^<!\\[CDATA\\["),
-regex { expression = "^<[/]?(?:" +
-	"address|article|aside|" +
-		"base|basefont|blockquote|" +
-		"body|caption|center|" +
-		"col|colgroup|dd|" +
-		"details|dialog|dir" +
-		"|div|dl|dt|fieldset|" +
-		"figcaption|figure|footer|" +
-		"form|frame|frameset|" +
-		"h1|head|header|hr|" +
-		"html|iframe|legend|" +
-		"li|link|main|menu|" +
-		"menuitem|meta|nav|" +
-		"noframes|ol|optgroup|" +
-		"option|p|param|section|" +
-		"source|title|summary|" +
-		"table|tbody|td|tfoot|" +
-		"th|thead|title|tr|track|ul)" +
-		"(?:\\s|[/]?[>]|$)";
-ignoreCase = true; },
-regex { expression = "^(?:" + openTag + "|" + closeTag + ")\\s*$"; ignoreCase = true; }
+	regex { expression = "^<(?:script|pre|style)(?:\\s|>|$)"; ignoreCase = true; },
+	regex("^<!--"),
+	regex("^<[?]"),
+	regex("^<![A-Z]"),
+	regex("^<!\\[CDATA\\["),
+	regex { expression = "^<[/]?(?:" +
+				"address|article|aside|" +
+				"base|basefont|blockquote|" +
+				"body|caption|center|" +
+				"col|colgroup|dd|" +
+				"details|dialog|dir" +
+				"|div|dl|dt|fieldset|" +
+				"figcaption|figure|footer|" +
+				"form|frame|frameset|" +
+				"h1|head|header|hr|" +
+				"html|iframe|legend|" +
+				"li|link|main|menu|" +
+				"menuitem|meta|nav|" +
+				"noframes|ol|optgroup|" +
+				"option|p|param|section|" +
+				"source|title|summary|" +
+				"table|tbody|td|tfoot|" +
+				"th|thead|title|tr|track|ul)" +
+				"(?:\\s|[/]?[>]|$)";
+		ignoreCase = true; },
+	regex { expression = "^(?:" + openTag + "|" + closeTag + ")\\s*$"; ignoreCase = true; }
 ];
 
 Regex[] htmlBlockClose = [
-regex { expression = "<\\/(?:script|pre|style)>"; ignoreCase = true; },
-regex("-->"),
-regex("\\?>"),
-regex(">"),
-regex("\\]\\]>")
+	regex { expression = "<\\/(?:script|pre|style)>"; ignoreCase = true; },
+	regex("-->"),
+	regex("\\?>"),
+	regex(">"),
+	regex("\\]\\]>")
 ];

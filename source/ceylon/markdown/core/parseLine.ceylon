@@ -28,13 +28,13 @@ void parseLine(variable String line, Block parent = internalDoc) {
 		if (is Paragraph block = lastBlock) {
 			block.closeBlock();
 		}
-		if(is HtmlBlock block = lastBlock) {
-			if(block.type >= 5) {
+		if (is HtmlBlock block = lastBlock) {
+			if (block.type >= 5) {
 				block.closeBlock();
 			} else {
 				block.text += "\n";
 			}
-	}
+		}
 		
 		return;
 	}
@@ -43,6 +43,7 @@ void parseLine(variable String line, Block parent = internalDoc) {
 		line = trimSpaces(line); //trim first 3 spaces in the beginning
 	}
 	
+	//close fenced code blocks
 	if (is FencedCode block = lastBlock, closingCodeblockPattern.test(line), block.fenceLevel >= line.count('\`'.equals)) {
 		block.closeBlock();
 		
@@ -51,8 +52,8 @@ void parseLine(variable String line, Block parent = internalDoc) {
 	
 	if (line.startsWith("<")) {
 		for (i in 0:7) {
-			if(is HtmlBlock block = lastBlock, exists htmlTest = htmlBlockClose[i], htmlTest.test(line), block.type == i) {
-				block.text += "\n" + line;
+			if (is HtmlBlock block = lastBlock, exists htmlTest = htmlBlockClose[i], htmlTest.test(line), block.type == i) {
+				block.text += "\n"+line;
 				block.closeBlock();
 				return;
 			} else if (exists htmlTest = htmlBlockOpen[i], htmlTest.test(line)) {
@@ -78,7 +79,11 @@ void parseLine(variable String line, Block parent = internalDoc) {
 		
 		return;
 	} else if (atxHeadingPattern.test(line)) {
-		value text = atxHeadingPattern.split(line)[1] else "";
+		variable String text = atxHeadingPattern.split(line)[1] else "";
+		
+		if (atxTrailingPattern.test(text)) {
+			text = atxTrailingPattern.split(text)[0] else "";
+		}
 		
 		lineBlock = Heading {
 			text = text;
@@ -118,7 +123,7 @@ void parseLine(variable String line, Block parent = internalDoc) {
 		}
 		
 		line = "";
-	} else if(is HtmlBlock block = lastBlock) {
+	} else if (is HtmlBlock block = lastBlock) {
 		lineBlock = HtmlBlock(line, block.type);
 		line = "";
 	} else if (is FencedCode block = lastBlock) {
@@ -148,8 +153,8 @@ void parseLine(variable String line, Block parent = internalDoc) {
 		} else if (is Code block, is Code lineBlock, block.open) {
 			block.text += "\n"+lineBlock.text;
 			noLastBlock = false;
-		} else if(is HtmlBlock block, is HtmlBlock lineBlock, block.open) {
-			block.text += "\n" + lineBlock.text;
+		} else if (is HtmlBlock block, is HtmlBlock lineBlock, block.open) {
+			block.text += "\n"+lineBlock.text;
 			noLastBlock = false;
 		}
 		
