@@ -39,6 +39,8 @@ Regex fencedCodeblockPattern = regex("^`{3,}(?!.*`)|^~{3,}(?!.*~)");
 
 Regex closingCodeblockPattern = regex("^(?:\`{3,}|~{3,})(?= *$)");
 
+Regex thematicBreakPattern = regex("^(?:(?:\\* *){3,}|(?:_ *){3,}|(?:- *){3,}) *$");
+
 Regex[] htmlBlockOpen = [
 	regex { expression = "^<(?:script|pre|style)(?:\\s|>|$)"; ignoreCase = true; },
 	regex("^<!--"),

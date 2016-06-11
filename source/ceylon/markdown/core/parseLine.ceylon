@@ -68,7 +68,7 @@ void parseLine(variable String line, Block parent = internalDoc) {
 	} else if (!lastBlock is FencedCode, fencedCodeblockPattern.test(line)) {
 		lineBlock = FencedCode("", line.count(('\`'.equals)));
 		line = "";
-	} else if (is Paragraph block = lastBlock, setextHeadingPattern.test(line), is Text last = block.children.last) {
+	} else if (is Paragraph block = lastBlock, block.open, setextHeadingPattern.test(line), is Text last = block.children.last) {
 		
 		lineBlock = Heading {
 			text = last.text;
@@ -78,6 +78,10 @@ void parseLine(variable String line, Block parent = internalDoc) {
 		parent.children = [for (e in parent.children) e == block then lineBlock else e];
 		
 		return;
+	} else if(thematicBreakPattern.test(line)) {
+		lineBlock = ThematicBreak();
+		
+		line = "";
 	} else if (atxHeadingPattern.test(line)) {
 		variable String text = atxHeadingPattern.split(line)[1] else "";
 		
