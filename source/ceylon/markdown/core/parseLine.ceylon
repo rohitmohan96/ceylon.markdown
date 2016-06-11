@@ -149,6 +149,7 @@ void parseLine(variable String line, Block parent = internalDoc) {
 		if (sameType(block, lineBlock), !is ListItem|Paragraph|Code|Heading|HtmlBlock block) {
 			parseLine(line, block);
 			noLastBlock = false;
+			break;
 		} else if (is Paragraph block, is Paragraph lineBlock) {
 			//for paragraph, append the text to previous paragraph node
 			Node? text = block.children.last;
@@ -157,12 +158,15 @@ void parseLine(variable String line, Block parent = internalDoc) {
 				text.text += "\n"+last.text;
 				noLastBlock = false;
 			}
+			break;
 		} else if (is Code block, is Code lineBlock) {
 			block.text += "\n"+lineBlock.text;
 			noLastBlock = false;
+			break;
 		} else if (is HtmlBlock block, is HtmlBlock lineBlock) {
 			block.text += "\n"+lineBlock.text;
 			noLastBlock = false;
+			break;
 		}
 		
 		lastBlock = block.children.last;
