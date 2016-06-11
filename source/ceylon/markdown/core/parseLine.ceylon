@@ -25,7 +25,7 @@ void parseLine(variable String line, Block parent = internalDoc) {
 	variable Node? lastBlock = parent.children.last;
 	
 	if (line.equals(""), !is List parent) {
-		if (is Paragraph block = lastBlock) {
+		if (is Paragraph|BlockQuote block = lastBlock) {
 			block.closeBlock();
 		}
 		if (is HtmlBlock block = lastBlock) {
@@ -34,6 +34,9 @@ void parseLine(variable String line, Block parent = internalDoc) {
 			} else {
 				block.text += "\n";
 			}
+		}
+		if(is Code block = lastBlock, block.open) {
+			block.text += "\n";  
 		}
 		
 		return;
@@ -44,7 +47,7 @@ void parseLine(variable String line, Block parent = internalDoc) {
 	}
 	
 	//close fenced code blocks
-	if (is FencedCode block = lastBlock, closingCodeblockPattern.test(line), block.fenceLevel >= line.count('\`'.equals)) {
+	if (is FencedCode block = lastBlock, closingCodeblockPattern.test(line), block.fenceLevel <= line.count('\`'.equals)) {
 		block.closeBlock();
 		
 		return;
@@ -127,10 +130,10 @@ void parseLine(variable String line, Block parent = internalDoc) {
 		}
 		
 		line = "";
-	} else if (is HtmlBlock block = lastBlock) {
+	} else if (is HtmlBlock block = lastBlock, block.open) {
 		lineBlock = HtmlBlock(line, block.type);
 		line = "";
-	} else if (is FencedCode block = lastBlock) {
+	} else if (is FencedCode block = lastBlock, block.open) {
 		lineBlock = FencedCode(line, block.fenceLevel);
 		
 		line = "";
@@ -142,11 +145,11 @@ void parseLine(variable String line, Block parent = internalDoc) {
 	}
 	
 	//Check if block is already open
-	while (is Block block = lastBlock) {
+	while (is Block block = lastBlock, block.open) {
 		if (sameType(block, lineBlock), !is ListItem|Paragraph|Code|Heading|HtmlBlock block) {
 			parseLine(line, block);
 			noLastBlock = false;
-		} else if (is Paragraph block, is Paragraph lineBlock, block.open) {
+		} else if (is Paragraph block, is Paragraph lineBlock) {
 			//for paragraph, append the text to previous paragraph node
 			Node? text = block.children.last;
 			Node? last = lineBlock.children.last;
@@ -154,10 +157,10 @@ void parseLine(variable String line, Block parent = internalDoc) {
 				text.text += "\n"+last.text;
 				noLastBlock = false;
 			}
-		} else if (is Code block, is Code lineBlock, block.open) {
+		} else if (is Code block, is Code lineBlock) {
 			block.text += "\n"+lineBlock.text;
 			noLastBlock = false;
-		} else if (is HtmlBlock block, is HtmlBlock lineBlock, block.open) {
+		} else if (is HtmlBlock block, is HtmlBlock lineBlock) {
 			block.text += "\n"+lineBlock.text;
 			noLastBlock = false;
 		}
