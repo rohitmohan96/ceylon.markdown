@@ -108,6 +108,7 @@ void parseLine(variable String line, Block parent = internalDoc) {
 		
 		line = regex("[.)]").split(line)[1] else "";
 	} else if (!lastBlock is FencedCode,
+		if(is Paragraph block = lastBlock) then !block.open else true,
 		line.startsWith(" "),
 		(line = line.trimLeading(' '.equals).trimTrailing(' '.equals)) != "") {
 		
