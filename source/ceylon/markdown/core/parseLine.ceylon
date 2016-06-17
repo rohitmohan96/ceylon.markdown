@@ -42,7 +42,7 @@ void parseLine(variable String line, Block parent) {
 		return;
 	}
 	
-	if (!lastBlock is Code) {
+	if (!lastBlock is FencedCode) {
 		line = trimSpaces(line); //trim first 3 spaces in the beginning
 	}
 	
@@ -53,9 +53,13 @@ void parseLine(variable String line, Block parent) {
 		return;
 	}
 	
+	if(is HtmlBlock block = lastBlock, block.open) {
+		line = line.trimLeading(' '.equals).trimTrailing(' '.equals);
+	}
+	
 	if (line.startsWith("<")) {
 		for (i in 0:7) {
-			if (is HtmlBlock block = lastBlock, exists htmlTest = htmlBlockClose[i], htmlTest.test(line), block.type == i) {
+			if (is HtmlBlock block = lastBlock, block.open, exists htmlTest = htmlBlockClose[i], htmlTest.test(line), block.type == i) {
 				block.text += "\n"+line;
 				block.closeBlock();
 				return;
@@ -112,9 +116,9 @@ void parseLine(variable String line, Block parent) {
 	} else if (!lastBlock is FencedCode,
 		if(is Paragraph block = lastBlock) then !block.open else true,
 		line.startsWith(" "),
-		(line = line.trimLeading(' '.equals).trimTrailing(' '.equals)) != "") {
+		(line.trimLeading(' '.equals).trimTrailing(' '.equals)) != "") {
 		
-		lineBlock = IndentedCode(line);
+		lineBlock = IndentedCode(line[1...]);
 		line = "";
 	} else if (line.startsWith(">")) {
 		lineBlock = BlockQuote();

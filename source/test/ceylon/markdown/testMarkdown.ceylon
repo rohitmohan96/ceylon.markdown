@@ -48,3 +48,9 @@ shared void testThematicBreak() => assertEquals {
 	actual = parse(thematicBreakMd).string;
 	expected = thematicBreakTree;
 };
+
+test
+shared void testHtmlBlock() => assertEquals {
+	actual = parse(htmlBlockMd).string;
+	expected = htmlBlockTree;
+};

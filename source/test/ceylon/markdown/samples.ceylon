@@ -185,3 +185,72 @@ String thematicBreakTree = "Document:
                             		Text: 
                             			\"************************* text\"
                             ";
+
+String htmlBlockMd = "<div class=\"this is an html block\">
+                      
+                      blah blah
+                      
+                      </div>
+                      
+                      <table>
+                        <tr>
+                          <td>
+                            **test**
+                          </td>
+                        </tr>
+                      </table>
+                      
+                      <table>
+                      
+                        <tr>
+                      
+                          <td>
+                      
+                            test
+                      
+                          </td>
+                      
+                        </tr>
+                      
+                      </table>
+                      
+                      <![CDATA[
+                      [[[[[[[[[[[... *cdata section - this should not be parsed* ...]]]]]]]]]]]
+                      ]]>";
+
+String htmlBlockTree = "Document: 
+                        \tHtmlBlock: 
+                        \t\t\"<div class=\"this is an html block\">\"
+                        \tParagraph: 
+                        \t\tText: 
+                        \t\t\t\"blah blah\"
+                        \tHtmlBlock: 
+                        \t\t\"</div>\"
+                        \tHtmlBlock: 
+                        \t\t\"<table>
+                        <tr>
+                        <td>
+                        **test**
+                        </td>
+                        </tr>
+                        </table>\"
+                        \tHtmlBlock: 
+                        \t\t\"<table>\"
+                        \tHtmlBlock: 
+                        \t\t\"<tr>\"
+                        \tIndentedCode: 
+                        \t\t\"<td>
+                        
+                          test
+                        
+                        </td>
+                        \"
+                        \tHtmlBlock: 
+                        \t\t\"</tr>\"
+                        \tHtmlBlock: 
+                        \t\t\"</table>\"
+                        \tHtmlBlock: 
+                        \t\t\"<![CDATA[
+                        [[[[[[[[[[[... *cdata section - this should not be parsed* ...]]]]]]]]]]]
+                        ]]>\"
+                        ";
