@@ -109,3 +109,61 @@ String blockQuote2Tree = "Document:
                           \t\t\t\"empty blockquote:\"
                           \tBlockQuote: 
                           ";
+
+String headingMd = "# heading
+                    ### heading
+                    ##### heading
+                    
+                    # heading #
+                    ### heading ###
+                    ##### heading \\#\\#\\#\\#\\######
+                    
+                    ############ not a heading";
+
+String headingTree = "Document: 
+                      \tHeading: 
+                      \t\t\"heading\" (1)
+                      \tHeading: 
+                      \t\t\"heading\" (3)
+                      \tHeading: 
+                      \t\t\"heading\" (5)
+                      \tHeading: 
+                      \t\t\"heading\" (1)
+                      \tHeading: 
+                      \t\t\"heading\" (3)
+                      \tHeading: 
+                      \t\t\"heading \\#\\#\\#\\#\\######\" (5)
+                      \tParagraph: 
+                      \t\tText: 
+                      \t\t\t\"############ not a heading\"
+                      ";
+
+String fencedCodeMd = "\`\`\`\`\`\`\`\`\`\`text
+                       an
+                       example
+                       \`\`\`
+                       of
+                       
+                       
+                       a fenced
+                       \`\`\`
+                       code
+                       block
+                       \`\`\`\`\`\`\`\`\`\`
+                       ";
+
+String fencedCodeTree = "Document: 
+                         	FencedCode: 
+                         		\"
+                         an
+                         example
+                         \`\`\`
+                         of
+                         
+                         
+                         a fenced
+                         \`\`\`
+                         code
+                         block\"
+                         
+                         ";

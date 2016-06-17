@@ -13,7 +13,7 @@ String treeToString(Node node, Integer level = 0) {
 		string += "\t".repeat(level + 1) + "\"``n.text``\"" + "\n";
 	}
 	if (is Heading n = node) {
-		string += "\t".repeat(level + 1) + "\"``n.text``\"" + "\n";
+		string += "\t".repeat(level + 1) + "\"``n.text``\" (``n.level``)" + "\n";
 	}
 	if (is HtmlBlock n = node) {
 		string += "\t".repeat(level + 1) + "\"``n.text``\"" + "\n";

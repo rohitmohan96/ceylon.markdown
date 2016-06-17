@@ -30,3 +30,14 @@ shared void testBlockQuote2() => assertEquals {
 	actual = parse(blockQuote2Md).string;
 	expected = blockQuote2Tree;
 };
+
+test
+shared void testHeading() => assertEquals {
+	actual = parse(headingMd).string;
+	expected = headingTree;
+};
+
+shared void testFencedCode() => assertEquals {
+	actual = parse(fencedCodeMd).string;
+	expected = fencedCodeTree;
+};
