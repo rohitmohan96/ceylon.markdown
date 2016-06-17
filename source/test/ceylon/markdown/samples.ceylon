@@ -19,3 +19,93 @@ String sample1 = "Document:
                   					Text: 
                   						\"aliquando id\"
                   ";
+
+String blockQuote1Md = ">>>>>> deeply nested blockquote
+                        >>>>> deeply nested blockquote
+                        >>>> deeply nested blockquote
+                        >>> deeply nested blockquote
+                        >> deeply nested blockquote
+                        > deeply nested blockquote
+                        
+                        > deeply nested blockquote
+                        >> deeply nested blockquote
+                        >>> deeply nested blockquote
+                        >>>> deeply nested blockquote
+                        >>>>> deeply nested blockquote
+                        >>>>>> deeply nested blockquote";
+
+String blockQuote2Md = "> the simple example of a blockquote 
+                        > the simple example of a blockquote
+                        > the simple example of a blockquote
+                        > the simple example of a blockquote
+                        ... continuation
+                        ... continuation
+                        ... continuation
+                        ... continuation
+                        
+                        empty blockquote:
+                        
+                        >
+                        >
+                        >
+                        >
+                        ";
+
+String blockQuote1Tree = "Document: 
+                          \tBlockQuote: 
+                          \t\tBlockQuote: 
+                          \t\t\tBlockQuote: 
+                          \t\t\t\tBlockQuote: 
+                          \t\t\t\t\tBlockQuote: 
+                          \t\t\t\t\t\tBlockQuote: 
+                          \t\t\t\t\t\t\tParagraph: 
+                          \t\t\t\t\t\t\t\tText: 
+                          \t\t\t\t\t\t\t\t\t\"deeply nested blockquote
+                          deeply nested blockquote
+                          deeply nested blockquote
+                          deeply nested blockquote
+                          deeply nested blockquote
+                          deeply nested blockquote\"
+                          \tBlockQuote: 
+                          \t\tParagraph: 
+                          \t\t\tText: 
+                          \t\t\t\t\"deeply nested blockquote\"
+                          \t\tBlockQuote: 
+                          \t\t\tParagraph: 
+                          \t\t\t\tText: 
+                          \t\t\t\t\t\"deeply nested blockquote\"
+                          \t\t\tBlockQuote: 
+                          \t\t\t\tParagraph: 
+                          \t\t\t\t\tText: 
+                          \t\t\t\t\t\t\"deeply nested blockquote\"
+                          \t\t\t\tBlockQuote: 
+                          \t\t\t\t\tParagraph: 
+                          \t\t\t\t\t\tText: 
+                          \t\t\t\t\t\t\t\"deeply nested blockquote\"
+                          \t\t\t\t\tBlockQuote: 
+                          \t\t\t\t\t\tParagraph: 
+                          \t\t\t\t\t\t\tText: 
+                          \t\t\t\t\t\t\t\t\"deeply nested blockquote\"
+                          \t\t\t\t\t\tBlockQuote: 
+                          \t\t\t\t\t\t\tParagraph: 
+                          \t\t\t\t\t\t\t\tText: 
+                          \t\t\t\t\t\t\t\t\t\"deeply nested blockquote\"
+                          ";
+
+String blockQuote2Tree = "Document: 
+                          \tBlockQuote: 
+                          \t\tParagraph: 
+                          \t\t\tText: 
+                          \t\t\t\t\"the simple example of a blockquote 
+                          the simple example of a blockquote
+                          the simple example of a blockquote
+                          the simple example of a blockquote
+                          ... continuation
+                          ... continuation
+                          ... continuation
+                          ... continuation\"
+                          \tParagraph: 
+                          \t\tText: 
+                          \t\t\t\"empty blockquote:\"
+                          \tBlockQuote: 
+                          ";

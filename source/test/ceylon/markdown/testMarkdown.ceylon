@@ -19,3 +19,14 @@ shared void testSample2() => assertEquals {
 	expected = Document().string;
 };
 
+test
+shared void testBlockQuote1() => assertEquals {
+	actual = parse(blockQuote1Md).string;
+	expected = blockQuote1Tree;
+};
+
+test
+shared void testBlockQuote2() => assertEquals {
+	actual = parse(blockQuote2Md).string;
+	expected = blockQuote2Tree;
+};
