@@ -32,9 +32,15 @@ shared void testBlockQuote2() => assertEquals {
 };
 
 test
-shared void testHeading() => assertEquals {
-	actual = parse(headingMd).string;
-	expected = headingTree;
+shared void testHeading1() => assertEquals {
+	actual = parse(heading1Md).string;
+	expected = heading1Tree;
+};
+
+test 
+shared void testHeading2() => assertEquals {
+	actual = parse(heading2Md).string;
+	expected = heading2Tree;
 };
 
 test

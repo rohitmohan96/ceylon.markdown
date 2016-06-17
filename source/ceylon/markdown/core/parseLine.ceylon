@@ -35,8 +35,8 @@ void parseLine(variable String line, Block parent) {
 				block.text += "\n";
 			}
 		}
-		if(is Code block = lastBlock, block.open) {
-			block.text += "\n";  
+		if (is Code block = lastBlock, block.open) {
+			block.text += "\n";
 		}
 		
 		return;
@@ -45,21 +45,27 @@ void parseLine(variable String line, Block parent) {
 	if (!lastBlock is FencedCode) {
 		line = trimSpaces(line); //trim first 3 spaces in the beginning
 	}
-	
+	 
 	//close fenced code blocks
-	if (is FencedCode block = lastBlock, closingCodeblockPattern.test(line), block.fenceLevel <= line.count('\`'.equals)) {
+	if (is FencedCode block = lastBlock,
+		closingCodeblockPattern.test(line),
+		block.fenceLevel <= line.count('\`'.equals)) {
 		block.closeBlock();
 		
 		return;
 	}
 	
-	if(is HtmlBlock block = lastBlock, block.open) {
+	if (is HtmlBlock block = lastBlock, block.open) {
 		line = line.trimLeading(' '.equals).trimTrailing(' '.equals);
 	}
 	
 	if (line.startsWith("<")) {
 		for (i in 0:7) {
-			if (is HtmlBlock block = lastBlock, block.open, exists htmlTest = htmlBlockClose[i], htmlTest.test(line), block.type == i) {
+			if (is HtmlBlock block = lastBlock,
+				block.open, exists htmlTest = htmlBlockClose[i],
+				htmlTest.test(line),
+				block.type == i) {
+				
 				block.text += "\n"+line;
 				block.closeBlock();
 				return;
@@ -85,7 +91,7 @@ void parseLine(variable String line, Block parent) {
 		parent.children = [for (e in parent.children) e == block then lineBlock else e];
 		
 		return;
-	} else if(thematicBreakPattern.test(line)) {
+	} else if (thematicBreakPattern.test(line)) {
 		lineBlock = ThematicBreak();
 		
 		lineBlock.closeBlock();
@@ -114,7 +120,7 @@ void parseLine(variable String line, Block parent) {
 		
 		line = regex("[.)]").split(line)[1] else "";
 	} else if (!lastBlock is FencedCode,
-		if(is Paragraph block = lastBlock) then !block.open else true,
+		if (is Paragraph block = lastBlock) then !block.open else true,
 		line.startsWith(" "),
 		(line.trimLeading(' '.equals).trimTrailing(' '.equals)) != "") {
 		

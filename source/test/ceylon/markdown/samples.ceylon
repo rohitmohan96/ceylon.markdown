@@ -110,33 +110,53 @@ String blockQuote2Tree = "Document:
                           \tBlockQuote: 
                           ";
 
-String headingMd = "# heading
-                    ### heading
-                    ##### heading
-                    
-                    # heading #
-                    ### heading ###
-                    ##### heading \\#\\#\\#\\#\\######
-                    
-                    ############ not a heading";
+String heading1Md = "# heading
+                     ### heading
+                     ##### heading
+                     
+                     # heading #
+                     ### heading ###
+                     ##### heading \\#\\#\\#\\#\\######
+                     
+                     ############ not a heading";
 
-String headingTree = "Document: 
-                      \tHeading: 
-                      \t\t\"heading\" (1)
-                      \tHeading: 
-                      \t\t\"heading\" (3)
-                      \tHeading: 
-                      \t\t\"heading\" (5)
-                      \tHeading: 
-                      \t\t\"heading\" (1)
-                      \tHeading: 
-                      \t\t\"heading\" (3)
-                      \tHeading: 
-                      \t\t\"heading \\#\\#\\#\\#\\######\" (5)
-                      \tParagraph: 
-                      \t\tText: 
-                      \t\t\t\"############ not a heading\"
-                      ";
+String heading1Tree = "Document: 
+                       \tHeading: 
+                       \t\t\"heading\" (1)
+                       \tHeading: 
+                       \t\t\"heading\" (3)
+                       \tHeading: 
+                       \t\t\"heading\" (5)
+                       \tHeading: 
+                       \t\t\"heading\" (1)
+                       \tHeading: 
+                       \t\t\"heading\" (3)
+                       \tHeading: 
+                       \t\t\"heading \\#\\#\\#\\#\\######\" (5)
+                       \tParagraph: 
+                       \t\tText: 
+                       \t\t\t\"############ not a heading\"
+                       ";
+
+String heading2Md = "heading
+                     ---
+                     
+                     heading
+                     ===================================
+                     
+                     not a heading
+                     ----------------------------------- text";
+
+String heading2Tree = "Document: 
+                       \tHeading: 
+                       \t\t\"heading\" (2)
+                       \tHeading: 
+                       \t\t\"heading\" (1)
+                       \tParagraph: 
+                       \t\tText: 
+                       \t\t\t\"not a heading
+                       ----------------------------------- text\"
+                       ";
 
 String fencedCodeMd = "\`\`\`\`\`\`\`\`\`\`text
                        an
