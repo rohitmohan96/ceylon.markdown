@@ -1,0 +1,1 @@
+shared class UnorderedList(shared Character bulletChar) extends List() {}

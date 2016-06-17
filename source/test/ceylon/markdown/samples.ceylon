@@ -3,22 +3,22 @@ String sample1Md = "> Lorem ipsum dolor
                     > - Qui *quodsi iracundia*
                     > - aliquando id";
 
-String sample1 = "Document: 
-                  	BlockQuote: 
-                  		Paragraph: 
-                  			Text: 
-                  				\"Lorem ipsum dolor     
-                  sit amet.\"
-                  		List: 
-                  			ListItem: 
-                  				Paragraph: 
-                  					Text: 
-                  						\"Qui *quodsi iracundia*\"
-                  			ListItem: 
-                  				Paragraph: 
-                  					Text: 
-                  						\"aliquando id\"
-                  ";
+String sample1Tree = "Document: 
+                      	BlockQuote: 
+                      		Paragraph: 
+                      			Text: 
+                      				\"Lorem ipsum dolor     
+                      sit amet.\"
+                      		UnorderedList (bulletChar='-'): 
+                      			ListItem: 
+                      				Paragraph: 
+                      					Text: 
+                      						\"Qui *quodsi iracundia*\"
+                      			ListItem: 
+                      				Paragraph: 
+                      					Text: 
+                      						\"aliquando id\"
+                      ";
 
 String blockQuote1Md = ">>>>>> deeply nested blockquote
                         >>>>> deeply nested blockquote
@@ -121,18 +121,18 @@ String heading1Md = "# heading
                      ############ not a heading";
 
 String heading1Tree = "Document: 
-                       \tHeading: 
-                       \t\t\"heading\" (1)
-                       \tHeading: 
-                       \t\t\"heading\" (3)
-                       \tHeading: 
-                       \t\t\"heading\" (5)
-                       \tHeading: 
-                       \t\t\"heading\" (1)
-                       \tHeading: 
-                       \t\t\"heading\" (3)
-                       \tHeading: 
-                       \t\t\"heading \\#\\#\\#\\#\\######\" (5)
+                       \tHeading (1): 
+                       \t\t\"heading\"
+                       \tHeading (3): 
+                       \t\t\"heading\"
+                       \tHeading (5): 
+                       \t\t\"heading\"
+                       \tHeading (1): 
+                       \t\t\"heading\"
+                       \tHeading (3): 
+                       \t\t\"heading\"
+                       \tHeading (5): 
+                       \t\t\"heading \\#\\#\\#\\#\\######\"
                        \tParagraph: 
                        \t\tText: 
                        \t\t\t\"############ not a heading\"
@@ -148,10 +148,10 @@ String heading2Md = "heading
                      ----------------------------------- text";
 
 String heading2Tree = "Document: 
-                       \tHeading: 
-                       \t\t\"heading\" (2)
-                       \tHeading: 
-                       \t\t\"heading\" (1)
+                       \tHeading (2): 
+                       \t\t\"heading\"
+                       \tHeading (1): 
+                       \t\t\"heading\"
                        \tParagraph: 
                        \t\tText: 
                        \t\t\t\"not a heading

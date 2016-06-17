@@ -111,11 +111,9 @@ void parseLine(variable String line, Block parent) {
 		
 		line = "";
 	} else if (orderedListPattern.test(line)) {
-		
-		lineBlock = List {
-			type = "ordered";
-			bulletChar = 'o';
-			startsWith = parseInteger(regex("[.)]").split(line)[0] else "0"); //get list number
+		lineBlock = OrderedList {
+			 startsWith = parseInteger(regex("[.)]").split(line)[0] else "0") else 0;
+			 delimeter = (regex("\\d").split(line)[1] else ".").get(0) else '.';
 		};
 		
 		line = regex("[.)]").split(line)[1] else "";
@@ -130,7 +128,7 @@ void parseLine(variable String line, Block parent) {
 		lineBlock = BlockQuote();
 		line = line[1...]; //trim the starting ">"
 	} else if (line.startsWith("- ") || line.startsWith("* ") || line.startsWith("+ ")) {
-		lineBlock = List("bullet", line.get(0) else ' ');
+		lineBlock = UnorderedList(line.get(0) else ' ');
 		line = line[2...]; //trim the starting "- "
 	} else if (parent is List) {
 		line = line.trimLeading(' '.equals).trimTrailing(' '.equals);
@@ -193,8 +191,11 @@ void parseLine(variable String line, Block parent) {
 }
 
 Boolean sameType(Block b1, Block b2) => className(b1).equals(className(b2))
-		&& sameListType(b1, b2);
+		&& sameListType(b1, b2) && sameOrderedListType(b1, b2);
 
 //Check if lists have the same bullet character, if not lists, then return true
 Boolean sameListType(Block b1, Block b2) =>
-	if (is List b1, is List b2) then b1.bulletChar == b2.bulletChar else true;
+	if (is UnorderedList b1, is UnorderedList b2) then b1.bulletChar == b2.bulletChar else true;
+
+Boolean sameOrderedListType(Block b1, Block b2) =>
+	if(is OrderedList b1, is OrderedList b2) then b1.delimeter == b2.delimeter else true;

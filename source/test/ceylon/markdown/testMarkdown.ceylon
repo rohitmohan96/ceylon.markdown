@@ -10,7 +10,7 @@ import ceylon.markdown.core {
 test
 shared void testSample1() => assertEquals {
 	actual = parse(sample1Md).string;
-	expected = sample1;
+	expected = sample1Tree;
 };
 
 test

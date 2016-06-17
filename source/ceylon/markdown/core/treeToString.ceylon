@@ -5,19 +5,24 @@ String treeToString(Node node, Integer level = 0) {
 		.split(':'.equals)
 		.last;
 	
-	variable String string = "\t".repeat(level) + name + ": \n";
+	variable String string = "\t".repeat(level) + name;
 	
 	if (is Text n = node) {
-		string += "\t".repeat(level + 1) + "\"``n.text``\"" + "\n";
+		string += ": \n" + "\t".repeat(level + 1) + "\"``n.text``\"" + "\n";
 	} else if (is Code n = node) {
-		string += "\t".repeat(level + 1) + "\"``n.text``\"" + "\n";
+		string += ": \n" + "\t".repeat(level + 1) + "\"``n.text``\"" + "\n";
+	} else if (is Heading n = node) {
+		string += " (``n.level``): \n" + "\t".repeat(level + 1) + "\"``n.text``\"" + "\n";
+	} else if (is HtmlBlock n = node) {
+		string += ": \n" + "\t".repeat(level + 1) + "\"``n.text``\"" + "\n";
+	} else if (is OrderedList n = node) {
+		string += " (start=``n.startsWith``, delimeter='``n.delimeter``'): \n";
+	} else if(is UnorderedList n = node) {
+		string += " (bulletChar='``n.bulletChar``'): \n";
+	} else {
+		string += ": \n";
 	}
-	if (is Heading n = node) {
-		string += "\t".repeat(level + 1) + "\"``n.text``\" (``n.level``)" + "\n";
-	}
-	if (is HtmlBlock n = node) {
-		string += "\t".repeat(level + 1) + "\"``n.text``\"" + "\n";
-	}
+	
 	for (c in node.children) {
 		string += treeToString(c, level + 1);
 	}
