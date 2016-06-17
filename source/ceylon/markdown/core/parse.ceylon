@@ -1,13 +1,15 @@
 import ceylon.collection {
 	HashMap
 }
-Document internalDoc = Document();
-
-HashMap<String, Link> referenceMap = HashMap<String, Link>();
 
 shared Document parse(String text) {
+	
+	Document internalDoc = Document();
+	
+	HashMap<String,Link> referenceMap = HashMap<String,Link>();
+	
 	for (line in text.lines) {
-		parseLine(line);
+		parseLine(line, internalDoc);
 	}
 	
 	value document = inlineParser(internalDoc);

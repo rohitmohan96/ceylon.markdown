@@ -3,8 +3,19 @@ import ceylon.test {
 	assertEquals
 }
 import ceylon.markdown.core {
-	parse
+	parse,
+	Document
 }
 
-shared void testMarkdown() {
-}
+test
+shared void testSample1() => assertEquals {
+	actual = parse(sample1Md).string;
+	expected = sample1;
+};
+
+test
+shared void testSample2() => assertEquals {
+	actual = parse("").string;
+	expected = Document().string;
+};
+

@@ -18,7 +18,7 @@ String trimSpaces(String line) {
 	return line[count...];
 }
 
-void parseLine(variable String line, Block parent = internalDoc) {
+void parseLine(variable String line, Block parent) {
 	variable Boolean noLastBlock = true;
 	
 	Block lineBlock;
