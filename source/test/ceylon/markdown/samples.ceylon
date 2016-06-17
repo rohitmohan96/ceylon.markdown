@@ -165,7 +165,6 @@ String fencedCodeTree = "Document:
                          \`\`\`
                          code
                          block\"
-                         
                          ";
 
 String thematicBreakMd = " * * * * *

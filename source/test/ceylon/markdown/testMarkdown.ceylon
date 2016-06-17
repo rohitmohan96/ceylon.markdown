@@ -37,11 +37,13 @@ shared void testHeading() => assertEquals {
 	expected = headingTree;
 };
 
+test
 shared void testFencedCode() => assertEquals {
 	actual = parse(fencedCodeMd).string;
 	expected = fencedCodeTree;
 };
 
+test
 shared void testThematicBreak() => assertEquals {
 	actual = parse(thematicBreakMd).string;
 	expected = thematicBreakTree;
