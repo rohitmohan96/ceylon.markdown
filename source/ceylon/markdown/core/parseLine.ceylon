@@ -84,6 +84,8 @@ void parseLine(variable String line, Block parent) {
 	} else if(thematicBreakPattern.test(line)) {
 		lineBlock = ThematicBreak();
 		
+		lineBlock.closeBlock();
+		
 		line = "";
 	} else if (atxHeadingPattern.test(line)) {
 		variable String text = atxHeadingPattern.split(line)[1] else "";

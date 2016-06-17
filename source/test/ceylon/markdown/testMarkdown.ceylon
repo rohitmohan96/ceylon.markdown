@@ -41,3 +41,8 @@ shared void testFencedCode() => assertEquals {
 	actual = parse(fencedCodeMd).string;
 	expected = fencedCodeTree;
 };
+
+shared void testThematicBreak() => assertEquals {
+	actual = parse(thematicBreakMd).string;
+	expected = thematicBreakTree;
+};

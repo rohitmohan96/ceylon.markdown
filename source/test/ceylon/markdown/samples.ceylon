@@ -167,3 +167,22 @@ String fencedCodeTree = "Document:
                          block\"
                          
                          ";
+
+String thematicBreakMd = " * * * * *
+                          
+                           -  -  -  -  -
+                          
+                           ________
+                          
+                          
+                           ************************* text
+                          ";
+
+String thematicBreakTree = "Document: 
+                            	ThematicBreak: 
+                            	ThematicBreak: 
+                            	ThematicBreak: 
+                            	Paragraph: 
+                            		Text: 
+                            			\"************************* text\"
+                            ";
