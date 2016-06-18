@@ -9,7 +9,7 @@ String sample1Tree = "Document:
                       			Text: 
                       				\"Lorem ipsum dolor     
                       sit amet.\"
-                      		UnorderedList (bulletChar='-'): 
+                      		UnorderedList (bulletChar='-', tight='true'): 
                       			ListItem: 
                       				Paragraph: 
                       					Text: 
