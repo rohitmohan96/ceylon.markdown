@@ -19,6 +19,8 @@ String treeToString(Node node, Integer level = 0) {
 		string += " (start=``n.startsWith``, delimeter='``n.delimeter``', tight='``n.tight``'): \n";
 	} else if(is UnorderedList n = node) {
 		string += " (bulletChar='``n.bulletChar``', tight='``n.tight``'): \n";
+	} else if(is Link n = node) {
+		string += " (destination='``n.destination``', title='``n.title``'): \n";
 	} else {
 		string += ": \n";
 	}

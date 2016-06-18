@@ -1,4 +1,3 @@
-shared class Link(shared String destination, shared String title) extends Node() {
+shared class Link(shared String destination, shared String title = "") extends Node() {
 	shared actual variable Node[] children = [];
-	
 }

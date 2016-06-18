@@ -69,7 +69,8 @@ void parseLine(variable String line, Block parent) {
 		line = line.trimLeading(' '.equals).trimTrailing(' '.equals);
 	}
 	
-	if (line.startsWith("<")) {
+	if (line.startsWith("<"), 
+		if(is Paragraph pblock = lastBlock) then !pblock.open else true) {
 		for (i in 0:7) {
 			if (is HtmlBlock block = lastBlock,
 				block.open, exists htmlTest = htmlBlockClose[i],
@@ -155,7 +156,7 @@ void parseLine(variable String line, Block parent) {
 			lineBlock.appendChild(p);
 		}
 		
-		line = "";
+		line = "";  
 	} else if (is HtmlBlock block = lastBlock, block.open) {
 		lineBlock = HtmlBlock(line, block.type);
 		line = "";
@@ -181,7 +182,7 @@ void parseLine(variable String line, Block parent) {
 			Node? text = block.children.last;
 			Node? last = lineBlock.children.last;
 			if (is Text text, is Text last) {
-				text.text += "\n"+last.text;
+				text.text += "\n"+last.text; 
 				noLastBlock = false;
 			}
 			break;

@@ -7,9 +7,20 @@ String escapable = "[!\"#$%&\'()*+,./:;<=>?@\\[\\\\\\]^_`{|}~-]";
 
 String escapedChar = "\\\\" + escapable;
 
+String regChar = "[^\\\\()\\x00-\\x20]";
+
+String inParensNoSP = "\\((" + regChar + "|" + escapedChar + "|\\\\)*\\)";
+
 String linkLabel = "^\\[(?:[^\\\\\\[\\]]|" + escapedChar + "|\\\\){1,1000}\\]";
 
 Regex linkReferencePattern = regex(linkLabel + ":");
+
+Regex linkTitlePattern = regex("^(?:\"(.|\\n)*\"$|(?:'(.|\\n)*'$)|(?:\\((.|\\n)*\\)$))");
+
+Regex linkDestinationBraces = regex(
+	"^(?:[<](?:[^ <>\\t\\n\\\\\\x00]" + "|" + escapedChar + "|" + "\\\\)*[>])");
+
+Regex linkDestination = regex("^(?:[^\\\\()\\x00-\\x20]+)*");
 
 String tagName = "[A-Za-z][A-Za-z0-9-]*";
 String attributeName = "[a-zA-Z_:][a-zA-Z0-9:._-]*";
