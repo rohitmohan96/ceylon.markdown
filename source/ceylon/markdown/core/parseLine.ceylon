@@ -18,6 +18,8 @@ String trimSpaces(String line) {
 	return line[count...];
 }
 
+variable Boolean blankLine = false;
+
 void parseLine(variable String line, Block parent) {
 	variable Boolean noLastBlock = true;
 	
@@ -37,6 +39,14 @@ void parseLine(variable String line, Block parent) {
 		}
 		if (is Code block = lastBlock, block.open) {
 			block.text += "\n";
+		}
+		if(is List block = lastBlock, block.open) {
+			if(!blankLine) {
+				blankLine = true;
+			} else {
+				block.closeBlock();
+				blankLine = false;
+			}
 		}
 		
 		return;
@@ -85,7 +95,7 @@ void parseLine(variable String line, Block parent) {
 		
 		lineBlock = Heading {
 			text = last.text;
-			level = if (line.startsWith("===")) then 1 else 2;
+			level = if (line.startsWith("=")) then 1 else 2;
 		};
 		
 		parent.children = [for (e in parent.children) e == block then lineBlock else e];
@@ -127,12 +137,17 @@ void parseLine(variable String line, Block parent) {
 	} else if (line.startsWith(">")) {
 		lineBlock = BlockQuote();
 		line = line[1...]; //trim the starting ">"
-	} else if (line.startsWith("- ") || line.startsWith("* ") || line.startsWith("+ ")) {
+	} else if (bulletListPattern.test(line)) {
 		lineBlock = UnorderedList(line.get(0) else ' ');
 		line = line[2...]; //trim the starting "- "
-	} else if (parent is List) {
+	} else if (is List parent) {
 		line = line.trimLeading(' '.equals).trimTrailing(' '.equals);
 		lineBlock = ListItem();
+		
+		if(blankLine) {
+			parent.tight = false;
+			blankLine = false;
+		}
 		
 		if (!line.equals("")) {
 			Block p = Paragraph();

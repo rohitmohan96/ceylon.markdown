@@ -16,9 +16,9 @@ String treeToString(Node node, Integer level = 0) {
 	} else if (is HtmlBlock n = node) {
 		string += ": \n" + "\t".repeat(level + 1) + "\"``n.text``\"" + "\n";
 	} else if (is OrderedList n = node) {
-		string += " (start=``n.startsWith``, delimeter='``n.delimeter``'): \n";
+		string += " (start=``n.startsWith``, delimeter='``n.delimeter``', tight='``n.tight``'): \n";
 	} else if(is UnorderedList n = node) {
-		string += " (bulletChar='``n.bulletChar``'): \n";
+		string += " (bulletChar='``n.bulletChar``', tight='``n.tight``'): \n";
 	} else {
 		string += ": \n";
 	}

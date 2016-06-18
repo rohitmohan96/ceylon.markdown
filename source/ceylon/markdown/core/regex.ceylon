@@ -31,9 +31,11 @@ Regex atxHeadingPattern = regex("^#{1,6}(?: +|$)");
 
 Regex atxTrailingPattern = regex("(^| ) *#+ *$");
 
-Regex orderedListPattern = regex("^\\d+[.)](|\\s.*)$");
+Regex orderedListPattern = regex("^\\d{1,9}+[.)](|\\s.*)$");
 
-Regex setextHeadingPattern = regex("^(={3,}|-{3,})$");
+Regex bulletListPattern = regex("^[*+-](|\\s.*)$");
+
+Regex setextHeadingPattern = regex("^(?:=+|-+) *$");
 
 Regex fencedCodeblockPattern = regex("^`{3,}(?!.*`)|^~{3,}(?!.*~)");
 
