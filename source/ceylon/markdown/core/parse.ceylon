@@ -2,7 +2,7 @@ import ceylon.collection {
 	HashMap
 }
 
-late HashMap<String,Link> referenceMap;
+late variable HashMap<String,Link> referenceMap;
 
 shared Document parse(String text) {
 	
