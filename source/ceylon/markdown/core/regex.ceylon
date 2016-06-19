@@ -42,7 +42,7 @@ Regex atxHeadingPattern = regex("^#{1,6}(?: +|$)");
 
 Regex atxTrailingPattern = regex("(^| ) *#+ *$");
 
-Regex orderedListPattern = regex("^\\d{1,9}+[.)](|\\s.*)$");
+Regex orderedListPattern = regex("^\\d{1,9}[.)](|\\s.*)$");
 
 Regex bulletListPattern = regex("^[*+-](|\\s.*)$");
 
