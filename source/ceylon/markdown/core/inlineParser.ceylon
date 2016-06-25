@@ -6,6 +6,7 @@ void parseReference(Node node) {
 	
 	String key;
 	String destination;
+	variable String title = "";
 	
 	if (is Text node) {
 		variable String text = node.text;
@@ -48,11 +49,19 @@ void parseReference(Node node) {
 			return;
 		}
 		
-		//TODO: parse title from link reference
+		MatchResult? linkTitle = linkTitlePattern.find(text);
+		
+		if(exists linkTitle) {
+			title = linkTitle.matched;
+			
+			text = text[linkTitle.end...]
+					.trimLeading('\n'.equals)
+					.trimLeading(' '.equals);
+		}
 		
 		node.text = text;
 		
-		referenceMap.put(key, Link(destination));
+		referenceMap.put(key, Link(destination, title));
 		
 		return;
 	}

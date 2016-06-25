@@ -15,12 +15,16 @@ String linkLabel = "^\\[(?:[^\\\\\\[\\]]|" + escapedChar + "|\\\\){1,1000}\\]";
 
 Regex linkReferencePattern = regex(linkLabel + ":");
 
-Regex linkTitlePattern = regex("^(?:\"(.|\\n)*\"$|(?:'(.|\\n)*'$)|(?:\\((.|\\n)*\\)$))");
+Regex linkTitlePattern = regex("^(?:\"(" + escapedChar + "|[^\"\\x00])*\"" +
+			"|" +
+			"'(" + escapedChar + "|[^'\\x00])*'" +
+			"|" +
+			"\\((" + escapedChar + "|[^)\\x00])*\\))");
 
 Regex linkDestinationBraces = regex(
 	"^(?:[<](?:[^ <>\\t\\n\\\\\\x00]" + "|" + escapedChar + "|" + "\\\\)*[>])");
 
-Regex linkDestination = regex("^(?:[^\\\\()\\x00-\\x20]+)*");
+Regex linkDestination = regex("^(?:" + regChar + "+|" + escapedChar + "|\\\\|" + inParensNoSP + ")*");
 
 String tagName = "[A-Za-z][A-Za-z0-9-]*";
 String attributeName = "[a-zA-Z_:][a-zA-Z0-9:._-]*";
