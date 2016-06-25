@@ -108,20 +108,21 @@ void parseLine(variable String line, Block parent) {
 		lineBlock.closeBlock();
 		
 		line = "";
-	} else if (atxHeadingPattern.test(line)) {
+	} else if (exists find = atxHeadingPattern.find(line)) {
 		variable String text = atxHeadingPattern.split(line)[1] else "";
 		
 		if (atxTrailingPattern.test(text)) {
 			text = atxTrailingPattern.split(text)[0] else "";
 		}
-		
+				
 		lineBlock = Heading {
 			text = text;
-			level = (regex(" ").split(line)[0] else "").count('#'.equals);
+			level = find.matched.count('#'.equals);
 		};
 		
 		line = "";
 	} else if (orderedListPattern.test(line)) {
+		
 		lineBlock = OrderedList {
 			 startsWith = parseInteger(regex("[.)]").split(line)[0] else "0") else 0;
 			 delimeter = (regex("\\d").split(line)[1] else ".").get(0) else '.';
