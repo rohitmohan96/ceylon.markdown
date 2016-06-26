@@ -37,31 +37,34 @@ void parseReference(Node node) {
 				.replaceLast(">", "");
 			
 			text = text[destBraces.end...]
-					.trimLeading('\n'.equals)
-					.trimLeading(' '.equals);
-		} else if(exists dest) {
+				.trimLeading('\n'.equals)
+				.trimLeading(' '.equals);
+		} else if (exists dest) {
 			destination = dest.matched;
 			
 			text = text[dest.end...]
-					.trimLeading('\n'.equals)
-					.trimLeading(' '.equals);
+				.trimLeading('\n'.equals)
+				.trimLeading(' '.equals);
 		} else {
 			return;
 		}
 		
 		MatchResult? linkTitle = linkTitlePattern.find(text);
 		
-		if(exists linkTitle) {
-			title = linkTitle.matched;
+		if (exists linkTitle) {
+			title = linkTitle.matched[1..linkTitle.end - 2];
 			
 			text = text[linkTitle.end...]
-					.trimLeading('\n'.equals)
-					.trimLeading(' '.equals);
+				.trimLeading('\n'.equals)
+				.trimLeading(' '.equals);
 		}
 		
 		node.text = text;
 		
-		referenceMap.put(key, Link(destination, title));
+		if (!referenceMap.defines(key)) {
+			Link link = Link(destination, title);
+			referenceMap.put(key, link);
+		}
 		
 		return;
 	}

@@ -69,6 +69,7 @@ void parseLine(variable String line, Block parent) {
 		line = line.trimLeading(' '.equals).trimTrailing(' '.equals);
 	}
 	
+	//TODO Nested list item
 	if (line.startsWith("<"), 
 		if(is Paragraph pblock = lastBlock) then !pblock.open else true) {
 		for (i in 0:7) {
@@ -167,7 +168,7 @@ void parseLine(variable String line, Block parent) {
 		line = "";
 	} else {
 		lineBlock = Paragraph();
-		lineBlock.appendChild(Text(line));
+		lineBlock.appendChild(Text(line.trimLeading(' '.equals)));
 		
 		line = "";
 	}
