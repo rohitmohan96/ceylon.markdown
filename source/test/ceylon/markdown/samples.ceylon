@@ -122,17 +122,23 @@ String heading1Md = "# heading
 
 String heading1Tree = "Document: 
                        \tHeading (1): 
-                       \t\t\"heading\"
+                       \t\tText: 
+                       \t\t\t\"heading\"
                        \tHeading (3): 
-                       \t\t\"heading\"
+                       \t\tText: 
+                       \t\t\t\"heading\"
                        \tHeading (5): 
-                       \t\t\"heading\"
+                       \t\tText: 
+                       \t\t\t\"heading\"
                        \tHeading (1): 
-                       \t\t\"heading\"
+                       \t\tText: 
+                       \t\t\t\"heading\"
                        \tHeading (3): 
-                       \t\t\"heading\"
+                       \t\tText: 
+                       \t\t\t\"heading\"
                        \tHeading (5): 
-                       \t\t\"heading \\#\\#\\#\\#\\######\"
+                       \t\tText: 
+                       \t\t\t\"heading \\#\\#\\#\\#\\######\"
                        \tParagraph: 
                        \t\tText: 
                        \t\t\t\"############ not a heading\"
@@ -149,9 +155,11 @@ String heading2Md = "heading
 
 String heading2Tree = "Document: 
                        \tHeading (2): 
-                       \t\t\"heading\"
+                       \t\tText: 
+                       \t\t\t\"heading\"
                        \tHeading (1): 
-                       \t\t\"heading\"
+                       \t\tText: 
+                       \t\t\t\"heading\"
                        \tParagraph: 
                        \t\tText: 
                        \t\t\t\"not a heading

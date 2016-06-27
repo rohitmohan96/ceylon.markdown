@@ -96,9 +96,10 @@ void parseLine(variable String line, Block parent) {
 	} else if (is Paragraph block = lastBlock, block.open, setextHeadingPattern.test(line), is Text last = block.children.last) {
 		
 		lineBlock = Heading {
-			text = last.text;
 			level = if (line.startsWith("=")) then 1 else 2;
 		};
+		
+		lineBlock.appendChild(Text(last.text));
 		
 		parent.children = [for (e in parent.children) e == block then lineBlock else e];
 		
@@ -116,10 +117,9 @@ void parseLine(variable String line, Block parent) {
 			text = atxTrailingPattern.split(text)[0] else "";
 		}
 				
-		lineBlock = Heading {
-			text = text;
-			level = find.matched.count('#'.equals);
-		};
+		lineBlock = Heading(find.matched.count('#'.equals));
+		
+		lineBlock.appendChild(Text(text));
 		
 		line = "";
 	} else if (orderedListPattern.test(line)) {
