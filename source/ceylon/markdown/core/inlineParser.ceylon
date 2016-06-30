@@ -74,6 +74,19 @@ void parseReference(Node node) {
 	}
 }
 
+shared void parseInlines(Node node, Node parent) {
+	
+	if(is Text node) {
+		for(i->ch in node.text.indexed) {
+			
+		}
+	}
+	
+	for(child in node.children) {
+		parseInlines(child, node);
+	}
+}
+
 shared Document inlineParser(Document document) {
 	parseReference(document);
 	
