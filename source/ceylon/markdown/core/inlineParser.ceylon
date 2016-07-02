@@ -52,7 +52,7 @@ void parseReference(Node node) {
 		MatchResult? linkTitle = linkTitlePattern.find(text);
 		
 		if (exists linkTitle) {
-			title = linkTitle.matched[1..linkTitle.end - 2];
+			title = linkTitle.matched[1 .. linkTitle.end-2];
 			
 			text = text[linkTitle.end...]
 				.trimLeading('\n'.equals)
@@ -76,19 +76,41 @@ void parseReference(Node node) {
 
 shared void parseInlines(Node node, Node parent) {
 	
-	if(is Text node) {
-		for(i->ch in node.text.indexed) {
-			
+	if (is Text node) {
+		String text = node.text;
+		variable String str = "";
+		String last = text.lines.last;
+		for (i->ch in text.indexed) {
+			switch (ch)
+			case ('\n') {
+				parent.removeChild(node);
+				parent.appendChild(Text(str.trimTrailing(' '.equals)));
+				parent.appendChild(str.endsWith("  ") then HardBreak() else SoftBreak());
+				str = "";
+			}
+			case ('\\') {
+			}
+			case ('`') {
+			}
+			else {
+				str += ch.string;
+			}
 		}
-	}
+		
+		if(last != text) {
+			parent.appendChild(Text(last));
+		}
+	} 
 	
-	for(child in node.children) {
+	for (child in node.children) {
 		parseInlines(child, node);
 	}
 }
 
 shared Document inlineParser(Document document) {
 	parseReference(document);
+	
+	parseInlines(document, document);
 	
 	return document;
 }
