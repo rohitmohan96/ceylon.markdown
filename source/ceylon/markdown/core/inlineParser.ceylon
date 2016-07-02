@@ -79,28 +79,45 @@ shared void parseInlines(Node node, Node parent) {
 	if (is Text node) {
 		String text = node.text;
 		variable String str = "";
-		String last = text.lines.last;
+		variable Boolean tick = false;
+		
 		for (i->ch in text.indexed) {
 			switch (ch)
 			case ('\n') {
-				parent.removeChild(node);
-				parent.appendChild(Text(str.trimTrailing(' '.equals)));
-				parent.appendChild(str.endsWith("  ") then HardBreak() else SoftBreak());
-				str = "";
+				if (!tick) {
+					parent.removeChild(node);
+					parent.appendChild(Text(str.trimTrailing(' '.equals)));
+					parent.appendChild(str.endsWith("  ") then HardBreak() else SoftBreak());
+					str = "";
+				} else {
+					str = str.trimTrailing(' '.equals);
+					str += " ";
+				}
 			}
 			case ('\\') {
 			}
 			case ('`') {
+				parent.removeChild(node);
+				
+				if (!tick) {
+					tick = true;
+					parent.appendChild(Text(str));
+					str = "";
+				} else {
+					parent.appendChild(Code(str.trimLeading(' '.equals).trimTrailing(' '.equals)));
+					str = "";
+					tick = false;
+				}
 			}
 			else {
 				str += ch.string;
 			}
 		}
 		
-		if(last != text) {
-			parent.appendChild(Text(last));
+		if (str != text) {
+			parent.appendChild(Text(str));
 		}
-	} 
+	}
 	
 	for (child in node.children) {
 		parseInlines(child, node);
