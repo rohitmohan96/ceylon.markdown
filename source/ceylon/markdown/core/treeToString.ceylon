@@ -9,7 +9,7 @@ String treeToString(Node node, Integer level = 0) {
 	
 	if (is Text n = node) {
 		string += ": \n" + "\t".repeat(level + 1) + "\"``n.text``\"" + "\n";
-	} else if (is Code n = node) {
+	} else if (is CodeBlock n = node) {
 		string += ": \n" + "\t".repeat(level + 1) + "\"``n.text``\"" + "\n";
 	} else if (is Heading n = node) {
 		string += " (``n.level``): \n";

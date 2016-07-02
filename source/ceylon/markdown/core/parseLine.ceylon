@@ -37,7 +37,7 @@ void parseLine(variable String line, Block parent) {
 				block.text += "\n";
 			}
 		}
-		if (is Code block = lastBlock, block.open) {
+		if (is CodeBlock block = lastBlock, block.open) {
 			block.text += "\n";
 		}
 		if(is List block = lastBlock, block.open) {
@@ -188,7 +188,7 @@ void parseLine(variable String line, Block parent) {
 				noLastBlock = false;
 			}
 			break;
-		} else if (is Code block, is Code lineBlock) {
+		} else if (is CodeBlock block, is CodeBlock lineBlock) {
 			block.text += "\n"+lineBlock.text;
 			noLastBlock = false;
 			break;

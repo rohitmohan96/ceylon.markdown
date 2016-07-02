@@ -1,1 +1,1 @@
-shared class FencedCode(String text, shared Integer fenceLevel) extends Code(text) {}
+shared class FencedCode(String text, shared Integer fenceLevel) extends CodeBlock(text) {}
