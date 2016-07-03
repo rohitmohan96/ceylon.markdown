@@ -96,15 +96,19 @@ shared void parseInlines(Node node, Node parent) {
 			}
 			case ('\\') {
 			}
+			case ('*' | '_') {
+			}
 			case ('`') {
 				parent.removeChild(node);
 				
 				if (!tick) {
 					tick = true;
-					parent.appendChild(Text(str));
-					str = "";
+					if (str != "") {
+						parent.appendChild(Text(str));
+					}
+					str = "`";
 				} else {
-					parent.appendChild(Code(str.trimLeading(' '.equals).trimTrailing(' '.equals)));
+					parent.appendChild(Code(str.trimmed.removeInitial("`")));
 					str = "";
 					tick = false;
 				}
@@ -114,7 +118,9 @@ shared void parseInlines(Node node, Node parent) {
 			}
 		}
 		
-		if (str != text) {
+		if (str != text, str != "") {
+			parent.appendChild(Text(str));
+		} else if(tick) {
 			parent.appendChild(Text(str));
 		}
 	}
