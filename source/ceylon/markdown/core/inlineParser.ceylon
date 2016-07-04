@@ -75,6 +75,7 @@ void parseReference(Node node) {
 }
 
 shared void parseInlines(Node node, Node parent) {
+	variable Delimiter? delimiter = null;
 	
 	if (is Text node) {
 		String text = node.text;
@@ -96,7 +97,17 @@ shared void parseInlines(Node node, Node parent) {
 			}
 			case ('\\') {
 			}
-			case ('*' | '_') {
+			case ('*' | '_' | '[') {
+				parent.removeChild(node);
+				
+				if (str != "") {
+					parent.appendChild(Text(str));
+				}
+				Text textNode = Text(ch.string);
+				parent.appendChild(textNode);
+				str = "";
+			}
+			case ('!') {
 			}
 			case ('`') {
 				parent.removeChild(node);
@@ -120,7 +131,7 @@ shared void parseInlines(Node node, Node parent) {
 		
 		if (str != text, str != "") {
 			parent.appendChild(Text(str));
-		} else if(tick) {
+		} else if (tick) {
 			parent.appendChild(Text(str));
 		}
 	}
