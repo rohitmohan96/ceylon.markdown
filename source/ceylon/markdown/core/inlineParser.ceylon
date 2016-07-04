@@ -75,7 +75,7 @@ void parseReference(Node node) {
 }
 
 shared void parseInlines(Node node, Node parent) {
-	variable Delimiter? delimiter = null;
+	variable Delimiter? lastDelimiter = null;
 	
 	if (is Text node) {
 		String text = node.text;
@@ -105,6 +105,30 @@ shared void parseInlines(Node node, Node parent) {
 				}
 				Text textNode = Text(ch.string);
 				parent.appendChild(textNode);
+				
+				if (exists last = lastDelimiter) {
+					
+					Delimiter delimiter = Delimiter {
+						node = textNode;
+						delimiterChar = ch;
+						numOfDelimiters = last.numOfDelimiters + 1;
+						previous = last;
+						next = null;
+					};
+					
+					last.next = delimiter;
+					lastDelimiter = delimiter;
+				} else {
+					
+					lastDelimiter = Delimiter {
+						node = textNode;
+						delimiterChar = ch;
+						numOfDelimiters = 1;
+						previous = null;
+						next = null;
+					};
+				}
+				
 				str = "";
 			}
 			case ('!') {
