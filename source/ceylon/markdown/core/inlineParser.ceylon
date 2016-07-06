@@ -81,6 +81,7 @@ shared void parseInlines(Node node, Node parent) {
 		String text = node.text;
 		variable String str = "";
 		variable Boolean tick = false;
+		variable Boolean bang = false;
 		
 		for (i->ch in text.indexed) {
 			switch (ch)
@@ -100,38 +101,83 @@ shared void parseInlines(Node node, Node parent) {
 			case ('*' | '_' | '[') {
 				parent.removeChild(node);
 				
+				if (bang) {
+					bang = false;
+				} else {
+					
+					if (str != "") {
+						parent.appendChild(Text(str));
+					}
+					
+					Text textNode = Text(ch.string);
+					parent.appendChild(textNode);
+					
+					if (exists last = lastDelimiter) {
+						
+						Delimiter delimiter = Delimiter {
+							node = textNode;
+							delimiterChar = ch;
+							numOfDelimiters = last.numOfDelimiters + 1;
+							previous = last;
+							next = null;
+						};
+						
+						last.next = delimiter;
+						lastDelimiter = delimiter;
+					} else {
+						
+						lastDelimiter = Delimiter {
+							node = textNode;
+							delimiterChar = ch;
+							numOfDelimiters = 1;
+							previous = null;
+							next = null;
+						};
+					}
+					
+					str = "";
+				}
+			}
+			case ('!') {
+				parent.removeChild(node);
+				
 				if (str != "") {
 					parent.appendChild(Text(str));
 				}
-				Text textNode = Text(ch.string);
-				parent.appendChild(textNode);
 				
-				if (exists last = lastDelimiter) {
+				if (exists next = text.get(i + 1), next == '[') {
+					Text textNode = Text("![");
+					parent.appendChild(textNode);
 					
-					Delimiter delimiter = Delimiter {
-						node = textNode;
-						delimiterChar = ch;
-						numOfDelimiters = last.numOfDelimiters + 1;
-						previous = last;
-						next = null;
-					};
-					
-					last.next = delimiter;
-					lastDelimiter = delimiter;
+					bang = true;
+					if (exists last = lastDelimiter) {
+						
+						Delimiter delimiter = Delimiter {
+							node = textNode;
+							delimiterChar = ch;
+							numOfDelimiters = last.numOfDelimiters + 1;
+							previous = last;
+							next = null;
+						};
+						
+						last.next = delimiter;
+						lastDelimiter = delimiter;
+					} else {
+						
+						lastDelimiter = Delimiter {
+							node = textNode;
+							delimiterChar = ch;
+							numOfDelimiters = 1;
+							previous = null;
+							next = null;
+						};
+					}
 				} else {
-					
-					lastDelimiter = Delimiter {
-						node = textNode;
-						delimiterChar = ch;
-						numOfDelimiters = 1;
-						previous = null;
-						next = null;
-					};
+					Text textNode = Text("!");
+					parent.appendChild(textNode);
 				}
 				
 				str = "";
-			}
-			case ('!') {
 			}
 			case ('`') {
 				parent.removeChild(node);
@@ -147,6 +193,18 @@ shared void parseInlines(Node node, Node parent) {
 					str = "";
 					tick = false;
 				}
+			}
+			case(']') {
+				parent.removeChild(node);
+				
+				if (str != "") {
+					parent.appendChild(Text(str));
+				}
+				
+				Text textNode = Text(ch.string);
+				parent.appendChild(textNode);
+				
+				str = "";
 			}
 			else {
 				str += ch.string;
