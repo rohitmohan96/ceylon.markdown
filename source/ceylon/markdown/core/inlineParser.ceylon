@@ -201,8 +201,28 @@ shared void parseInlines(Node node, Node parent) {
 					parent.appendChild(Text(str));
 				}
 				
-				Text textNode = Text(ch.string);
-				parent.appendChild(textNode);
+				variable Delimiter? delimiter = lastDelimiter;
+				
+				while(exists del = delimiter) {
+					if(del.delimiterChar == '[' || del.delimiterChar == '!' && !del.isActive) {
+						removeLastBracket(del, lastDelimiter);
+						
+						delimiter = null;
+						
+						break;
+					} else if(del.delimiterChar == '[') {
+						
+						break;
+					} else if(del.delimiterChar == '!') {
+						break;
+					} else {
+						delimiter = del.previous;
+					}
+				}
+				
+				if(!delimiter exists) {
+					parent.appendChild(Text(ch.string));
+				}
 				
 				str = "";
 			}
@@ -229,4 +249,17 @@ shared Document inlineParser(Document document) {
 	parseInlines(document, document);
 	
 	return document;
+}
+
+shared void removeLastBracket(Delimiter del, variable Delimiter? lastDelimiter) {
+	if(exists prev = del.previous, exists next = del.next) {
+		prev.next = del.next;
+		next.previous = prev;
+	} else if(exists prev = del.previous) {
+		prev.next = null;
+	} else if(exists next = del.next) {
+		next.previous = null;
+	} else {
+		lastDelimiter = null;
+	}
 }
