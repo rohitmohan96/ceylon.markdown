@@ -4,20 +4,28 @@ String sample1Md = "> Lorem ipsum dolor
                     > - aliquando id";
 
 String sample1Tree = "Document: 
-                      	BlockQuote: 
-                      		Paragraph: 
-                      			Text: 
-                      				\"Lorem ipsum dolor     
-                      sit amet.\"
-                      		UnorderedList (bulletChar='-', tight='true'): 
-                      			ListItem: 
-                      				Paragraph: 
-                      					Text: 
-                      						\"Qui *quodsi iracundia*\"
-                      			ListItem: 
-                      				Paragraph: 
-                      					Text: 
-                      						\"aliquando id\"
+                      \tBlockQuote: 
+                      \t\tParagraph: 
+                      \t\t\tText: 
+                      \t\t\t\t\"Lorem ipsum dolor\"
+                      \t\t\tHardBreak: 
+                      \t\t\tText: 
+                      \t\t\t\t\"sit amet.\"
+                      \t\tUnorderedList (bulletChar='-', tight='true'): 
+                      \t\t\tListItem: 
+                      \t\t\t\tParagraph: 
+                      \t\t\t\t\tText: 
+                      \t\t\t\t\t\t\"Qui \"
+                      \t\t\t\t\tText: 
+                      \t\t\t\t\t\t\"*\"
+                      \t\t\t\t\tText: 
+                      \t\t\t\t\t\t\"quodsi iracundia\"
+                      \t\t\t\t\tText: 
+                      \t\t\t\t\t\t\"*\"
+                      \t\t\tListItem: 
+                      \t\t\t\tParagraph: 
+                      \t\t\t\t\tText: 
+                      \t\t\t\t\t\t\"aliquando id\"
                       ";
 
 String blockQuote1Md = ">>>>>> deeply nested blockquote
@@ -60,12 +68,22 @@ String blockQuote1Tree = "Document:
                           \t\t\t\t\t\tBlockQuote: 
                           \t\t\t\t\t\t\tParagraph: 
                           \t\t\t\t\t\t\t\tText: 
-                          \t\t\t\t\t\t\t\t\t\"deeply nested blockquote
-                          deeply nested blockquote
-                          deeply nested blockquote
-                          deeply nested blockquote
-                          deeply nested blockquote
-                          deeply nested blockquote\"
+                          \t\t\t\t\t\t\t\t\t\"deeply nested blockquote\"
+                          \t\t\t\t\t\t\t\tSoftBreak: 
+                          \t\t\t\t\t\t\t\tText: 
+                          \t\t\t\t\t\t\t\t\t\"deeply nested blockquote\"
+                          \t\t\t\t\t\t\t\tSoftBreak: 
+                          \t\t\t\t\t\t\t\tText: 
+                          \t\t\t\t\t\t\t\t\t\"deeply nested blockquote\"
+                          \t\t\t\t\t\t\t\tSoftBreak: 
+                          \t\t\t\t\t\t\t\tText: 
+                          \t\t\t\t\t\t\t\t\t\"deeply nested blockquote\"
+                          \t\t\t\t\t\t\t\tSoftBreak: 
+                          \t\t\t\t\t\t\t\tText: 
+                          \t\t\t\t\t\t\t\t\t\"deeply nested blockquote\"
+                          \t\t\t\t\t\t\t\tSoftBreak: 
+                          \t\t\t\t\t\t\t\tText: 
+                          \t\t\t\t\t\t\t\t\t\"deeply nested blockquote\"
                           \tBlockQuote: 
                           \t\tParagraph: 
                           \t\t\tText: 
@@ -96,14 +114,28 @@ String blockQuote2Tree = "Document:
                           \tBlockQuote: 
                           \t\tParagraph: 
                           \t\t\tText: 
-                          \t\t\t\t\"the simple example of a blockquote 
-                          the simple example of a blockquote
-                          the simple example of a blockquote
-                          the simple example of a blockquote
-                          ... continuation
-                          ... continuation
-                          ... continuation
-                          ... continuation\"
+                          \t\t\t\t\"the simple example of a blockquote\"
+                          \t\t\tSoftBreak: 
+                          \t\t\tText: 
+                          \t\t\t\t\"the simple example of a blockquote\"
+                          \t\t\tSoftBreak: 
+                          \t\t\tText: 
+                          \t\t\t\t\"the simple example of a blockquote\"
+                          \t\t\tSoftBreak: 
+                          \t\t\tText: 
+                          \t\t\t\t\"the simple example of a blockquote\"
+                          \t\t\tSoftBreak: 
+                          \t\t\tText: 
+                          \t\t\t\t\"... continuation\"
+                          \t\t\tSoftBreak: 
+                          \t\t\tText: 
+                          \t\t\t\t\"... continuation\"
+                          \t\t\tSoftBreak: 
+                          \t\t\tText: 
+                          \t\t\t\t\"... continuation\"
+                          \t\t\tSoftBreak: 
+                          \t\t\tText: 
+                          \t\t\t\t\"... continuation\"
                           \tParagraph: 
                           \t\tText: 
                           \t\t\t\"empty blockquote:\"
