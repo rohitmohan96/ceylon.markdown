@@ -215,6 +215,7 @@ shared void parseInlines(Node node, Node parent) {
 							parent.appendChild(link);
 							link.appendChild(Text(str));
 							parent.removeChild(del.node);
+							removeLastBracket(del, lastDelimiter);
 						} else {
 							delimiter = null;
 						}
@@ -228,6 +229,7 @@ shared void parseInlines(Node node, Node parent) {
 							parent.appendChild(image);
 							image.appendChild(Text(str));
 							parent.removeChild(del.node);
+							removeLastBracket(del, lastDelimiter);
 						} else {
 							delimiter = null;
 						}
