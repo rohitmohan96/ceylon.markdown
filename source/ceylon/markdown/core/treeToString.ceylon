@@ -23,6 +23,8 @@ String treeToString(Node node, Integer level = 0) {
 		string += " (bulletChar='``n.bulletChar``', tight='``n.tight``'): \n";
 	} else if(is Link n = node) {
 		string += " (destination='``n.destination``', title='``n.title``'): \n";
+	} else if(is Image n = node) {
+		string += " (destination='``n.destination``', title='``n.title``'): \n";
 	} else {
 		string += ": \n";
 	}

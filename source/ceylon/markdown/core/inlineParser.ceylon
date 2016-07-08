@@ -213,6 +213,7 @@ shared void parseInlines(Node node, Node parent) {
 							
 						} else if(exists link = referenceMap.get(normalizeReference(str))) {
 							parent.appendChild(link);
+							link.appendChild(Text(str));
 							parent.removeChild(del.node);
 						} else {
 							delimiter = null;
@@ -220,6 +221,17 @@ shared void parseInlines(Node node, Node parent) {
 						
 						break;
 					} else if(del.delimiterChar == '!') {
+						if (exists next = text.get(i + 1), next == '(') {
+							
+						} else if(exists link = referenceMap.get(normalizeReference(str))) {
+							Image image = Image(link.destination, link.title);
+							parent.appendChild(image);
+							image.appendChild(Text(str));
+							parent.removeChild(del.node);
+						} else {
+							delimiter = null;
+						}
+						
 						break;
 					} else {
 						delimiter = del.previous;
