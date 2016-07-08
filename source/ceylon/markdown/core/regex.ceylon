@@ -5,6 +5,8 @@ import ceylon.regex {
 
 String escapable = "[!\"#$%&\'()*+,./:;<=>?@\\[\\\\\\]^_`{|}~-]";
 
+Regex whitespace = regex("[ \t\r\n]+");
+
 String escapedChar = "\\\\" + escapable;
 
 String regChar = "[^\\\\()\\x00-\\x20]";

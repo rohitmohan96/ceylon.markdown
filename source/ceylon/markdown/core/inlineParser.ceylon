@@ -61,9 +61,11 @@ void parseReference(Node node) {
 		
 		node.text = text;
 		
+		String normalizedLabel = normalizeReference(key);
+		
 		if (!referenceMap.defines(key)) {
 			Link link = Link(destination, title);
-			referenceMap.put(key, link);
+			referenceMap.put(normalizedLabel, link);
 		}
 		
 		return;
@@ -209,7 +211,7 @@ shared void parseInlines(Node node, Node parent) {
 					} else if(del.delimiterChar == '[') {
 						if (exists next = text.get(i + 1), next == '(') {
 							
-						} else if(exists link = referenceMap.get(str)) {
+						} else if(exists link = referenceMap.get(normalizeReference(str))) {
 							parent.appendChild(link);
 							parent.removeChild(del.node);
 						} else {
@@ -271,3 +273,6 @@ shared void removeLastBracket(Delimiter del, variable Delimiter? lastDelimiter) 
 		lastDelimiter = null;
 	}
 }
+
+shared String normalizeReference(String str) =>
+		 whitespace.replace(str.trimmed.lowercased, " ");
