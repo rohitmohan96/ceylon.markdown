@@ -197,20 +197,24 @@ shared void parseInlines(Node node, Node parent) {
 			case(']') {
 				parent.removeChild(node);
 				
-				if (str != "") {
-					parent.appendChild(Text(str));
-				}
-				
 				variable Delimiter? delimiter = lastDelimiter;
 				
 				while(exists del = delimiter) {
-					if(del.delimiterChar == '[' || del.delimiterChar == '!' && !del.isActive) {
+					if((del.delimiterChar == '[' || del.delimiterChar == '!') && !del.isActive) {
 						removeLastBracket(del, lastDelimiter);
 						
 						delimiter = null;
 						
 						break;
 					} else if(del.delimiterChar == '[') {
+						if (exists next = text.get(i + 1), next == '(') {
+							
+						} else if(exists link = referenceMap.get(str)) {
+							parent.appendChild(link);
+							parent.removeChild(del.node);
+						} else {
+							delimiter = null;
+						}
 						
 						break;
 					} else if(del.delimiterChar == '!') {
@@ -221,6 +225,10 @@ shared void parseInlines(Node node, Node parent) {
 				}
 				
 				if(!delimiter exists) {
+					if (str != "") {
+						parent.appendChild(Text(str));
+					}
+					
 					parent.appendChild(Text(ch.string));
 				}
 				
