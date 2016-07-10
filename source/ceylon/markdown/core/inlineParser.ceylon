@@ -73,6 +73,10 @@ void parseReference(Node node) {
 	
 	for (child in node.children) {
 		parseReference(child);
+		
+		if(is Paragraph child, is Text c = child.children[0], c.text == "") {
+			node.removeChild(child);
+		}
 	}
 }
 
