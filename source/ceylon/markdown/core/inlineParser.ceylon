@@ -189,7 +189,8 @@ shared void parseInlines(Node node, Node parent) {
 					i += tick.end;
 					Integer afterOpenTicks = i;
 					
-					while (exists matched = reTicks.find(text[i...])) {
+					for (matched in reTicks.findAll(text[i...])) {
+						
 						if (matched.matched == ticks) {
 							parent.appendChild(
 								Code {
@@ -203,11 +204,9 @@ shared void parseInlines(Node node, Node parent) {
 							i += matched.end;
 							break;
 						}
-						
-						i += matched.end;
 					}
 					
-					if(noClosingTicks) {
+					if (noClosingTicks) {
 						i = afterOpenTicks - 1;
 						parent.appendChild(Text(ticks));
 					}
