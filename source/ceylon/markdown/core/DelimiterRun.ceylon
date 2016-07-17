@@ -1,3 +1,3 @@
-shared class DelimiterRun(Integer count, Boolean canOpen, Boolean canClose) {
+shared class DelimiterRun(shared Integer count, shared Boolean canOpen, shared Boolean canClose) {
 	
 }

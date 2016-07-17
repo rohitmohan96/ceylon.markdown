@@ -102,7 +102,51 @@ shared void parseInlines(Node node, Node parent) {
 			}
 			case ('\\') {
 			}
-			case ('*' | '_' | '[') {
+			case ('*'|'_') {
+				parent.removeChild(node);
+				if (str != "") {
+					parent.appendChild(Text(str));
+				}
+				
+				value res = scanDelimiters(text, i, ch);
+				
+				Integer startIndex = i;
+				Integer numDelims = res.count;
+				i += numDelims - 1;
+				
+				Text textNode = Text(text[startIndex..i]);
+				parent.appendChild(textNode);
+				
+				if (exists last = lastDelimiter) {
+					
+					Delimiter delimiter = Delimiter {
+						node = textNode;
+						delimiterChar = ch;
+						numOfDelimiters = numDelims;
+						previous = last;
+						next = null;
+						canOpen = res.canOpen;
+						canClose = res.canClose;
+					};
+					
+					last.next = delimiter;
+					lastDelimiter = delimiter;
+				} else {
+					
+					lastDelimiter = Delimiter {
+						node = textNode;
+						delimiterChar = ch;
+						numOfDelimiters = numDelims;
+						previous = null;
+						next = null;
+						canOpen = res.canOpen;
+						canClose = res.canClose;
+					};
+				}
+				
+				str = "";
+			}
+			case ('[') {
 				parent.removeChild(node);
 				if (str != "") {
 					parent.appendChild(Text(str));
@@ -116,7 +160,7 @@ shared void parseInlines(Node node, Node parent) {
 					Delimiter delimiter = Delimiter {
 						node = textNode;
 						delimiterChar = ch;
-						numOfDelimiters = last.numOfDelimiters + 1;
+						numOfDelimiters = 1;
 						previous = last;
 						next = null;
 					};
