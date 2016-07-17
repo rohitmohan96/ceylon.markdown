@@ -1,6 +1,9 @@
 import ceylon.regex {
 	MatchResult
 }
+import ceylon.collection {
+	HashMap
+}
 
 void parseReference(Node node) {
 	
@@ -471,6 +474,63 @@ shared Document inlineParser(Document document) {
 	parseInlines(document, document);
 	
 	return document;
+}
+
+shared DelimiterRun scanDelimiters(String text, variable Integer index, Character delimiterChar) {
+	variable Integer delimiterCount = 0;
+	Integer startIndex = index;
+	while (exists ch = text[index], ch == delimiterChar) {
+		delimiterCount++;
+		index++;
+	}
+	
+	String before = startIndex == 0 then "\n" else text[startIndex-1 .. startIndex];
+	Character charAfter = text[index + 1] else '\n';
+	String after = charAfter.string;
+	
+	Boolean beforeIsPunctuation = punctuation.test(before);
+	Boolean beforeIsWhitespace = unicodeWhitespaceChar.test(before);
+	Boolean afterIsPunctuation = punctuation.test(after);
+	Boolean afterIsWhitespace = unicodeWhitespaceChar.test(after);
+	
+	Boolean leftFlanking = !afterIsWhitespace && !(afterIsPunctuation && !beforeIsWhitespace && !beforeIsPunctuation);
+	Boolean rightFlanking = !beforeIsWhitespace && !(beforeIsPunctuation && !afterIsWhitespace && !afterIsPunctuation);
+	variable Boolean canOpen;
+	variable Boolean canClose;
+	if (delimiterChar == '_') {
+		canOpen = leftFlanking && (!rightFlanking || beforeIsPunctuation);
+		canClose = rightFlanking && (!leftFlanking || afterIsPunctuation);
+	} else {
+		canOpen = leftFlanking;
+		canClose = rightFlanking;
+	}
+	
+	// index = startIndex;
+	
+	return DelimiterRun(delimiterCount, canOpen, canClose);
+}
+
+shared void processEmphasis(Node parent, Delimiter? stackBottom, variable Delimiter? lastDelimiter) {
+	variable Delimiter? currentPosition;
+	if (exists stackBottom) {
+		currentPosition = stackBottom.next;
+	} else {
+		variable Delimiter? del = null;
+		while (exists delimiter = lastDelimiter) {
+			del = delimiter;
+			lastDelimiter = delimiter.previous;
+		}
+		currentPosition = del;
+	}
+	
+	value openBottom = HashMap {
+		'*'->stackBottom,
+		'_'->stackBottom
+	};
+	
+	while (exists cp = currentPosition) {
+		currentPosition = cp.next;
+	}
 }
 
 shared Delimiter? removeLastBracket(Delimiter del, variable Delimiter? lastDelimiter) {

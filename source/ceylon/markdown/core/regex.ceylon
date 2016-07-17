@@ -102,3 +102,9 @@ Regex[] htmlBlockClose = [
 	regex(">"),
 	regex("\\]\\]>")
 ];
+
+String asciiPunctuation = "'!\"#\\$%&\\(\\)\\*\\+,\\-\\./:;<=>\\?@\\[\\\\\\]\\^_`\\{\\|\\}~";
+
+Regex punctuation = regex("^[" + asciiPunctuation + "\\p{Pc}\\p{Pd}\\p{Pe}\\p{Pf}\\p{Pi}\\p{Po}\\p{Ps}]");
+
+Regex unicodeWhitespaceChar = regex("^[\\p{Zs}\t\r\n\f]");
