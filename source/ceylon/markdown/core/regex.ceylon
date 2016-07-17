@@ -15,6 +15,10 @@ String inParensNoSP = "\\((" + regChar + "|" + escapedChar + "|\\\\)*\\)";
 
 Regex spnl = regex("^ *(?:\n *)?");
 
+Regex ticksHere = regex("^`+");
+
+Regex reTicks = regex("`+");
+
 String linkLabel = "^\\[(?:[^\\\\\\[\\]]|" + escapedChar + "|\\\\){1,1000}\\]";
 
 Regex linkReferencePattern = regex(linkLabel + ":");

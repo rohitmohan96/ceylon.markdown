@@ -87,21 +87,15 @@ shared void parseInlines(Node node, Node parent) {
 		String text = node.text;
 		variable String str = "";
 		variable Integer i = 0;
-		variable Boolean tick = false;
 		
 		while (i < text.size) {
 			Character ch = text[i] else ' ';
 			switch (ch)
 			case ('\n') {
-				if (!tick) {
-					parent.removeChild(node);
-					parent.appendChild(Text(str.trimTrailing(' '.equals)));
-					parent.appendChild(str.endsWith("  ") then HardBreak() else SoftBreak());
-					str = "";
-				} else {
-					str = str.trimTrailing(' '.equals);
-					str += " ";
-				}
+				parent.removeChild(node);
+				parent.appendChild(Text(str.trimTrailing(' '.equals)));
+				parent.appendChild(str.endsWith("  ") then HardBreak() else SoftBreak());
+				str = "";
 			}
 			case ('\\') {
 			}
@@ -182,16 +176,43 @@ shared void parseInlines(Node node, Node parent) {
 			case ('`') {
 				parent.removeChild(node);
 				
-				if (!tick) {
-					tick = true;
-					if (str != "") {
-						parent.appendChild(Text(str));
+				if (str != "") {
+					parent.appendChild(Text(str));
+				}
+				
+				variable Boolean noClosingTicks = true;
+				
+				value tick = ticksHere.find(text[i...]);
+				
+				if (exists tick) {
+					String ticks = tick.matched;
+					i += tick.end;
+					Integer afterOpenTicks = i;
+					
+					while (exists matched = reTicks.find(text[i...])) {
+						if (matched.matched == ticks) {
+							parent.appendChild(
+								Code {
+									text = whitespace.replace {
+										input = text[afterOpenTicks:matched.start].trimmed;
+										replacement = " ";
+									};
+								});
+							
+							noClosingTicks = false;
+							i += matched.end;
+							break;
+						}
+						
+						i += matched.end;
 					}
-					str = "`";
-				} else {
-					parent.appendChild(Code(str.trimmed.removeInitial("`")));
+					
+					if(noClosingTicks) {
+						i = afterOpenTicks - 1;
+						parent.appendChild(Text(ticks));
+					}
+					
 					str = "";
-					tick = false;
 				}
 			}
 			case (']') {
@@ -402,8 +423,6 @@ shared void parseInlines(Node node, Node parent) {
 		}
 		
 		if (str != text, str != "") {
-			parent.appendChild(Text(str));
-		} else if (tick) {
 			parent.appendChild(Text(str));
 		}
 	}
