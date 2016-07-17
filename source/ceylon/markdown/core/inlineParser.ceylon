@@ -366,7 +366,7 @@ shared void parseInlines(Node node, Node parent) {
 								}
 								
 								if (reference.trimmed.startsWith(")")) {
-									Link link = Link(destination, title);
+									Image link = Image(destination, title);
 									parent.appendChild(link);
 									link.appendChild(Text(whitespace.replace(str.trimmed, " ")));
 									parent.removeChild(del.node);
