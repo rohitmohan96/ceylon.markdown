@@ -208,6 +208,81 @@ shared void parseInlines(Node node, Node parent) {
 						break;
 					} else if (del.delimiterChar == '[') {
 						if (exists next = text.get(i + 1), next == '(') {
+							Integer init = i;
+							i++;
+							variable String reference = text[i + 1...];
+							variable String destination = "";
+							variable String title = "";
+							
+							MatchResult? destBraces = linkDestinationBraces.find(reference);
+							
+							MatchResult? dest = linkDestination.find(reference);
+							
+							if (exists destBraces) {
+								destination = destBraces
+										.matched
+										.replaceFirst("<", "")
+										.replaceLast(">", "");
+								
+								reference = reference[destBraces.end...];
+								
+								i+= destBraces.end;
+								
+								if (exists spnl = spnl.find(reference)) {
+									i += spnl.end;
+									reference = reference[spnl.end...];
+								}
+							} else if (exists dest) {
+								destination = dest.matched;
+								
+								reference = reference[dest.end...];
+								i += dest.end;
+								
+								if (exists spnl = spnl.find(reference)) {
+									i += spnl.end;
+									reference = reference[spnl.end...];
+								}
+								
+							} 
+							
+							MatchResult? linkTitle = linkTitlePattern.find(reference);
+							
+							if(destination != "") {
+								if (exists linkTitle) {
+									title = linkTitle.matched[1 .. linkTitle.end-2];
+									
+									reference = reference[linkTitle.end...];
+									i += linkTitle.end;
+									
+									if (exists spnl = spnl.find(reference)) {
+										i += spnl.end;
+										reference = reference[spnl.end...];
+									}
+								}
+								
+								if(reference.trimmed.startsWith(")")) {
+									Link link = Link(destination, title);
+									parent.appendChild(link);
+									link.appendChild(Text(whitespace.replace(str.trimmed, " ")));
+									parent.removeChild(del.node);
+									removeLastBracket(del, lastDelimiter);
+									
+									i++;
+								} else {
+									if(str != "") {
+										parent.appendChild(Text(str));
+									}
+								parent.appendChild(Text(ch.string));
+								i = init;
+								}
+							} else {
+								if(str != "") {
+									parent.appendChild(Text(str));
+								}
+								parent.appendChild(Text(ch.string));
+								i = init;
+							}
+							
 						} else if (exists link = referenceMap.get(normalizeReference(str))) {
 							parent.appendChild(link);
 							link.appendChild(Text(whitespace.replace(str.trimmed, " ")));
@@ -217,7 +292,7 @@ shared void parseInlines(Node node, Node parent) {
 							delimiter = null;
 						}
 						
-						break;
+					    break;
 					} else if (del.delimiterChar == '!') {
 						if (exists next = text.get(i + 1), next == '(') {
 						} else if (exists link = referenceMap.get(normalizeReference(str))) {
@@ -236,6 +311,7 @@ shared void parseInlines(Node node, Node parent) {
 					}
 				}
 				
+				// not a link or image
 				if (!delimiter exists) {
 					if (str != "") {
 						parent.appendChild(Text(str));

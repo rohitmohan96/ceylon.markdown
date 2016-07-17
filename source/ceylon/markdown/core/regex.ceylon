@@ -13,6 +13,8 @@ String regChar = "[^\\\\()\\x00-\\x20]";
 
 String inParensNoSP = "\\((" + regChar + "|" + escapedChar + "|\\\\)*\\)";
 
+Regex spnl = regex("^ *(?:\n *)?");
+
 String linkLabel = "^\\[(?:[^\\\\\\[\\]]|" + escapedChar + "|\\\\){1,1000}\\]";
 
 Regex linkReferencePattern = regex(linkLabel + ":");
