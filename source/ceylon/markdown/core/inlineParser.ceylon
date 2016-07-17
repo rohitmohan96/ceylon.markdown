@@ -74,7 +74,7 @@ void parseReference(Node node) {
 	for (child in node.children) {
 		parseReference(child);
 		
-		if(is Paragraph child, is Text c = child.children[0], c.text == "") {
+		if (is Paragraph child, is Text c = child.children[0], c.text == "") {
 			node.removeChild(child);
 		}
 	}
@@ -86,10 +86,11 @@ shared void parseInlines(Node node, Node parent) {
 	if (is Text node) {
 		String text = node.text;
 		variable String str = "";
+		variable Integer i = 0;
 		variable Boolean tick = false;
-		variable Boolean bang = false;
 		
-		for (i->ch in text.indexed) {
+		while (i < text.size) {
+			Character ch = text[i] else ' ';
 			switch (ch)
 			case ('\n') {
 				if (!tick) {
@@ -106,43 +107,37 @@ shared void parseInlines(Node node, Node parent) {
 			}
 			case ('*' | '_' | '[') {
 				parent.removeChild(node);
+				if (str != "") {
+					parent.appendChild(Text(str));
+				}
 				
-				if (bang) {
-					bang = false;
+				Text textNode = Text(ch.string);
+				parent.appendChild(textNode);
+				
+				if (exists last = lastDelimiter) {
+					
+					Delimiter delimiter = Delimiter {
+						node = textNode;
+						delimiterChar = ch;
+						numOfDelimiters = last.numOfDelimiters + 1;
+						previous = last;
+						next = null;
+					};
+					
+					last.next = delimiter;
+					lastDelimiter = delimiter;
 				} else {
 					
-					if (str != "") {
-						parent.appendChild(Text(str));
-					}
-					
-					Text textNode = Text(ch.string);
-					parent.appendChild(textNode);
-					
-					if (exists last = lastDelimiter) {
-						
-						Delimiter delimiter = Delimiter {
-							node = textNode;
-							delimiterChar = ch;
-							numOfDelimiters = last.numOfDelimiters + 1;
-							previous = last;
-							next = null;
-						};
-						
-						last.next = delimiter;
-						lastDelimiter = delimiter;
-					} else {
-						
-						lastDelimiter = Delimiter {
-							node = textNode;
-							delimiterChar = ch;
-							numOfDelimiters = 1;
-							previous = null;
-							next = null;
-						};
-					}
-					
-					str = "";
+					lastDelimiter = Delimiter {
+						node = textNode;
+						delimiterChar = ch;
+						numOfDelimiters = 1;
+						previous = null;
+						next = null;
+					};
 				}
+				
+				str = "";
 			}
 			case ('!') {
 				parent.removeChild(node);
@@ -154,8 +149,7 @@ shared void parseInlines(Node node, Node parent) {
 				if (exists next = text.get(i + 1), next == '[') {
 					Text textNode = Text("![");
 					parent.appendChild(textNode);
-					
-					bang = true;
+					i++; //skip next [
 					if (exists last = lastDelimiter) {
 						
 						Delimiter delimiter = Delimiter {
@@ -200,22 +194,21 @@ shared void parseInlines(Node node, Node parent) {
 					tick = false;
 				}
 			}
-			case(']') {
+			case (']') {
 				parent.removeChild(node);
 				
 				variable Delimiter? delimiter = lastDelimiter;
 				
-				while(exists del = delimiter) {
-					if((del.delimiterChar == '[' || del.delimiterChar == '!') && !del.isActive) {
+				while (exists del = delimiter) {
+					if ((del.delimiterChar=='[' || del.delimiterChar=='!') && !del.isActive) {
 						removeLastBracket(del, lastDelimiter);
 						
 						delimiter = null;
 						
 						break;
-					} else if(del.delimiterChar == '[') {
+					} else if (del.delimiterChar == '[') {
 						if (exists next = text.get(i + 1), next == '(') {
-							
-						} else if(exists link = referenceMap.get(normalizeReference(str))) {
+						} else if (exists link = referenceMap.get(normalizeReference(str))) {
 							parent.appendChild(link);
 							link.appendChild(Text(whitespace.replace(str.trimmed, " ")));
 							parent.removeChild(del.node);
@@ -225,10 +218,9 @@ shared void parseInlines(Node node, Node parent) {
 						}
 						
 						break;
-					} else if(del.delimiterChar == '!') {
+					} else if (del.delimiterChar == '!') {
 						if (exists next = text.get(i + 1), next == '(') {
-							
-						} else if(exists link = referenceMap.get(normalizeReference(str))) {
+						} else if (exists link = referenceMap.get(normalizeReference(str))) {
 							Image image = Image(link.destination, link.title);
 							parent.appendChild(image);
 							image.appendChild(Text(whitespace.replace(str.trimmed, " ")));
@@ -244,7 +236,7 @@ shared void parseInlines(Node node, Node parent) {
 					}
 				}
 				
-				if(!delimiter exists) {
+				if (!delimiter exists) {
 					if (str != "") {
 						parent.appendChild(Text(str));
 					}
@@ -257,6 +249,8 @@ shared void parseInlines(Node node, Node parent) {
 			else {
 				str += ch.string;
 			}
+			
+			i++;
 		}
 		
 		if (str != text, str != "") {
@@ -280,12 +274,12 @@ shared Document inlineParser(Document document) {
 }
 
 shared void removeLastBracket(Delimiter del, variable Delimiter? lastDelimiter) {
-	if(exists prev = del.previous, exists next = del.next) {
+	if (exists prev = del.previous, exists next = del.next) {
 		prev.next = del.next;
 		next.previous = prev;
-	} else if(exists prev = del.previous) {
+	} else if (exists prev = del.previous) {
 		prev.next = null;
-	} else if(exists next = del.next) {
+	} else if (exists next = del.next) {
 		next.previous = null;
 	} else {
 		lastDelimiter = null;
@@ -293,4 +287,4 @@ shared void removeLastBracket(Delimiter del, variable Delimiter? lastDelimiter) 
 }
 
 shared String normalizeReference(String str) =>
-		 whitespace.replace(str.trimmed.lowercased, " ");
+	whitespace.replace(str.trimmed.lowercased, " ");
