@@ -3,6 +3,6 @@ shared class Delimiter(shared Text node,
 	shared variable Integer numOfDelimiters,
 	shared variable Delimiter? previous,
 	shared variable Delimiter? next,
-	shared Boolean isActive = true) {
+	shared variable Boolean active = true) {
 	
 }

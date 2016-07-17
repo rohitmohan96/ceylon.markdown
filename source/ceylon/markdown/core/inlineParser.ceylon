@@ -220,8 +220,8 @@ shared void parseInlines(Node node, Node parent) {
 				variable Delimiter? delimiter = lastDelimiter;
 				
 				while (exists del = delimiter) {
-					if ((del.delimiterChar=='[' || del.delimiterChar=='!') && !del.isActive) {
-						removeLastBracket(del, lastDelimiter);
+					if ((del.delimiterChar=='[' || del.delimiterChar=='!') && !del.active) {
+						lastDelimiter = removeLastBracket(del, lastDelimiter);
 						
 						delimiter = null;
 						
@@ -281,10 +281,27 @@ shared void parseInlines(Node node, Node parent) {
 								
 								if (reference.trimmed.startsWith(")")) {
 									Link link = Link(destination, title);
+									value firstIndexWhere = parent.children.firstIndexWhere((Node element) => element == del.node) else 0;
+									link.children = parent.children[firstIndexWhere+1 ...];
+									parent.children = parent.children[...firstIndexWhere];
 									parent.appendChild(link);
-									link.appendChild(Text(whitespace.replace(str.trimmed, " ")));
+									
+									if (str != "") {
+										link.appendChild(Text(whitespace.replace(str.trimmed, " ")));
+									}
+									
+									variable Delimiter? prev = del;
+									
+									// set all previous [ to inactive to prevent nested links
+									while (exists d = prev) {
+										if (d.delimiterChar == '[') {
+											d.active = false;
+										}
+										prev = d.previous;
+									}
+									
 									parent.removeChild(del.node);
-									removeLastBracket(del, lastDelimiter);
+									lastDelimiter = removeLastBracket(del, lastDelimiter);
 									
 									i++;
 								} else {
@@ -305,7 +322,17 @@ shared void parseInlines(Node node, Node parent) {
 							parent.appendChild(link);
 							link.appendChild(Text(whitespace.replace(str.trimmed, " ")));
 							parent.removeChild(del.node);
-							removeLastBracket(del, lastDelimiter);
+							lastDelimiter = removeLastBracket(del, lastDelimiter);
+							
+							variable Delimiter? prev = del;
+							
+							// set all previous [ to inactive to prevent nested links
+							while (exists d = prev) {
+								if (d.delimiterChar == '[') {
+									d.active = false;
+								}
+								prev = d.previous;
+							}
 						} else {
 							delimiter = null;
 						}
@@ -367,10 +394,17 @@ shared void parseInlines(Node node, Node parent) {
 								
 								if (reference.trimmed.startsWith(")")) {
 									Image link = Image(destination, title);
+									value firstIndexWhere = parent.children.firstIndexWhere((Node element) => element == del.node) else 0;
+									link.children = parent.children[firstIndexWhere+1 ...];
+									parent.children = parent.children[...firstIndexWhere];
 									parent.appendChild(link);
-									link.appendChild(Text(whitespace.replace(str.trimmed, " ")));
+									
+									if (str != "") {
+										link.appendChild(Text(whitespace.replace(str.trimmed, " ")));
+									}
+									
 									parent.removeChild(del.node);
-									removeLastBracket(del, lastDelimiter);
+									lastDelimiter = removeLastBracket(del, lastDelimiter);
 									
 									i++;
 								} else {
@@ -392,7 +426,7 @@ shared void parseInlines(Node node, Node parent) {
 							parent.appendChild(image);
 							image.appendChild(Text(whitespace.replace(str.trimmed, " ")));
 							parent.removeChild(del.node);
-							removeLastBracket(del, lastDelimiter);
+							lastDelimiter = removeLastBracket(del, lastDelimiter);
 						} else {
 							delimiter = null;
 						}
@@ -439,7 +473,7 @@ shared Document inlineParser(Document document) {
 	return document;
 }
 
-shared void removeLastBracket(Delimiter del, variable Delimiter? lastDelimiter) {
+shared Delimiter? removeLastBracket(Delimiter del, variable Delimiter? lastDelimiter) {
 	if (exists prev = del.previous, exists next = del.next) {
 		prev.next = del.next;
 		next.previous = prev;
@@ -450,6 +484,12 @@ shared void removeLastBracket(Delimiter del, variable Delimiter? lastDelimiter) 
 	} else {
 		lastDelimiter = null;
 	}
+	
+	if (exists d = lastDelimiter, del == d) {
+		lastDelimiter = d.previous;
+	}
+	
+	return lastDelimiter;
 }
 
 shared String normalizeReference(String str) =>
