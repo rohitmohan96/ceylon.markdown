@@ -517,6 +517,13 @@ shared void parseInlines(Node node, Node parent) {
 					parent.appendChild(link);
 					
 					i += match.end - 1;
+				} else if(exists match = reHtmlTag.find(text[i...])) {
+					HtmlInline htmlInline = HtmlInline(match.matched);
+					parent.appendChild(htmlInline);
+					
+					i += match.end - 1;
+				} else {
+					parent.appendChild(Text(ch.string));
 				}
 				
 				str = "";

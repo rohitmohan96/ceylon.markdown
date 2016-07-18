@@ -113,3 +113,11 @@ Regex emailAutoLink = regex("^<([a-zA-Z0-9.!#$%&'*+\\/=?^_\`{|}~-]+@[a-zA-Z0-9](
 
 Regex autoLink = regex("^<[A-Za-z][A-Za-z0-9.+-]{1,31}:[^<>\\x00-\\x20]*>", false, true);
 
+String htmlComment = "<!---->|<!--(?:-?[^>-])(?:-?[^-])*-->";
+String processingInstruction = "[<][?].*?[?][>]";
+String declaration = "<![A-Z]+" + "\\s+[^>]*>";
+String cData = "<!\\[CDATA\\[[\\s\\S]*?\\]\\]>";
+String htmlTag = "(?:" + openTag + "|" + closeTag + "|" + htmlComment + "|" +
+		processingInstruction + "|" + declaration + "|" + cData + ")";
+
+Regex reHtmlTag = regex("^" + htmlTag, false, true);
