@@ -121,3 +121,5 @@ String htmlTag = "(?:" + openTag + "|" + closeTag + "|" + htmlComment + "|" +
 		processingInstruction + "|" + declaration + "|" + cData + ")";
 
 Regex reHtmlTag = regex("^" + htmlTag, false, true);
+
+Regex reEscapable = regex("^" + escapable);

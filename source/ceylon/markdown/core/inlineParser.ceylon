@@ -101,8 +101,64 @@ shared void parseInlines(Node node, Node parent) {
 				str = "";
 			}
 			case ('\\') {
+				parent.removeChild(node);
+				print(true);
+				if (str != "") {
+					parent.appendChild(Text(str));
+				}
+				i++;
+				if (exists next = text[i], next == '\n') {
+					parent.appendChild(HardBreak());
+				} else if (exists next = text[i], reEscapable.test(next.string)) {
+					parent.appendChild(Text(next.string));
+				} else {
+					parent.appendChild(Text(ch.string));
+				}
+				
+				str = "";
 			}
-			case ('*'|'_') {
+			case ('`') {
+				parent.removeChild(node);
+				
+				if (str != "") {
+					parent.appendChild(Text(str));
+				}
+				
+				variable Boolean noClosingTicks = true;
+				
+				value tick = ticksHere.find(text[i...]);
+				
+				if (exists tick) {
+					String ticks = tick.matched;
+					i += tick.end;
+					Integer afterOpenTicks = i;
+					
+					for (matched in reTicks.findAll(text[i...])) {
+						
+						if (matched.matched == ticks) {
+							parent.appendChild(
+								Code {
+									text = whitespace.replace {
+										input = text[afterOpenTicks:matched.start].trimmed;
+										replacement = " ";
+									};
+								});
+							
+							noClosingTicks = false;
+							i += matched.end;
+							break;
+						}
+					}
+					
+					if (noClosingTicks) {
+						i = afterOpenTicks - 1;
+						parent.appendChild(Text(ticks));
+					}
+					
+					str = "";
+				}
+			}
+			case ('*' | '_') {
 				parent.removeChild(node);
 				if (str != "") {
 					parent.appendChild(Text(str));
@@ -112,7 +168,7 @@ shared void parseInlines(Node node, Node parent) {
 				
 				Integer startIndex = i;
 				Integer numDelims = res.count;
-				i += numDelims - 1;
+				i += numDelims-1;
 				
 				Text textNode = Text(text[startIndex..i]);
 				parent.appendChild(textNode);
@@ -219,47 +275,6 @@ shared void parseInlines(Node node, Node parent) {
 				}
 				
 				str = "";
-			}
-			case ('`') {
-				parent.removeChild(node);
-				
-				if (str != "") {
-					parent.appendChild(Text(str));
-				}
-				
-				variable Boolean noClosingTicks = true;
-				
-				value tick = ticksHere.find(text[i...]);
-				
-				if (exists tick) {
-					String ticks = tick.matched;
-					i += tick.end;
-					Integer afterOpenTicks = i;
-					
-					for (matched in reTicks.findAll(text[i...])) {
-						
-						if (matched.matched == ticks) {
-							parent.appendChild(
-								Code {
-									text = whitespace.replace {
-										input = text[afterOpenTicks:matched.start].trimmed;
-										replacement = " ";
-									};
-								});
-							
-							noClosingTicks = false;
-							i += matched.end;
-							break;
-						}
-					}
-					
-					if (noClosingTicks) {
-						i = afterOpenTicks - 1;
-						parent.appendChild(Text(ticks));
-					}
-					
-					str = "";
-				}
 			}
 			case (']') {
 				parent.removeChild(node);
@@ -494,40 +509,42 @@ shared void parseInlines(Node node, Node parent) {
 				}
 				
 				str = "";
-			} case ('<') {
+			}
+			case ('<') {
 				parent.removeChild(node);
-				if(str != "") {
+				if (str != "") {
 					parent.appendChild(Text(str));
 				}
 				
 				String destination;
 				if (exists match = emailAutoLink.find(text[i...])) {
-					destination = match.matched[1..match.end - 2];
+					destination = match.matched[1 .. match.end-2];
 					
 					Link link = Link("mailto:" + destination);
 					link.appendChild(Text(destination));
 					parent.appendChild(link);
 					
-					i += match.end - 1;
-				} else if(exists match = autoLink.find(text[i...])) {
-					destination = match.matched[1..match.end - 2];
+					i += match.end-1;
+				} else if (exists match = autoLink.find(text[i...])) {
+					destination = match.matched[1 .. match.end-2];
 					
 					Link link = Link(destination);
 					link.appendChild(Text(destination));
 					parent.appendChild(link);
 					
-					i += match.end - 1;
-				} else if(exists match = reHtmlTag.find(text[i...])) {
+					i += match.end-1;
+				} else if (exists match = reHtmlTag.find(text[i...])) {
 					HtmlInline htmlInline = HtmlInline(match.matched);
 					parent.appendChild(htmlInline);
 					
-					i += match.end - 1;
+					i += match.end-1;
 				} else {
 					parent.appendChild(Text(ch.string));
 				}
 				
 				str = "";
-			} else {
+			}
+			else {
 				str += ch.string;
 			}
 			
