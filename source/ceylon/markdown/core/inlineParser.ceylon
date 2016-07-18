@@ -102,7 +102,6 @@ shared void parseInlines(Node node, Node parent) {
 			}
 			case ('\\') {
 				parent.removeChild(node);
-				print(true);
 				if (str != "") {
 					parent.appendChild(Text(str));
 				}

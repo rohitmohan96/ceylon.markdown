@@ -170,7 +170,19 @@ String heading1Tree = "Document:
                        \t\t\t\"heading\"
                        \tHeading (5): 
                        \t\tText: 
-                       \t\t\t\"heading \\#\\#\\#\\#\\######\"
+                       \t\t\t\"heading \"
+                       \t\tText: 
+                       \t\t\t\"#\"
+                       \t\tText: 
+                       \t\t\t\"#\"
+                       \t\tText: 
+                       \t\t\t\"#\"
+                       \t\tText: 
+                       \t\t\t\"#\"
+                       \t\tText: 
+                       \t\t\t\"#\"
+                       \t\tText: 
+                       \t\t\t\"#####\"
                        \tParagraph: 
                        \t\tText: 
                        \t\t\t\"############ not a heading\"
@@ -194,8 +206,10 @@ String heading2Tree = "Document:
                        \t\t\t\"heading\"
                        \tParagraph: 
                        \t\tText: 
-                       \t\t\t\"not a heading
-                       ----------------------------------- text\"
+                       \t\t\t\"not a heading\"
+                       \t\tSoftBreak: 
+                       \t\tText: 
+                       \t\t\t\"----------------------------------- text\"
                        ";
 
 String fencedCodeMd = "\`\`\`\`\`\`\`\`\`\`text
@@ -213,9 +227,8 @@ String fencedCodeMd = "\`\`\`\`\`\`\`\`\`\`text
                        ";
 
 String fencedCodeTree = "Document: 
-                         	FencedCode: 
-                         		\"
-                         an
+                         \tFencedCode: 
+                         \t\t\"an
                          example
                          \`\`\`
                          of
@@ -243,7 +256,9 @@ String thematicBreakTree = "Document:
                             	ThematicBreak: 
                             	Paragraph: 
                             		Text: 
-                            			\"************************* text\"
+                            			\"*************************\"
+                            		Text: 
+                            			\" text\"
                             ";
 
 String htmlBlockMd = "<div class=\"this is an html block\">
