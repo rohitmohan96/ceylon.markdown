@@ -494,8 +494,33 @@ shared void parseInlines(Node node, Node parent) {
 				}
 				
 				str = "";
-			}
-			else {
+			} case ('<') {
+				parent.removeChild(node);
+				if(str != "") {
+					parent.appendChild(Text(str));
+				}
+				
+				String destination;
+				if (exists match = emailAutoLink.find(text[i...])) {
+					destination = match.matched[1..match.end - 2];
+					
+					Link link = Link("mailto:" + destination);
+					link.appendChild(Text(destination));
+					parent.appendChild(link);
+					
+					i += match.end - 1;
+				} else if(exists match = autoLink.find(text[i...])) {
+					destination = match.matched[1..match.end - 2];
+					
+					Link link = Link(destination);
+					link.appendChild(Text(destination));
+					parent.appendChild(link);
+					
+					i += match.end - 1;
+				}
+				
+				str = "";
+			} else {
 				str += ch.string;
 			}
 			
