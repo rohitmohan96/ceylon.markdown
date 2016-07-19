@@ -96,7 +96,9 @@ shared void parseInlines(Node node, Node parent) {
 			switch (ch)
 			case ('\n') {
 				parent.removeChild(node);
-				parent.appendChild(Text(str.trimTrailing(' '.equals)));
+				if(str != "") {
+					parent.appendChild(Text(str.trimTrailing(' '.equals)));
+				}
 				parent.appendChild(str.endsWith("  ") then HardBreak() else SoftBreak());
 				str = "";
 			}
@@ -144,7 +146,7 @@ shared void parseInlines(Node node, Node parent) {
 								});
 							
 							noClosingTicks = false;
-							i += matched.end;
+							i += matched.end - 1;
 							break;
 						}
 					}
@@ -539,6 +541,21 @@ shared void parseInlines(Node node, Node parent) {
 					parent.appendChild(htmlInline);
 					
 					i += match.end-1;
+				} else {
+					parent.appendChild(Text(ch.string));
+				}
+				
+				str = "";
+			}
+			case ('&') {
+				parent.removeChild(node);
+				if (str != "") {
+					parent.appendChild(Text(str));
+				}
+				
+				if (exists match = reEntityHere.find(text[i...])) {
+					i += match.end - 1;
+					parent.appendChild(Text(match.matched));
 				} else {
 					parent.appendChild(Text(ch.string));
 				}

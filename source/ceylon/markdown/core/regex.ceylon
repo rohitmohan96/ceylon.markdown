@@ -123,3 +123,7 @@ String htmlTag = "(?:" + openTag + "|" + closeTag + "|" + htmlComment + "|" +
 Regex reHtmlTag = regex("^" + htmlTag, false, true);
 
 Regex reEscapable = regex("^" + escapable);
+
+String entity = "&(?:#x[a-f0-9]{1,8}|#[0-9]{1,8}|[a-z][a-z0-9]{1,31});";
+
+Regex reEntityHere = regex("^" + entity, false, true);
