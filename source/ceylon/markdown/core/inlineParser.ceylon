@@ -96,7 +96,7 @@ shared void parseInlines(Node node, Node parent) {
 			switch (ch)
 			case ('\n') {
 				parent.removeChild(node);
-				if(str != "") {
+				if (str != "") {
 					parent.appendChild(Text(str.trimTrailing(' '.equals)));
 				}
 				parent.appendChild(str.endsWith("  ") then HardBreak() else SoftBreak());
@@ -146,7 +146,7 @@ shared void parseInlines(Node node, Node parent) {
 								});
 							
 							noClosingTicks = false;
-							i += matched.end - 1;
+							i += matched.end-1;
 							break;
 						}
 					}
@@ -341,39 +341,33 @@ shared void parseInlines(Node node, Node parent) {
 										reference = reference[spnl.end...];
 									}
 								}
+							}
+							
+							if (reference.trimmed.startsWith(")")) {
+								Link link = Link(destination, title);
+								value firstIndexWhere = parent.children.firstIndexWhere((Node element) => element == del.node) else 0;
+								link.children = parent.children[firstIndexWhere+1 ...];
+								parent.children = parent.children[...firstIndexWhere];
+								parent.appendChild(link);
 								
-								if (reference.trimmed.startsWith(")")) {
-									Link link = Link(destination, title);
-									value firstIndexWhere = parent.children.firstIndexWhere((Node element) => element == del.node) else 0;
-									link.children = parent.children[firstIndexWhere+1 ...];
-									parent.children = parent.children[...firstIndexWhere];
-									parent.appendChild(link);
-									
-									if (str != "") {
-										link.appendChild(Text(whitespace.replace(str.trimmed, " ")));
-									}
-									
-									variable Delimiter? prev = del;
-									
-									// set all previous [ to inactive to prevent nested links
-									while (exists d = prev) {
-										if (d.delimiterChar == '[') {
-											d.active = false;
-										}
-										prev = d.previous;
-									}
-									
-									parent.removeChild(del.node);
-									lastDelimiter = removeLastBracket(del, lastDelimiter);
-									
-									i++;
-								} else {
-									if (str != "") {
-										parent.appendChild(Text(str));
-									}
-									parent.appendChild(Text(ch.string));
-									i = init;
+								if (str != "") {
+									link.appendChild(Text(whitespace.replace(str.trimmed, " ")));
 								}
+								
+								variable Delimiter? prev = del;
+								
+								// set all previous [ to inactive to prevent nested links
+								while (exists d = prev) {
+									if (d.delimiterChar == '[') {
+										d.active = false;
+									}
+									prev = d.previous;
+								}
+								
+								parent.removeChild(del.node);
+								lastDelimiter = removeLastBracket(del, lastDelimiter);
+								
+								i++;
 							} else {
 								if (str != "") {
 									parent.appendChild(Text(str));
@@ -385,7 +379,7 @@ shared void parseInlines(Node node, Node parent) {
 							Link newLink = Link(link.destination, link.title);
 							parent.appendChild(newLink);
 							// children to be appended to newLink and not link
-							newLink.appendChild(Text(whitespace.replace(str.trimmed, " "))); 
+							newLink.appendChild(Text(whitespace.replace(str.trimmed, " ")));
 							parent.removeChild(del.node);
 							lastDelimiter = removeLastBracket(del, lastDelimiter);
 							
@@ -456,29 +450,22 @@ shared void parseInlines(Node node, Node parent) {
 										reference = reference[spnl.end...];
 									}
 								}
+							}
+							if (reference.trimmed.startsWith(")")) {
+								Image link = Image(destination, title);
+								value firstIndexWhere = parent.children.firstIndexWhere((Node element) => element == del.node) else 0;
+								link.children = parent.children[firstIndexWhere+1 ...];
+								parent.children = parent.children[...firstIndexWhere];
+								parent.appendChild(link);
 								
-								if (reference.trimmed.startsWith(")")) {
-									Image link = Image(destination, title);
-									value firstIndexWhere = parent.children.firstIndexWhere((Node element) => element == del.node) else 0;
-									link.children = parent.children[firstIndexWhere+1 ...];
-									parent.children = parent.children[...firstIndexWhere];
-									parent.appendChild(link);
-									
-									if (str != "") {
-										link.appendChild(Text(whitespace.replace(str.trimmed, " ")));
-									}
-									
-									parent.removeChild(del.node);
-									lastDelimiter = removeLastBracket(del, lastDelimiter);
-									
-									i++;
-								} else {
-									if (str != "") {
-										parent.appendChild(Text(str));
-									}
-									parent.appendChild(Text(ch.string));
-									i = init;
+								if (str != "") {
+									link.appendChild(Text(whitespace.replace(str.trimmed, " ")));
 								}
+								
+								parent.removeChild(del.node);
+								lastDelimiter = removeLastBracket(del, lastDelimiter);
+								
+								i++;
 							} else {
 								if (str != "") {
 									parent.appendChild(Text(str));
@@ -554,7 +541,7 @@ shared void parseInlines(Node node, Node parent) {
 				}
 				
 				if (exists match = reEntityHere.find(text[i...])) {
-					i += match.end - 1;
+					i += match.end-1;
 					parent.appendChild(Text(match.matched));
 				} else {
 					parent.appendChild(Text(ch.string));
