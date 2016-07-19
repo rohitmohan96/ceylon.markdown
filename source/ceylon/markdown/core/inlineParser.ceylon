@@ -7,11 +7,11 @@ import ceylon.collection {
 
 void parseReference(Node node) {
 	
-	String key;
-	String destination;
+	variable String key;
+	variable String destination;
 	variable String title = "";
 	
-	if (is Text node) {
+	while (is Text node, node.text.startsWith("[")) {
 		variable String text = node.text;
 		
 		MatchResult? linkRef = linkReferencePattern.find(text);
@@ -71,7 +71,7 @@ void parseReference(Node node) {
 			referenceMap.put(normalizedLabel, link);
 		}
 		
-		return;
+		// return;
 	}
 	
 	for (child in node.children) {
@@ -380,8 +380,10 @@ shared void parseInlines(Node node, Node parent) {
 								i = init;
 							}
 						} else if (exists link = referenceMap.get(normalizeReference(str))) {
-							parent.appendChild(link);
-							link.appendChild(Text(whitespace.replace(str.trimmed, " ")));
+							Link newLink = Link(link.destination, link.title);
+							parent.appendChild(newLink);
+							// children to be appended to newLink and not link
+							newLink.appendChild(Text(whitespace.replace(str.trimmed, " "))); 
 							parent.removeChild(del.node);
 							lastDelimiter = removeLastBracket(del, lastDelimiter);
 							
