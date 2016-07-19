@@ -329,3 +329,298 @@ String htmlBlockTree = "Document:
                         [[[[[[[[[[[... *cdata section - this should not be parsed* ...]]]]]]]]]]]
                         ]]>\"
                         ";
+
+String referenceMd = "[1] [2] [3] [1] [2] [3]
+                      
+                      [looooooooooooooooooooooooooooooooooooooooooooooooooong label]
+                      
+                      [1]: <http://something.example.com/foo/bar>
+                      [2]: http://something.example.com/foo/bar 'test'
+                      [3]:
+                      http://foo/bar
+                      [    looooooooooooooooooooooooooooooooooooooooooooooooooong   label    ]:
+                      111
+                      'test'
+                      [[[[[[[[[[[[[[[[[[[[ this should not slow down anything ]]]]]]]]]]]]]]]]]]]]: q
+                      (as long as it is not referenced anywhere)
+                      
+                      [[[[[[[[[[[[[[[[[[[[]: this is not a valid reference";
+
+String referenceTree = "Document: 
+                        \tParagraph: 
+                        \t\tLink (destination='http://something.example.com/foo/bar', title=''): 
+                        \t\t\tText: 
+                        \t\t\t\t\"1\"
+                        \t\tText: 
+                        \t\t\t\" \"
+                        \t\tLink (destination='http://something.example.com/foo/bar', title='test'): 
+                        \t\t\tText: 
+                        \t\t\t\t\"2\"
+                        \t\tText: 
+                        \t\t\t\" \"
+                        \t\tLink (destination='http://foo/bar', title='test'): 
+                        \t\t\tText: 
+                        \t\t\t\t\"3\"
+                        \t\tText: 
+                        \t\t\t\" \"
+                        \t\tLink (destination='http://something.example.com/foo/bar', title=''): 
+                        \t\t\tText: 
+                        \t\t\t\t\"1\"
+                        \t\tText: 
+                        \t\t\t\" \"
+                        \t\tLink (destination='http://something.example.com/foo/bar', title='test'): 
+                        \t\t\tText: 
+                        \t\t\t\t\"2\"
+                        \t\tText: 
+                        \t\t\t\" \"
+                        \t\tLink (destination='http://foo/bar', title='test'): 
+                        \t\t\tText: 
+                        \t\t\t\t\"3\"
+                        \tParagraph: 
+                        \t\tLink (destination='111', title='test'): 
+                        \t\t\tText: 
+                        \t\t\t\t\"looooooooooooooooooooooooooooooooooooooooooooooooooong label\"
+                        \tParagraph: 
+                        \t\tText: 
+                        \t\t\t\"[\"
+                        \t\tText: 
+                        \t\t\t\"[\"
+                        \t\tText: 
+                        \t\t\t\"[\"
+                        \t\tText: 
+                        \t\t\t\"[\"
+                        \t\tText: 
+                        \t\t\t\"[\"
+                        \t\tText: 
+                        \t\t\t\"[\"
+                        \t\tText: 
+                        \t\t\t\"[\"
+                        \t\tText: 
+                        \t\t\t\"[\"
+                        \t\tText: 
+                        \t\t\t\"[\"
+                        \t\tText: 
+                        \t\t\t\"[\"
+                        \t\tText: 
+                        \t\t\t\"[\"
+                        \t\tText: 
+                        \t\t\t\"[\"
+                        \t\tText: 
+                        \t\t\t\"[\"
+                        \t\tText: 
+                        \t\t\t\"[\"
+                        \t\tText: 
+                        \t\t\t\"[\"
+                        \t\tText: 
+                        \t\t\t\"[\"
+                        \t\tText: 
+                        \t\t\t\"[\"
+                        \t\tText: 
+                        \t\t\t\"[\"
+                        \t\tText: 
+                        \t\t\t\"[\"
+                        \t\tText: 
+                        \t\t\t\"[\"
+                        \t\tText: 
+                        \t\t\t\" this should not slow down anything \"
+                        \t\tText: 
+                        \t\t\t\"]\"
+                        \t\tText: 
+                        \t\t\t\"]\"
+                        \t\tText: 
+                        \t\t\t\"]\"
+                        \t\tText: 
+                        \t\t\t\"]\"
+                        \t\tText: 
+                        \t\t\t\"]\"
+                        \t\tText: 
+                        \t\t\t\"]\"
+                        \t\tText: 
+                        \t\t\t\"]\"
+                        \t\tText: 
+                        \t\t\t\"]\"
+                        \t\tText: 
+                        \t\t\t\"]\"
+                        \t\tText: 
+                        \t\t\t\"]\"
+                        \t\tText: 
+                        \t\t\t\"]\"
+                        \t\tText: 
+                        \t\t\t\"]\"
+                        \t\tText: 
+                        \t\t\t\"]\"
+                        \t\tText: 
+                        \t\t\t\"]\"
+                        \t\tText: 
+                        \t\t\t\"]\"
+                        \t\tText: 
+                        \t\t\t\"]\"
+                        \t\tText: 
+                        \t\t\t\"]\"
+                        \t\tText: 
+                        \t\t\t\"]\"
+                        \t\tText: 
+                        \t\t\t\"]\"
+                        \t\tText: 
+                        \t\t\t\"]\"
+                        \t\tText: 
+                        \t\t\t\": q\"
+                        \t\tSoftBreak: 
+                        \t\tText: 
+                        \t\t\t\"(as long as it is not referenced anywhere)\"
+                        \tParagraph: 
+                        \t\tText: 
+                        \t\t\t\"[\"
+                        \t\tText: 
+                        \t\t\t\"[\"
+                        \t\tText: 
+                        \t\t\t\"[\"
+                        \t\tText: 
+                        \t\t\t\"[\"
+                        \t\tText: 
+                        \t\t\t\"[\"
+                        \t\tText: 
+                        \t\t\t\"[\"
+                        \t\tText: 
+                        \t\t\t\"[\"
+                        \t\tText: 
+                        \t\t\t\"[\"
+                        \t\tText: 
+                        \t\t\t\"[\"
+                        \t\tText: 
+                        \t\t\t\"[\"
+                        \t\tText: 
+                        \t\t\t\"[\"
+                        \t\tText: 
+                        \t\t\t\"[\"
+                        \t\tText: 
+                        \t\t\t\"[\"
+                        \t\tText: 
+                        \t\t\t\"[\"
+                        \t\tText: 
+                        \t\t\t\"[\"
+                        \t\tText: 
+                        \t\t\t\"[\"
+                        \t\tText: 
+                        \t\t\t\"[\"
+                        \t\tText: 
+                        \t\t\t\"[\"
+                        \t\tText: 
+                        \t\t\t\"[\"
+                        \t\tText: 
+                        \t\t\t\"[\"
+                        \t\tText: 
+                        \t\t\t\"]\"
+                        \t\tText: 
+                        \t\t\t\": this is not a valid reference\"
+                        ";
+
+String inlineBackticksMd = "\`lots\`of\`backticks\`
+                            
+                            \`\`i\`\`wonder\`\`how\`\`this\`\`will\`\`be\`\`parsed\`\`";
+
+String inlineBackticksTree = "Document: 
+                              \tParagraph: 
+                              \t\tCode: 
+                              \t\t\t\"lots\"
+                              \t\tText: 
+                              \t\t\t\"of\"
+                              \t\tCode: 
+                              \t\t\t\"backticks\"
+                              \tParagraph: 
+                              \t\tCode: 
+                              \t\t\t\"i\"
+                              \t\tText: 
+                              \t\t\t\"wonder\"
+                              \t\tCode: 
+                              \t\t\t\"how\"
+                              \t\tText: 
+                              \t\t\t\"this\"
+                              \t\tCode: 
+                              \t\t\t\"will\"
+                              \t\tText: 
+                              \t\t\t\"be\"
+                              \t\tCode: 
+                              \t\t\t\"parsed\"
+                              ";
+
+String autolinkMd = "closed (valid) autolinks:
+                     
+                     <ftp://1.2.3.4:21/path/foo>
+                     <http://foo.bar.baz?q=hello&id=22&boolean>
+                     <http://veeeeeeeeeeeeeeeeeeery.loooooooooooooooooooooooooooooooong.autolink/>
+                     <teeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeest@gmail.com>
+                     
+                     these are not autolinks:
+                     
+                     <ftp://1.2.3.4:21/path/foo
+                     <http://foo.bar.baz?q=hello&id=22&boolean
+                     <http://veeeeeeeeeeeeeeeeeeery.loooooooooooooooooooooooooooooooong.autolink
+                     <teeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeest@gmail.com
+                     < http://foo.bar.baz?q=hello&id=22&boolean >";
+
+String autolinkTree = "Document: 
+                       \tParagraph: 
+                       \t\tText: 
+                       \t\t\t\"closed (valid) autolinks:\"
+                       \tParagraph: 
+                       \t\tLink (destination='ftp://1.2.3.4:21/path/foo', title=''): 
+                       \t\t\tText: 
+                       \t\t\t\t\"ftp://1.2.3.4:21/path/foo\"
+                       \t\tSoftBreak: 
+                       \t\tLink (destination='http://foo.bar.baz?q=hello&id=22&boolean', title=''): 
+                       \t\t\tText: 
+                       \t\t\t\t\"http://foo.bar.baz?q=hello&id=22&boolean\"
+                       \t\tSoftBreak: 
+                       \t\tLink (destination='http://veeeeeeeeeeeeeeeeeeery.loooooooooooooooooooooooooooooooong.autolink/', title=''): 
+                       \t\t\tText: 
+                       \t\t\t\t\"http://veeeeeeeeeeeeeeeeeeery.loooooooooooooooooooooooooooooooong.autolink/\"
+                       \t\tSoftBreak: 
+                       \t\tLink (destination='mailto:teeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeest@gmail.com', title=''): 
+                       \t\t\tText: 
+                       \t\t\t\t\"teeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeest@gmail.com\"
+                       \tParagraph: 
+                       \t\tText: 
+                       \t\t\t\"these are not autolinks:\"
+                       \tParagraph: 
+                       \t\tText: 
+                       \t\t\t\"<\"
+                       \t\tText: 
+                       \t\t\t\"ftp://1.2.3.4:21/path/foo\"
+                       \t\tSoftBreak: 
+                       \t\tText: 
+                       \t\t\t\"<\"
+                       \t\tText: 
+                       \t\t\t\"http://foo.bar.baz?q=hello\"
+                       \t\tText: 
+                       \t\t\t\"&\"
+                       \t\tText: 
+                       \t\t\t\"id=22\"
+                       \t\tText: 
+                       \t\t\t\"&\"
+                       \t\tText: 
+                       \t\t\t\"boolean\"
+                       \t\tSoftBreak: 
+                       \t\tText: 
+                       \t\t\t\"<\"
+                       \t\tText: 
+                       \t\t\t\"http://veeeeeeeeeeeeeeeeeeery.loooooooooooooooooooooooooooooooong.autolink\"
+                       \t\tSoftBreak: 
+                       \t\tText: 
+                       \t\t\t\"<\"
+                       \t\tText: 
+                       \t\t\t\"teeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeest@gmail.com\"
+                       \t\tSoftBreak: 
+                       \t\tText: 
+                       \t\t\t\"<\"
+                       \t\tText: 
+                       \t\t\t\" http://foo.bar.baz?q=hello\"
+                       \t\tText: 
+                       \t\t\t\"&\"
+                       \t\tText: 
+                       \t\t\t\"id=22\"
+                       \t\tText: 
+                       \t\t\t\"&\"
+                       \t\tText: 
+                       \t\t\t\"boolean >\"
+                       ";
