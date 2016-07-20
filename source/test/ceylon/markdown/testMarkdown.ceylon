@@ -7,13 +7,6 @@ import ceylon.markdown.core {
 	Document
 }
 
-shared void testMarkdown() {
-	value tree = parse("<ftp://1.2.3.4:21/path/foo>
-	                    <ftp://1.2.3.4:21/path/foo>");
-	
-	print(tree);
-}
-
 test
 shared void testSample1() => assertEquals {
 	actual = parse(sample1Md).string;

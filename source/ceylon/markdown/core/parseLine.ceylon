@@ -27,7 +27,7 @@ void parseLine(variable String line, Block parent) {
 	variable Node? lastBlock = parent.children.last;
 	
 	if (line.equals(""), !is List parent) {
-		if (is Paragraph|BlockQuote block = lastBlock) {
+		if (is Paragraph|BlockQuote block = lastBlock, !is ListItem parent) {
 			block.closeBlock();
 		}
 		if (is HtmlBlock block = lastBlock) {
