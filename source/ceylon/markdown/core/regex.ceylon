@@ -108,3 +108,22 @@ String asciiPunctuation = "'!\"#\\$%&\\(\\)\\*\\+,\\-\\./:;<=>\\?@\\[\\\\\\]\\^_
 Regex punctuation = regex("^[" + asciiPunctuation + "\\p{Pc}\\p{Pd}\\p{Pe}\\p{Pf}\\p{Pi}\\p{Po}\\p{Ps}]");
 
 Regex unicodeWhitespaceChar = regex("^[\\p{Zs}\t\r\n\f]");
+
+Regex emailAutoLink = regex("^<([a-zA-Z0-9.!#$%&'*+\\/=?^_\`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*)>");
+
+Regex autoLink = regex("^<[A-Za-z][A-Za-z0-9.+-]{1,31}:[^<>\\x00-\\x20]*>", false, true);
+
+String htmlComment = "<!---->|<!--(?:-?[^>-])(?:-?[^-])*-->";
+String processingInstruction = "[<][?].*?[?][>]";
+String declaration = "<![A-Z]+" + "\\s+[^>]*>";
+String cData = "<!\\[CDATA\\[[\\s\\S]*?\\]\\]>";
+String htmlTag = "(?:" + openTag + "|" + closeTag + "|" + htmlComment + "|" +
+		processingInstruction + "|" + declaration + "|" + cData + ")";
+
+Regex reHtmlTag = regex("^" + htmlTag, false, true);
+
+Regex reEscapable = regex("^" + escapable);
+
+String entity = "&(?:#x[a-f0-9]{1,8}|#[0-9]{1,8}|[a-z][a-z0-9]{1,31});";
+
+Regex reEntityHere = regex("^" + entity, false, true);

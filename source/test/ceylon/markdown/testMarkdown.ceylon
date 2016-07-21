@@ -37,7 +37,7 @@ shared void testHeading1() => assertEquals {
 	expected = heading1Tree;
 };
 
-test 
+test
 shared void testHeading2() => assertEquals {
 	actual = parse(heading2Md).string;
 	expected = heading2Tree;
@@ -59,4 +59,22 @@ test
 shared void testHtmlBlock() => assertEquals {
 	actual = parse(htmlBlockMd).string;
 	expected = htmlBlockTree;
+};
+
+test
+shared void testReference() => assertEquals {
+	actual = parse(referenceMd).string;
+	expected = referenceTree;
+};
+
+test
+shared void testInlineBackticks() => assertEquals {
+	actual = parse(inlineBackticksMd).string;
+	expected = inlineBackticksTree;
+};
+
+test
+shared void testAutolinks() => assertEquals {
+	actual = parse(autolinkMd).string;
+	expected = autolinkTree;
 };

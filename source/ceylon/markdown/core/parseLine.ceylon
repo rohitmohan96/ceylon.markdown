@@ -27,7 +27,7 @@ void parseLine(variable String line, Block parent) {
 	variable Node? lastBlock = parent.children.last;
 	
 	if (line.equals(""), !is List parent) {
-		if (is Paragraph|BlockQuote block = lastBlock) {
+		if (is Paragraph|BlockQuote block = lastBlock, !is ListItem parent) {
 			block.closeBlock();
 		}
 		if (is HtmlBlock block = lastBlock) {
@@ -175,7 +175,7 @@ void parseLine(variable String line, Block parent) {
 	
 	//Check if block is already open
 	while (is Block block = lastBlock, block.open) {
-		if (sameType(block, lineBlock), !is ListItem|Paragraph|Code|Heading|HtmlBlock block) {
+		if (sameType(block, lineBlock), !is ListItem|Paragraph|CodeBlock|Heading|HtmlBlock block) {
 			parseLine(line, block);
 			noLastBlock = false;
 			break;
@@ -189,7 +189,11 @@ void parseLine(variable String line, Block parent) {
 			}
 			break;
 		} else if (is CodeBlock block, is CodeBlock lineBlock) {
-			block.text += "\n"+lineBlock.text;
+			if(block.text == "") {
+				block.text += lineBlock.text;
+			} else {
+				block.text += "\n"+lineBlock.text;
+			}
 			noLastBlock = false;
 			break;
 		} else if (is HtmlBlock block, is HtmlBlock lineBlock) {
