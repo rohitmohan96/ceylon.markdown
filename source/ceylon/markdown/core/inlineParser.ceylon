@@ -559,6 +559,8 @@ shared void parseInlines(Node node, Node parent) {
 		if (str != text, str != "") {
 			parent.appendChild(Text(str));
 		}
+		
+		processEmphasis(parent, null, lastDelimiter);
 	}
 	
 	for (child in node.children) {
@@ -610,6 +612,10 @@ shared DelimiterRun scanDelimiters(String text, variable Integer index, Characte
 
 shared void processEmphasis(Node parent, Delimiter? stackBottom, variable Delimiter? lastDelimiter) {
 	variable Delimiter? currentPosition;
+	variable Delimiter? opener;
+	variable Integer useDelims;
+	variable Delimiter oldCloser;
+	
 	if (exists stackBottom) {
 		currentPosition = stackBottom.next;
 	} else {
@@ -627,7 +633,83 @@ shared void processEmphasis(Node parent, Delimiter? stackBottom, variable Delimi
 	};
 	
 	while (exists cp = currentPosition) {
-		currentPosition = cp.next;
+		Character delimiterChar = cp.delimiterChar;
+		
+		if (!cp.canClose) {
+			currentPosition = cp.next;
+		} else {
+			opener = cp.previous;
+			variable Boolean openerFound = false;
+			while (exists op = opener,
+				if (exists opBottom = openBottom[delimiterChar]) then 
+				op != opBottom else true,
+				if(exists stackBottom) then
+				op != stackBottom else true) {
+				
+				if(op.delimiterChar == cp.delimiterChar && op.canOpen) {
+					openerFound = true;
+					break;
+				}
+				
+				opener = op.previous;
+			}
+			oldCloser = cp;
+			
+			if(exists op = opener, delimiterChar == '*' || delimiterChar == '_') {
+				if(!openerFound) {
+					currentPosition = cp.next;
+				} else {
+					if(cp.numOfDelimiters < 3 || op.numOfDelimiters < 3) {
+						useDelims = cp.numOfDelimiters <= op.numOfDelimiters then cp.numOfDelimiters else op.numOfDelimiters;
+					} else {
+						useDelims = cp.numOfDelimiters % 2 == 0 then 2 else 1;
+					}
+					
+					op.numOfDelimiters -= useDelims;
+					cp.numOfDelimiters -= useDelims;
+					
+					op.node.text = op.node.text[...(op.node.text.size - useDelims)];
+					cp.node.text = cp.node.text[...(cp.node.text.size - useDelims)];
+					
+					Node emph = useDelims == 1 then Emphasis() else StrongEmphasis();
+					
+					value first = parent.children.firstIndexWhere((Node element) => element == op.node) else 0;
+					value last = parent.children.firstIndexWhere((Node element) => element == cp.node) else 0;
+					
+					emph.children = parent.children[first + 1..last - 1];
+					for(child in emph.children) {
+						parent.removeChild(child);
+					}
+					parent.appendChild(emph);
+					
+					removeDelimitersBetween(op, cp);
+					
+					if(op.numOfDelimiters == 0) {
+						parent.removeChild(op.node);
+						removeLastBracket(op, lastDelimiter);
+					}
+					
+					if(cp.numOfDelimiters == 0) {
+						parent.removeChild(cp.node);
+						currentPosition = cp.next;
+						removeLastBracket(cp, lastDelimiter);
+					}
+				}
+				if(!openerFound) {
+					openBottom.put(delimiterChar, oldCloser.previous);
+					if(!oldCloser.canOpen) {
+						lastDelimiter = removeLastBracket(oldCloser, lastDelimiter);
+					}
+				}
+			}
+		}
+	}
+}
+
+void removeDelimitersBetween(Delimiter opener, Delimiter closer) {
+	if(exists next = opener.next, next != closer) {
+		opener.next = closer;
+		closer.previous = opener;
 	}
 }
 
