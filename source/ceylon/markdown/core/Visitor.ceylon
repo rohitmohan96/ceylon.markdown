@@ -18,4 +18,5 @@ shared interface Visitor {
 	shared formal void visitStrongEmphasis(StrongEmphasis strongEmphasis);
 	shared formal void visitThematicBreak(ThematicBreak thematicBreak);
 	shared formal void visitUnorderedList(UnorderedList unorderedList);
+	shared formal void visitHtmlInline(HtmlInline htmlInline);
 }

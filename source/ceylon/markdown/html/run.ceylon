@@ -5,5 +5,6 @@ import ceylon.markdown.core {
 shared void run() {
     value tree = parse("[hello](/url \"title\")");
     
-    tree.accept(HtmlVisitor());
+    HtmlVisitor visitor = HtmlVisitor();
+    tree.accept(visitor);
 }

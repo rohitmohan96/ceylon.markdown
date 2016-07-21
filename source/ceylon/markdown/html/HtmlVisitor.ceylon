@@ -18,7 +18,8 @@ import ceylon.markdown.core {
 	StrongEmphasis,
 	Text,
 	ThematicBreak,
-	UnorderedList
+	UnorderedList,
+	HtmlInline
 }
 shared class HtmlVisitor() satisfies Visitor {
 	shared actual void visitBlockQuote(BlockQuote blockQuote) {}
@@ -78,5 +79,7 @@ shared class HtmlVisitor() satisfies Visitor {
 	shared actual void visitThematicBreak(ThematicBreak thematicBreak) {}
 	
 	shared actual void visitUnorderedList(UnorderedList unorderedList) {}
+	shared actual void visitHtmlInline(HtmlInline htmlInline) {}
+	
 	
 }
