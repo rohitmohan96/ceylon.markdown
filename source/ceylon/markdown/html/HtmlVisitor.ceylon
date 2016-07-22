@@ -70,7 +70,8 @@ shared class HtmlVisitor(Boolean completeHtml = false)
 					children = [for (child in document.children)
 							if (is FlowCategory|String ch = child.accept(this)) ch];
 				}
-			}; } else {
+			};
+		} else {
 			return [for (child in document.children)
 					if (is FlowCategory|String ch = child.accept(this)) ch];
 		}
