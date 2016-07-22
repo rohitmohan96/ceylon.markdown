@@ -49,7 +49,9 @@ import ceylon.markdown.core {
 	HtmlInline
 }
 
-shared class HtmlVisitor() satisfies Visitor<Node> {
+shared class HtmlVisitor(Boolean completeHtml = false)
+		satisfies Visitor<Node|<Node&FlowCategory|String>[]> {
+	
 	shared actual Node visitBlockQuote(BlockQuote blockQuote) => Blockquote {
 		children = [for (child in blockQuote.children) if (is FlowCategory|String ch = child.accept(this)) ch];
 	};
@@ -58,16 +60,24 @@ shared class HtmlVisitor() satisfies Visitor<Node> {
 		children = code.text.linesWithBreaks;
 	};
 	
-	shared actual Node visitDocument(Document document) => Html {
-		Head {
-		},
-		Body {
-			children = [for (child in document.children) if (is FlowCategory|String ch = child.accept(this)) ch];
+	shared actual Node|<Node&FlowCategory|String>[] visitDocument(Document document) {
+		if (completeHtml) {
+			return Html {
+				Head {
+				},
+				Body {
+					children = [for (child in document.children)
+							if (is FlowCategory|String ch = child.accept(this)) ch];
+				}
+			}; } else {
+			return [for (child in document.children)
+					if (is FlowCategory|String ch = child.accept(this)) ch];
 		}
-	};
+	}
 	
 	shared actual Node visitEmphasis(Emphasis emphasis) => Em {
-		children = [for (child in emphasis.children) if (is PhrasingCategory|String ch = child.accept(this)) ch];
+		children = [for (child in emphasis.children) 
+						if (is PhrasingCategory|String ch = child.accept(this)) ch];
 	};
 	
 	shared actual Node visitFencedCode(FencedCode fencedCode) => Pre {
@@ -79,7 +89,8 @@ shared class HtmlVisitor() satisfies Visitor<Node> {
 	shared actual Node visitHardBreak(HardBreak hardBreak) => Br();
 	
 	shared actual Node visitHeading(Heading heading) {
-		value children = [for (child in heading.children) if (is PhrasingCategory|String ch = child.accept(this)) ch];
+		value children = [for (child in heading.children)
+		 					if (is PhrasingCategory|String ch = child.accept(this)) ch];
 		
 		switch (level = heading.level)
 		case (1) {
@@ -124,27 +135,31 @@ shared class HtmlVisitor() satisfies Visitor<Node> {
 	shared actual Node visitLink(Link link) => A {
 		href = link.destination;
 		title = if (link.title == "") then null else link.title;
-		children = [for (child in link.children) if (is FlowCategory|String ch = child.accept(this)) ch];
+		children = [for (child in link.children) 
+						if (is FlowCategory|String ch = child.accept(this)) ch];
 	};
 	
 	shared actual Node visitListItem(ListItem listItem) => Li {
-		children = [for (child in listItem.children) if (is FlowCategory|String ch = child.accept(this)) ch];
+		children = [for (child in listItem.children) 
+						if (is FlowCategory|String ch = child.accept(this)) ch];
 	};
 	
 	//TODO: Fix tightness for lists
 	shared actual Node visitOrderedList(OrderedList orderedList) => Ol {
-		children = [for (child in orderedList.children) if (is Li|String ch = child.accept(this)) ch];
-		
+		children = [for (child in orderedList.children)
+						if (is Li|String ch = child.accept(this)) ch];
 	};
 	
 	shared actual Node visitParagraph(Paragraph paragraph) => P {
-		children = [for (child in paragraph.children) if (is PhrasingCategory|String ch = child.accept(this)) ch];
+		children = [for (child in paragraph.children) 
+						if (is PhrasingCategory|String ch = child.accept(this)) ch];
 	};
 	
 	shared actual String visitSoftBreak(SoftBreak softBreak) => "\n";
 	
 	shared actual Node visitStrongEmphasis(StrongEmphasis strongEmphasis) => Strong {
-		children = [for (child in strongEmphasis.children) if (is PhrasingCategory|String ch = child.accept(this)) ch];
+		children = [for (child in strongEmphasis.children) 
+						if (is PhrasingCategory|String ch = child.accept(this)) ch];
 	};
 	
 	shared actual String visitText(Text text) => text.text;
@@ -152,6 +167,7 @@ shared class HtmlVisitor() satisfies Visitor<Node> {
 	shared actual Node visitThematicBreak(ThematicBreak thematicBreak) => Hr();
 	
 	shared actual Node visitUnorderedList(UnorderedList unorderedList) => Ul {
-		children = [for (child in unorderedList.children) if (is Li|String ch = child.accept(this)) ch];
+		children = [for (child in unorderedList.children) 
+						if (is Li|String ch = child.accept(this)) ch];
 	};
 }

@@ -5,9 +5,11 @@ import ceylon.markdown.core {
 "Run the module `ceylon.markdown.html`."
 shared void run() {
 	value tree = parse("asddf `jhdasa
-	                    sd` adsasd");
+	                    sd` adsasd
+	                    
+	                    asdas");
 	
-	HtmlVisitor visitor = HtmlVisitor();
+	HtmlVisitor visitor = HtmlVisitor(true);
 	value accept = tree.accept(visitor);
 	
 	print(accept);
