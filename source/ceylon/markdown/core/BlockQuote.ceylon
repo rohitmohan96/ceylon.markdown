@@ -1,5 +1,5 @@
 shared class BlockQuote() extends Block() {
 	shared actual variable Node[] children = [];
 	
-	shared actual void accept(Visitor visitor) => visitor.visitBlockQuote(this);
+	shared actual Type accept<Type>(Visitor<Type> visitor) => visitor.visitBlockQuote(this);
 }

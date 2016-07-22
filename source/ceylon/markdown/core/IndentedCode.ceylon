@@ -1,5 +1,5 @@
 shared class IndentedCode(String text) extends CodeBlock(text) {
 	shared actual variable Node[] children = [];
 	
-	shared actual void accept(Visitor visitor) => visitor.visitIndentedCode(this);
+	shared actual Type accept<Type>(Visitor<Type> visitor) => visitor.visitIndentedCode(this);
 }

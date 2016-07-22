@@ -1,22 +1,22 @@
-shared interface Visitor {
-	shared formal void visitText(Text text);
-	shared formal void visitParagraph(Paragraph paragraph);
-	shared formal void visitBlockQuote(BlockQuote blockQuote);
-	shared formal void visitDocument(Document document);
-	shared formal void visitCode(Code code);
-	shared formal void visitEmphasis(Emphasis emphasis);
-	shared formal void visitFencedCode(FencedCode fencedCode);
-	shared formal void visitHardBreak(HardBreak hardBreak);
-	shared formal void visitHeading(Heading heading);
-	shared formal void visitHtmlBlock(HtmlBlock htmlBlock);
-	shared formal void visitImage(Image image);
-	shared formal void visitIndentedCode(IndentedCode indentedCode);
-	shared formal void visitLink(Link link);
-	shared formal void visitOrderedList(OrderedList orderedList);
-	shared formal void visitListItem(ListItem listItem);
-	shared formal void visitSoftBreak(SoftBreak softBreak);
-	shared formal void visitStrongEmphasis(StrongEmphasis strongEmphasis);
-	shared formal void visitThematicBreak(ThematicBreak thematicBreak);
-	shared formal void visitUnorderedList(UnorderedList unorderedList);
-	shared formal void visitHtmlInline(HtmlInline htmlInline);
+shared interface Visitor<Type> {
+	shared formal String visitText(Text text);
+	shared formal Type visitParagraph(Paragraph paragraph);
+	shared formal Type visitBlockQuote(BlockQuote blockQuote);
+	shared formal Type visitDocument(Document document);
+	shared formal Type visitCode(Code code);
+	shared formal Type visitEmphasis(Emphasis emphasis);
+	shared formal Type visitFencedCode(FencedCode fencedCode);
+	shared formal Type visitHardBreak(HardBreak hardBreak);
+	shared formal Type visitHeading(Heading heading);
+	shared formal Type visitHtmlBlock(HtmlBlock htmlBlock);
+	shared formal Type visitImage(Image image);
+	shared formal Type visitIndentedCode(IndentedCode indentedCode);
+	shared formal Type visitLink(Link link);
+	shared formal Type visitOrderedList(OrderedList orderedList);
+	shared formal Type visitListItem(ListItem listItem);
+	shared formal String visitSoftBreak(SoftBreak softBreak);
+	shared formal Type visitStrongEmphasis(StrongEmphasis strongEmphasis);
+	shared formal Type visitThematicBreak(ThematicBreak thematicBreak);
+	shared formal Type visitUnorderedList(UnorderedList unorderedList);
+	shared formal Type visitHtmlInline(HtmlInline htmlInline);
 }

@@ -1,3 +1,30 @@
+import ceylon.html {
+	Node,
+	A,
+	FlowCategory,
+	P,
+	PhrasingCategory,
+	Br,
+	Body,
+	Li,
+	Hr,
+	Ul,
+	Html,
+	Head,
+	Em,
+	Strong,
+	Pre,
+	HtmlCode=Code,
+	H1,
+	H2,
+	H3,
+	H4,
+	H5,
+	H6,
+	Img,
+	Ol,
+	Blockquote
+}
 import ceylon.markdown.core {
 	Visitor,
 	BlockQuote,
@@ -21,65 +48,110 @@ import ceylon.markdown.core {
 	UnorderedList,
 	HtmlInline
 }
-shared class HtmlVisitor() satisfies Visitor {
-	shared actual void visitBlockQuote(BlockQuote blockQuote) {}
+
+shared class HtmlVisitor() satisfies Visitor<Node> {
+	shared actual Node visitBlockQuote(BlockQuote blockQuote) => Blockquote {
+		children = [for (child in blockQuote.children) if (is FlowCategory|String ch = child.accept(this)) ch];
+	};
 	
-	shared actual void visitCode(Code code) {}
+	shared actual Node visitCode(Code code) => HtmlCode {
+		children = code.text.linesWithBreaks;
+	};
 	
-	shared actual void visitDocument(Document document) {
-		print("<body>");
-		for(child in document.children) {
-			child.accept(this);
+	shared actual Node visitDocument(Document document) => Html {
+		Head {
+		},
+		Body {
+			children = [for (child in document.children) if (is FlowCategory|String ch = child.accept(this)) ch];
 		}
-		print("</body>");
-	}
+	};
 	
-	shared actual void visitEmphasis(Emphasis emphasis) {}
+	shared actual Node visitEmphasis(Emphasis emphasis) => Em {
+		children = [for (child in emphasis.children) if (is PhrasingCategory|String ch = child.accept(this)) ch];
+	};
 	
-	shared actual void visitFencedCode(FencedCode fencedCode) {}
-	
-	shared actual void visitHardBreak(HardBreak hardBreak) {}
-	
-	shared actual void visitHeading(Heading heading) {}
-	
-	shared actual void visitHtmlBlock(HtmlBlock htmlBlock) {}
-	
-	shared actual void visitImage(Image image) {}
-	
-	shared actual void visitIndentedCode(IndentedCode indentedCode) {}
-	
-	shared actual void visitLink(Link link) {
-		print("<a href=\"``link.destination``\" title=\"``link.title``\">");
-		for(child in link.children) {
-			child.accept(this);
+	shared actual Node visitFencedCode(FencedCode fencedCode) => Pre {
+		HtmlCode {
+			children = fencedCode.text.linesWithBreaks;
 		}
-		print("</a>");
-	}
+	};
 	
-	shared actual void visitListItem(ListItem listItem) {}
+	shared actual Node visitHardBreak(HardBreak hardBreak) => Br();
 	
-	shared actual void visitOrderedList(OrderedList orderedList) {}
-	
-	shared actual void visitParagraph(Paragraph paragraph) {
-		print("<p>");
-		for(child in paragraph.children) {
-			child.accept(this);
+	shared actual Node visitHeading(Heading heading) {
+		value children = [for (child in heading.children) if (is PhrasingCategory|String ch = child.accept(this)) ch];
+		
+		switch (level = heading.level)
+		case (1) {
+			return H1 { children = children; };
 		}
-		print("</p>");
+		case (2) {
+			return H2 { children = children; };
+		}
+		case (3) {
+			return H3 { children = children; };
+		}
+		case (4) {
+			return H4 { children = children; };
+		}
+		case (5) {
+			return H5 { children = children; };
+		}
+		case (6) {
+			return H6 { children = children; };
+		}
+		else {
+			return H1 { children = children; };
+		}
 	}
 	
-	shared actual void visitSoftBreak(SoftBreak softBreak) {}
+	shared actual Node visitHtmlBlock(HtmlBlock htmlBlock) => nothing;
 	
-	shared actual void visitStrongEmphasis(StrongEmphasis strongEmphasis) {}
+	shared actual Node visitHtmlInline(HtmlInline htmlInline) => nothing;
 	
-	shared actual void visitText(Text text) {
-		print(text.text);
-	}
+	//TODO: get alt from child text or link
+	shared actual Node visitImage(Image image) => Img {
+		src = image.destination;
+		title = if (image.title == "") then null else image.title;
+	};
 	
-	shared actual void visitThematicBreak(ThematicBreak thematicBreak) {}
+	shared actual Node visitIndentedCode(IndentedCode indentedCode) => Pre {
+		HtmlCode {
+			children = indentedCode.text.linesWithBreaks;
+		}
+	};
 	
-	shared actual void visitUnorderedList(UnorderedList unorderedList) {}
-	shared actual void visitHtmlInline(HtmlInline htmlInline) {}
+	shared actual Node visitLink(Link link) => A {
+		href = link.destination;
+		title = if (link.title == "") then null else link.title;
+		children = [for (child in link.children) if (is FlowCategory|String ch = child.accept(this)) ch];
+	};
 	
+	shared actual Node visitListItem(ListItem listItem) => Li {
+		children = [for (child in listItem.children) if (is FlowCategory|String ch = child.accept(this)) ch];
+	};
 	
+	//TODO: Fix tightness for lists
+	shared actual Node visitOrderedList(OrderedList orderedList) => Ol {
+		children = [for (child in orderedList.children) if (is Li|String ch = child.accept(this)) ch];
+		
+	};
+	
+	shared actual Node visitParagraph(Paragraph paragraph) => P {
+		children = [for (child in paragraph.children) if (is PhrasingCategory|String ch = child.accept(this)) ch];
+	};
+	
+	shared actual String visitSoftBreak(SoftBreak softBreak) => "\n";
+	
+	shared actual Node visitStrongEmphasis(StrongEmphasis strongEmphasis) => Strong {
+		children = [for (child in strongEmphasis.children) if (is PhrasingCategory|String ch = child.accept(this)) ch];
+	};
+	
+	shared actual String visitText(Text text) => text.text;
+	
+	shared actual Node visitThematicBreak(ThematicBreak thematicBreak) => Hr();
+	
+	shared actual Node visitUnorderedList(UnorderedList unorderedList) => Ul {
+		children = [for (child in unorderedList.children) if (is Li|String ch = child.accept(this)) ch];
+	};
 }
