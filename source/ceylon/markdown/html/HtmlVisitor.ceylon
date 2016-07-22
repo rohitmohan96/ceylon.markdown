@@ -1,5 +1,5 @@
 import ceylon.html {
-	Node,
+	HtmlNode=Node,
 	A,
 	FlowCategory,
 	P,
@@ -50,17 +50,18 @@ import ceylon.markdown.core {
 }
 
 shared class HtmlVisitor(Boolean completeHtml = false)
-		satisfies Visitor<Node|<Node&FlowCategory|String>[]> {
+		satisfies Visitor<HtmlNode|<HtmlNode&FlowCategory|String>[]> {
 	
-	shared actual Node visitBlockQuote(BlockQuote blockQuote) => Blockquote {
-		children = [for (child in blockQuote.children) if (is FlowCategory|String ch = child.accept(this)) ch];
+	shared actual HtmlNode visitBlockQuote(BlockQuote blockQuote) => Blockquote {
+		children = [for (child in blockQuote.children)
+				if (is FlowCategory|String ch = child.accept(this)) ch];
 	};
 	
-	shared actual Node visitCode(Code code) => HtmlCode {
+	shared actual HtmlNode visitCode(Code code) => HtmlCode {
 		children = code.text.linesWithBreaks;
 	};
 	
-	shared actual Node|<Node&FlowCategory|String>[] visitDocument(Document document) {
+	shared actual HtmlNode|<HtmlNode&FlowCategory|String>[] visitDocument(Document document) {
 		if (completeHtml) {
 			return Html {
 				Head {
@@ -75,22 +76,22 @@ shared class HtmlVisitor(Boolean completeHtml = false)
 		}
 	}
 	
-	shared actual Node visitEmphasis(Emphasis emphasis) => Em {
-		children = [for (child in emphasis.children) 
-						if (is PhrasingCategory|String ch = child.accept(this)) ch];
+	shared actual HtmlNode visitEmphasis(Emphasis emphasis) => Em {
+		children = [for (child in emphasis.children)
+				if (is PhrasingCategory|String ch = child.accept(this)) ch];
 	};
 	
-	shared actual Node visitFencedCode(FencedCode fencedCode) => Pre {
+	shared actual HtmlNode visitFencedCode(FencedCode fencedCode) => Pre {
 		HtmlCode {
 			children = fencedCode.text.linesWithBreaks;
 		}
 	};
 	
-	shared actual Node visitHardBreak(HardBreak hardBreak) => Br();
+	shared actual HtmlNode visitHardBreak(HardBreak hardBreak) => Br();
 	
-	shared actual Node visitHeading(Heading heading) {
+	shared actual HtmlNode visitHeading(Heading heading) {
 		value children = [for (child in heading.children)
-		 					if (is PhrasingCategory|String ch = child.accept(this)) ch];
+				if (is PhrasingCategory|String ch = child.accept(this)) ch];
 		
 		switch (level = heading.level)
 		case (1) {
@@ -116,58 +117,58 @@ shared class HtmlVisitor(Boolean completeHtml = false)
 		}
 	}
 	
-	shared actual Node visitHtmlBlock(HtmlBlock htmlBlock) => nothing;
+	shared actual HtmlNode visitHtmlBlock(HtmlBlock htmlBlock) => nothing;
 	
-	shared actual Node visitHtmlInline(HtmlInline htmlInline) => nothing;
+	shared actual HtmlNode visitHtmlInline(HtmlInline htmlInline) => nothing;
 	
 	//TODO: get alt from child text or link
-	shared actual Node visitImage(Image image) => Img {
+	shared actual HtmlNode visitImage(Image image) => Img {
 		src = image.destination;
 		title = if (image.title == "") then null else image.title;
 	};
 	
-	shared actual Node visitIndentedCode(IndentedCode indentedCode) => Pre {
+	shared actual HtmlNode visitIndentedCode(IndentedCode indentedCode) => Pre {
 		HtmlCode {
 			children = indentedCode.text.linesWithBreaks;
 		}
 	};
 	
-	shared actual Node visitLink(Link link) => A {
+	shared actual HtmlNode visitLink(Link link) => A {
 		href = link.destination;
 		title = if (link.title == "") then null else link.title;
-		children = [for (child in link.children) 
-						if (is FlowCategory|String ch = child.accept(this)) ch];
+		children = [for (child in link.children)
+				if (is FlowCategory|String ch = child.accept(this)) ch];
 	};
 	
-	shared actual Node visitListItem(ListItem listItem) => Li {
-		children = [for (child in listItem.children) 
-						if (is FlowCategory|String ch = child.accept(this)) ch];
+	shared actual HtmlNode visitListItem(ListItem listItem) => Li {
+		children = [for (child in listItem.children)
+				if (is FlowCategory|String ch = child.accept(this)) ch];
 	};
 	
 	//TODO: Fix tightness for lists
-	shared actual Node visitOrderedList(OrderedList orderedList) => Ol {
+	shared actual HtmlNode visitOrderedList(OrderedList orderedList) => Ol {
 		children = [for (child in orderedList.children)
-						if (is Li|String ch = child.accept(this)) ch];
+				if (is Li|String ch = child.accept(this)) ch];
 	};
 	
-	shared actual Node visitParagraph(Paragraph paragraph) => P {
-		children = [for (child in paragraph.children) 
-						if (is PhrasingCategory|String ch = child.accept(this)) ch];
+	shared actual HtmlNode visitParagraph(Paragraph paragraph) => P {
+		children = [for (child in paragraph.children)
+				if (is PhrasingCategory|String ch = child.accept(this)) ch];
 	};
 	
 	shared actual String visitSoftBreak(SoftBreak softBreak) => "\n";
 	
-	shared actual Node visitStrongEmphasis(StrongEmphasis strongEmphasis) => Strong {
-		children = [for (child in strongEmphasis.children) 
-						if (is PhrasingCategory|String ch = child.accept(this)) ch];
+	shared actual HtmlNode visitStrongEmphasis(StrongEmphasis strongEmphasis) => Strong {
+		children = [for (child in strongEmphasis.children)
+				if (is PhrasingCategory|String ch = child.accept(this)) ch];
 	};
 	
 	shared actual String visitText(Text text) => text.text;
 	
-	shared actual Node visitThematicBreak(ThematicBreak thematicBreak) => Hr();
+	shared actual HtmlNode visitThematicBreak(ThematicBreak thematicBreak) => Hr();
 	
-	shared actual Node visitUnorderedList(UnorderedList unorderedList) => Ul {
-		children = [for (child in unorderedList.children) 
-						if (is Li|String ch = child.accept(this)) ch];
+	shared actual HtmlNode visitUnorderedList(UnorderedList unorderedList) => Ul {
+		children = [for (child in unorderedList.children)
+				if (is Li|String ch = child.accept(this)) ch];
 	};
 }

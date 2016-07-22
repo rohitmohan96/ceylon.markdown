@@ -9,7 +9,7 @@ shared void run() {
 	                    
 	                    asdas");
 	
-	HtmlVisitor visitor = HtmlVisitor(true);
+	HtmlVisitor visitor = HtmlVisitor();
 	value accept = tree.accept(visitor);
 	
 	print(accept);
