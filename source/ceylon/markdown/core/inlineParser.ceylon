@@ -677,10 +677,12 @@ shared void processEmphasis(Node parent, Delimiter? stackBottom, variable Delimi
 					value last = parent.children.firstIndexWhere((Node element) => element == cp.node) else 0;
 					
 					emph.children = parent.children[first + 1..last - 1];
-					for(child in emph.children) {
-						parent.removeChild(child);
-					}
+					value rest = parent.children[last + 1...];
+					parent.children = parent.children[...first - 1];
 					parent.appendChild(emph);
+					for(r in rest) {
+						parent.appendChild(r);
+					}
 					
 					removeDelimitersBetween(op, cp);
 					
