@@ -148,7 +148,7 @@ shared class HtmlVisitor(Boolean completeHtml = false)
 			for(child in listItem.children) {
 				value ch = child.accept(this);
 				if (is P ch) {
-					children = children.append([for (c in ch.children) if(is Em|Strong|String c) c]);
+					children = children.append([for (c in ch.children) if(is Em|Strong|A|Img|String c) c]);
 				} else if(is FlowCategory|String ch) {
 					children = children.append([ch]);
 				}
