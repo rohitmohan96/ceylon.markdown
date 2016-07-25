@@ -16,12 +16,9 @@ String sample1Tree = "Document:
                       \t\t\t\tParagraph: 
                       \t\t\t\t\tText: 
                       \t\t\t\t\t\t\"Qui \"
-                      \t\t\t\t\tText: 
-                      \t\t\t\t\t\t\"*\"
-                      \t\t\t\t\tText: 
-                      \t\t\t\t\t\t\"quodsi iracundia\"
-                      \t\t\t\t\tText: 
-                      \t\t\t\t\t\t\"*\"
+                      \t\t\t\t\tEmphasis: 
+                      \t\t\t\t\t\tText: 
+                      \t\t\t\t\t\t\t\"quodsi iracundia\"
                       \t\t\tListItem: 
                       \t\t\t\tParagraph: 
                       \t\t\t\t\tText: 

@@ -138,7 +138,18 @@ void parseLine(variable String line, Block parent) {
 		lineBlock = IndentedCode(line[1...]);
 		line = "";
 	} else if (line.startsWith(">")) {
-		lineBlock = BlockQuote();
+		if(is List parent) {
+			line = line.trimLeading(' '.equals).trimTrailing(' '.equals);
+			if(blankLine) {
+				parent.tight = false;
+				blankLine = false;
+			}
+			lineBlock = ListItem();
+			lineBlock.appendChild(BlockQuote());
+		} else {
+			lineBlock = BlockQuote();
+		}
+		
 		line = line[1...]; //trim the starting ">"
 	} else if (bulletListPattern.test(line)) {
 		lineBlock = UnorderedList(line.get(0) else ' ');
@@ -157,8 +168,7 @@ void parseLine(variable String line, Block parent) {
 			p.appendChild(Text(line));
 			lineBlock.appendChild(p);
 		}
-		
-		line = "";  
+		line = "";
 	} else if (is HtmlBlock block = lastBlock, block.open) {
 		lineBlock = HtmlBlock(line, block.type);
 		line = "";
@@ -208,7 +218,11 @@ void parseLine(variable String line, Block parent) {
 	if (noLastBlock) {
 		parent.appendChild(lineBlock);
 		
+		if(is List parent, exists last = lineBlock.children.last, is Block last) {
+			parseLine(line, last);
+		} else {
 		parseLine(line, lineBlock);
+		}	
 	}
 }
 
