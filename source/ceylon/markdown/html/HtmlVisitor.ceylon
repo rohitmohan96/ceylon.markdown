@@ -38,6 +38,7 @@ import ceylon.markdown.core {
 	Image,
 	IndentedCode,
 	Link,
+	List,
 	ListItem,
 	OrderedList,
 	Paragraph,
@@ -138,15 +139,32 @@ shared class HtmlVisitor(Boolean completeHtml = false)
 		href = link.destination;
 		title = if (link.title == "") then null else link.title;
 		children = [for (child in link.children)
-				if (is FlowCategory|String ch = child.accept(this)) ch];
+				if (is FlowCategory ch = child.accept(this)) ch];
 	};
 	
-	shared actual HtmlNode visitListItem(ListItem listItem) => Li {
+	shared actual HtmlNode visitListItem(ListItem listItem) {
+		if(is List parent = listItem.parent, parent.tight) {
+			variable <HtmlNode&FlowCategory|String>[] children = [];
+			for(child in listItem.children) {
+				value ch = child.accept(this);
+				if (is P ch) {
+					children = children.append([for (c in ch.children) if(is Em|Strong|String c) c]);
+				} else if(is FlowCategory|String ch) {
+					children = children.append([ch]);
+				}
+			}
+			
+			return Li {
+				children = children;
+			};
+		}
+		
+		return Li {
 		children = [for (child in listItem.children)
 				if (is FlowCategory|String ch = child.accept(this)) ch];
-	};
+		};
+	}
 	
-	//TODO: Fix tightness for lists
 	shared actual HtmlNode visitOrderedList(OrderedList orderedList) => Ol {
 		children = [for (child in orderedList.children)
 				if (is Li|String ch = child.accept(this)) ch];
