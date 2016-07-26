@@ -279,7 +279,6 @@ shared void parseInlines(Node node, Node parent) {
 			}
 			case (']') {
 				parent.removeChild(node);
-				
 				variable Delimiter? delimiter = lastDelimiter;
 				
 				while (exists del = delimiter) {
@@ -392,7 +391,38 @@ shared void parseInlines(Node node, Node parent) {
 								}
 								prev = d.previous;
 							}
+						} else if(exists find = linkLabelPattern.find(text[i + 1...])) {
+							String label = find.matched[1..find.end - 2];
+							
+							if(exists link = referenceMap.get(normalizeReference(label))) {
+								Link newLink = Link(link.destination, link.title);
+								parent.appendChild(newLink);
+								// children to be appended to newLink and not link
+								newLink.appendChild(Text(whitespace.replace(str.trimmed, " ")));
+								parent.removeChild(del.node);
+								lastDelimiter = removeLastBracket(del, lastDelimiter);
+								
+								variable Delimiter? prev = del;
+								
+								// set all previous [ to inactive to prevent nested links
+								while (exists d = prev) {
+									if (d.delimiterChar == '[') {
+										d.active = false;
+									}
+									prev = d.previous;
+								}
+								
+								i += find.end;
+							} else {
+								lastDelimiter = removeLastBracket(del, lastDelimiter);
+								if (str != "") {
+									parent.appendChild(Text(str));
+								}
+								parent.appendChild(Text(ch.string));
+							}
+							
 						} else {
+							lastDelimiter = removeLastBracket(del, lastDelimiter);
 							delimiter = null;
 						}
 						
@@ -479,7 +509,27 @@ shared void parseInlines(Node node, Node parent) {
 							image.appendChild(Text(whitespace.replace(str.trimmed, " ")));
 							parent.removeChild(del.node);
 							lastDelimiter = removeLastBracket(del, lastDelimiter);
+						} else if(exists find = linkLabelPattern.find(text[i + 1...])) {
+							String label = find.matched[1..find.end - 2];
+							
+							if(exists link = referenceMap.get(normalizeReference(label))) {
+								Image image = Image(link.destination, link.title);
+								parent.appendChild(image);
+								image.appendChild(Text(whitespace.replace(str.trimmed, " ")));
+								parent.removeChild(del.node);
+								lastDelimiter = removeLastBracket(del, lastDelimiter);
+								
+								i += find.end;
+							} else {
+								lastDelimiter = removeLastBracket(del, lastDelimiter);
+								if (str != "") {
+									parent.appendChild(Text(str));
+								}
+								parent.appendChild(Text(ch.string));
+							}
+							
 						} else {
+							lastDelimiter = removeLastBracket(del, lastDelimiter);
 							delimiter = null;
 						}
 						

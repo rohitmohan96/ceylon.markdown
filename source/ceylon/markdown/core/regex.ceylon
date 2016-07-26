@@ -21,6 +21,8 @@ Regex reTicks = regex("`+");
 
 String linkLabel = "^\\[(?:[^\\\\\\[\\]]|" + escapedChar + "|\\\\){1,1000}\\]";
 
+Regex linkLabelPattern = regex(linkLabel);
+
 Regex linkReferencePattern = regex(linkLabel + ":");
 
 Regex linkTitlePattern = regex("^(?:\"(" + escapedChar + "|[^\"\\x00])*\"" +

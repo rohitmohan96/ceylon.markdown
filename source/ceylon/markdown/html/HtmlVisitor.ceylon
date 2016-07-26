@@ -139,7 +139,7 @@ shared class HtmlVisitor(Boolean completeHtml = false)
 		href = link.destination;
 		title = if (link.title == "") then null else link.title;
 		children = [for (child in link.children)
-				if (is FlowCategory ch = child.accept(this)) ch];
+				if (is FlowCategory|String ch = child.accept(this)) ch];
 	};
 	
 	shared actual HtmlNode visitListItem(ListItem listItem) {
