@@ -67,7 +67,7 @@ void parseReference(Node node) {
 		String normalizedLabel = normalizeReference(key);
 		
 		if (!referenceMap.defines(key)) {
-			Link link = Link(destination, title);
+			Link link = Link(unescapeString(destination), unescapeString(title));
 			referenceMap.put(normalizedLabel, link);
 		}
 		
@@ -343,7 +343,7 @@ shared void parseInlines(Node node, Node parent) {
 							}
 							
 							if (reference.trimmed.startsWith(")")) {
-								Link link = Link(destination, title);
+								Link link = Link(unescapeString(destination), unescapeString(title));
 								value firstIndexWhere = parent.children.firstIndexWhere((Node element) => element == del.node) else 0;
 								link.children = parent.children[firstIndexWhere+1 ...];
 								parent.children = parent.children[...firstIndexWhere];
@@ -391,10 +391,10 @@ shared void parseInlines(Node node, Node parent) {
 								}
 								prev = d.previous;
 							}
-						} else if(exists find = linkLabelPattern.find(text[i + 1...])) {
-							String label = find.matched[1..find.end - 2];
+						} else if (exists find = linkLabelPattern.find(text[i+1 ...])) {
+							String label = find.matched[1 .. find.end-2];
 							
-							if(exists link = referenceMap.get(normalizeReference(label))) {
+							if (exists link = referenceMap.get(normalizeReference(label))) {
 								Link newLink = Link(link.destination, link.title);
 								parent.appendChild(newLink);
 								// children to be appended to newLink and not link
@@ -420,7 +420,6 @@ shared void parseInlines(Node node, Node parent) {
 								}
 								parent.appendChild(Text(ch.string));
 							}
-							
 						} else {
 							lastDelimiter = removeLastBracket(del, lastDelimiter);
 							delimiter = null;
@@ -482,7 +481,7 @@ shared void parseInlines(Node node, Node parent) {
 								}
 							}
 							if (reference.trimmed.startsWith(")")) {
-								Image link = Image(destination, title);
+								Image link = Image(unescapeString(destination), unescapeString(title));
 								value firstIndexWhere = parent.children.firstIndexWhere((Node element) => element == del.node) else 0;
 								link.children = parent.children[firstIndexWhere+1 ...];
 								parent.children = parent.children[...firstIndexWhere];
@@ -509,10 +508,10 @@ shared void parseInlines(Node node, Node parent) {
 							image.appendChild(Text(whitespace.replace(str.trimmed, " ")));
 							parent.removeChild(del.node);
 							lastDelimiter = removeLastBracket(del, lastDelimiter);
-						} else if(exists find = linkLabelPattern.find(text[i + 1...])) {
-							String label = find.matched[1..find.end - 2];
+						} else if (exists find = linkLabelPattern.find(text[i+1 ...])) {
+							String label = find.matched[1 .. find.end-2];
 							
-							if(exists link = referenceMap.get(normalizeReference(label))) {
+							if (exists link = referenceMap.get(normalizeReference(label))) {
 								Image image = Image(link.destination, link.title);
 								parent.appendChild(image);
 								image.appendChild(Text(whitespace.replace(str.trimmed, " ")));
@@ -527,7 +526,6 @@ shared void parseInlines(Node node, Node parent) {
 								}
 								parent.appendChild(Text(ch.string));
 							}
-							
 						} else {
 							lastDelimiter = removeLastBracket(del, lastDelimiter);
 							delimiter = null;
@@ -670,7 +668,8 @@ shared void processEmphasis(Node parent, Delimiter? stackBottom, variable Delimi
 		currentPosition = stackBottom.next;
 	} else {
 		variable Delimiter? del = null;
-		while (exists delimiter = lastDelimiter) {
+		while (exists delimiter = lastDelimiter, 
+			delimiter.delimiterChar == '*' || delimiter.delimiterChar == '_') {
 			del = delimiter;
 			lastDelimiter = delimiter.previous;
 		}
@@ -691,12 +690,12 @@ shared void processEmphasis(Node parent, Delimiter? stackBottom, variable Delimi
 			opener = cp.previous;
 			variable Boolean openerFound = false;
 			while (exists op = opener,
-				if (exists opBottom = openBottom[delimiterChar]) then 
-				op != opBottom else true,
-				if(exists stackBottom) then
-				op != stackBottom else true) {
+				if (exists opBottom = openBottom[delimiterChar]) then
+					op != opBottom else true,
+				if (exists stackBottom) then
+					op != stackBottom else true) {
 				
-				if(op.delimiterChar == cp.delimiterChar && op.canOpen) {
+				if (op.delimiterChar==cp.delimiterChar && op.canOpen) {
 					openerFound = true;
 					break;
 				}
@@ -705,51 +704,51 @@ shared void processEmphasis(Node parent, Delimiter? stackBottom, variable Delimi
 			}
 			oldCloser = cp;
 			
-			if(exists op = opener, delimiterChar == '*' || delimiterChar == '_') {
-				if(!openerFound) {
+			if (exists op = opener, delimiterChar=='*' || delimiterChar=='_') {
+				if (!openerFound) {
 					currentPosition = cp.next;
 				} else {
-					if(cp.numOfDelimiters < 3 || op.numOfDelimiters < 3) {
+					if (cp.numOfDelimiters<3 || op.numOfDelimiters<3) {
 						useDelims = cp.numOfDelimiters <= op.numOfDelimiters then cp.numOfDelimiters else op.numOfDelimiters;
 					} else {
-						useDelims = cp.numOfDelimiters % 2 == 0 then 2 else 1;
+						useDelims = cp.numOfDelimiters%2 == 0 then 2 else 1;
 					}
 					
 					op.numOfDelimiters -= useDelims;
 					cp.numOfDelimiters -= useDelims;
 					
-					op.node.text = op.node.text[...(op.node.text.size - useDelims)];
-					cp.node.text = cp.node.text[...(cp.node.text.size - useDelims)];
+					op.node.text = op.node.text[... (op.node.text.size - useDelims)];
+					cp.node.text = cp.node.text[... (cp.node.text.size - useDelims)];
 					
 					Node emph = useDelims == 1 then Emphasis() else StrongEmphasis();
 					
 					value first = parent.children.firstIndexWhere((Node element) => element == op.node) else 0;
 					value last = parent.children.firstIndexWhere((Node element) => element == cp.node) else 0;
 					
-					emph.children = parent.children[first + 1..last - 1];
-					value rest = parent.children[last + 1...];
-					parent.children = parent.children[...first - 1];
+					emph.children = parent.children[first+1 .. last-1];
+					value rest = parent.children[last+1 ...];
+					parent.children = parent.children[... first-1];
 					parent.appendChild(emph);
-					for(r in rest) {
+					for (r in rest) {
 						parent.appendChild(r);
 					}
 					
 					removeDelimitersBetween(op, cp);
 					
-					if(op.numOfDelimiters == 0) {
+					if (op.numOfDelimiters == 0) {
 						parent.removeChild(op.node);
 						removeLastBracket(op, lastDelimiter);
 					}
 					
-					if(cp.numOfDelimiters == 0) {
+					if (cp.numOfDelimiters == 0) {
 						parent.removeChild(cp.node);
 						currentPosition = cp.next;
 						removeLastBracket(cp, lastDelimiter);
 					}
 				}
-				if(!openerFound) {
+				if (!openerFound) {
 					openBottom.put(delimiterChar, oldCloser.previous);
-					if(!oldCloser.canOpen) {
+					if (!oldCloser.canOpen) {
 						lastDelimiter = removeLastBracket(oldCloser, lastDelimiter);
 					}
 				}
@@ -759,7 +758,7 @@ shared void processEmphasis(Node parent, Delimiter? stackBottom, variable Delimi
 }
 
 void removeDelimitersBetween(Delimiter opener, Delimiter closer) {
-	if(exists next = opener.next, next != closer) {
+	if (exists next = opener.next, next != closer) {
 		opener.next = closer;
 		closer.previous = opener;
 	}
@@ -786,3 +785,24 @@ shared Delimiter? removeLastBracket(Delimiter del, variable Delimiter? lastDelim
 
 shared String normalizeReference(String str) =>
 	whitespace.replace(str.trimmed.lowercased, " ");
+
+shared String unescapeString(String str) {
+	StringBuilder sb = StringBuilder();
+	variable Integer lastEnd = 0;
+	
+	for (find in reEntityOrEscapedChar.findAll(str)) {
+		sb.append(if (lastEnd != find.start) then str[lastEnd .. find.start-1] else "");
+		
+		if (find.matched.startsWith("\\")) {
+			sb.append(find.matched[1...]);
+		}
+		
+		lastEnd = find.end;
+	}
+	
+	if (lastEnd != str.size) {
+		sb.append(str[lastEnd...]);
+	}
+	
+	return sb.string;
+}
