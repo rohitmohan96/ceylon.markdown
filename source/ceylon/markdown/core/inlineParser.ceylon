@@ -350,7 +350,7 @@ shared void parseInlines(Node node, Node parent) {
 								parent.appendChild(link);
 								
 								if (str != "") {
-									link.appendChild(Text(whitespace.replace(str.trimmed, " ")));
+									link.appendChild(Text(str));
 								}
 								
 								variable Delimiter? prev = del;
@@ -381,7 +381,7 @@ shared void parseInlines(Node node, Node parent) {
 							Link newLink = Link(link.destination, link.title);
 							parent.appendChild(newLink);
 							// children to be appended to newLink and not link
-							newLink.appendChild(Text(whitespace.replace(str.trimmed, " ")));
+							newLink.appendChild(Text(str));
 							parent.removeChild(del.node);
 							
 							processEmphasis(newLink, del, lastDelimiter);
@@ -404,7 +404,7 @@ shared void parseInlines(Node node, Node parent) {
 								Link newLink = Link(link.destination, link.title);
 								parent.appendChild(newLink);
 								// children to be appended to newLink and not link
-								newLink.appendChild(Text(whitespace.replace(str.trimmed, " ")));
+								newLink.appendChild(Text(str));
 								parent.removeChild(del.node);
 								
 								processEmphasis(newLink, del, lastDelimiter);
@@ -497,7 +497,7 @@ shared void parseInlines(Node node, Node parent) {
 								parent.appendChild(link);
 								
 								if (str != "") {
-									link.appendChild(Text(whitespace.replace(str.trimmed, " ")));
+									link.appendChild(Text(str));
 								}
 								
 								parent.removeChild(del.node);
@@ -517,7 +517,7 @@ shared void parseInlines(Node node, Node parent) {
 						} else if (exists link = referenceMap.get(normalizeReference(str))) {
 							Image image = Image(link.destination, link.title);
 							parent.appendChild(image);
-							image.appendChild(Text(whitespace.replace(str.trimmed, " ")));
+							image.appendChild(Text(str));
 							parent.removeChild(del.node);
 						
 							processEmphasis(image, del, lastDelimiter);
@@ -529,7 +529,7 @@ shared void parseInlines(Node node, Node parent) {
 							if (exists link = referenceMap.get(normalizeReference(label))) {
 								Image image = Image(link.destination, link.title);
 								parent.appendChild(image);
-								image.appendChild(Text(whitespace.replace(str.trimmed, " ")));
+								image.appendChild(Text(str));
 								parent.removeChild(del.node);
 								
 								processEmphasis(image, del, lastDelimiter);

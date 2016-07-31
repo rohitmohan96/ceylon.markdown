@@ -123,11 +123,31 @@ shared class HtmlVisitor(Boolean completeHtml = false)
 	
 	shared actual HtmlNode visitHtmlInline(HtmlInline htmlInline) => nothing;
 	
-	//TODO: get alt from child text or link
-	shared actual HtmlNode visitImage(Image image) => Img {
-		src = image.destination;
-		title = if (image.title == "") then null else image.title;
-	};
+	shared actual HtmlNode visitImage(Image image) {
+		String text = getText(P {
+				children = [for (child in image.children)
+						if (is PhrasingCategory|String ch = child.accept(this)) ch];
+			});
+		
+		return Img {
+			src = image.destination;
+			alt = if (text != "") then text else null;
+			title = if (image.title == "") then null else image.title;
+		};
+	}
+	
+	String getText(HtmlNode node) {
+		variable StringBuilder text = StringBuilder();
+		for (child in node.children) {
+			if (is String child) {
+				text.append(child);
+			} else if (is HtmlNode child) {
+				text.append(getText(child));
+			}
+		}
+		
+		return text.string;
+	}
 	
 	shared actual HtmlNode visitIndentedCode(IndentedCode indentedCode) => Pre {
 		HtmlCode {
@@ -143,13 +163,13 @@ shared class HtmlVisitor(Boolean completeHtml = false)
 	};
 	
 	shared actual HtmlNode visitListItem(ListItem listItem) {
-		if(is List parent = listItem.parent, parent.tight) {
+		if (is List parent = listItem.parent, parent.tight) {
 			variable <HtmlNode&FlowCategory|String>[] children = [];
-			for(child in listItem.children) {
+			for (child in listItem.children) {
 				value ch = child.accept(this);
 				if (is P ch) {
-					children = children.append([for (c in ch.children) if(is Em|Strong|A|Img|String c) c]);
-				} else if(is FlowCategory|String ch) {
+					children = children.append([for (c in ch.children) if (is Em|Strong|A|Img|String c) c]);
+				} else if (is FlowCategory|String ch) {
 					children = children.append([ch]);
 				}
 			}
@@ -160,8 +180,8 @@ shared class HtmlVisitor(Boolean completeHtml = false)
 		}
 		
 		return Li {
-		children = [for (child in listItem.children)
-				if (is FlowCategory|String ch = child.accept(this)) ch];
+			children = [for (child in listItem.children)
+					if (is FlowCategory|String ch = child.accept(this)) ch];
 		};
 	}
 	
