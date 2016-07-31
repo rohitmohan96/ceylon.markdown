@@ -364,6 +364,9 @@ shared void parseInlines(Node node, Node parent) {
 								}
 								
 								parent.removeChild(del.node);
+
+								processEmphasis(link, del, lastDelimiter);
+								
 								lastDelimiter = removeLastBracket(del, lastDelimiter);
 								
 								i++;
@@ -380,6 +383,9 @@ shared void parseInlines(Node node, Node parent) {
 							// children to be appended to newLink and not link
 							newLink.appendChild(Text(whitespace.replace(str.trimmed, " ")));
 							parent.removeChild(del.node);
+							
+							processEmphasis(newLink, del, lastDelimiter);
+							
 							lastDelimiter = removeLastBracket(del, lastDelimiter);
 							
 							variable Delimiter? prev = del;
@@ -400,6 +406,9 @@ shared void parseInlines(Node node, Node parent) {
 								// children to be appended to newLink and not link
 								newLink.appendChild(Text(whitespace.replace(str.trimmed, " ")));
 								parent.removeChild(del.node);
+								
+								processEmphasis(newLink, del, lastDelimiter);
+								
 								lastDelimiter = removeLastBracket(del, lastDelimiter);
 								
 								variable Delimiter? prev = del;
@@ -492,6 +501,9 @@ shared void parseInlines(Node node, Node parent) {
 								}
 								
 								parent.removeChild(del.node);
+								
+								processEmphasis(link, del, lastDelimiter);
+								
 								lastDelimiter = removeLastBracket(del, lastDelimiter);
 								
 								i++;
@@ -507,6 +519,9 @@ shared void parseInlines(Node node, Node parent) {
 							parent.appendChild(image);
 							image.appendChild(Text(whitespace.replace(str.trimmed, " ")));
 							parent.removeChild(del.node);
+						
+							processEmphasis(image, del, lastDelimiter);
+							
 							lastDelimiter = removeLastBracket(del, lastDelimiter);
 						} else if (exists find = linkLabelPattern.find(text[i+1 ...])) {
 							String label = find.matched[1 .. find.end-2];
@@ -516,6 +531,9 @@ shared void parseInlines(Node node, Node parent) {
 								parent.appendChild(image);
 								image.appendChild(Text(whitespace.replace(str.trimmed, " ")));
 								parent.removeChild(del.node);
+								
+								processEmphasis(image, del, lastDelimiter);
+								
 								lastDelimiter = removeLastBracket(del, lastDelimiter);
 								
 								i += find.end;
