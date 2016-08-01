@@ -50,8 +50,22 @@ import ceylon.markdown.core {
 	HtmlInline
 }
 
-shared class HtmlVisitor(Boolean completeHtml = false)
-		satisfies Visitor<HtmlNode|<HtmlNode&FlowCategory|String>[]> {
+shared class HtmlVisitor()
+		satisfies Visitor<HtmlNode|String|<HtmlNode&FlowCategory|String>[]> {
+	
+	shared HtmlNode renderCompleteHtml(Document document) {
+		return Html {
+			Head {	
+			},
+			Body {
+				children = visitDocument(document);
+			}
+		};
+	}
+	
+	shared <HtmlNode&FlowCategory|String>[] renderPartialHtml(Document document) {
+		return visitDocument(document);
+	}
 	
 	shared actual HtmlNode visitBlockQuote(BlockQuote blockQuote) => Blockquote {
 		children = [for (child in blockQuote.children)
@@ -62,21 +76,9 @@ shared class HtmlVisitor(Boolean completeHtml = false)
 		children = code.text.linesWithBreaks;
 	};
 	
-	shared actual HtmlNode|<HtmlNode&FlowCategory|String>[] visitDocument(Document document) {
-		if (completeHtml) {
-			return Html {
-				Head {
-				},
-				Body {
-					children = [for (child in document.children)
-							if (is FlowCategory|String ch = child.accept(this)) ch];
-				}
-			};
-		} else {
-			return [for (child in document.children)
+	shared actual <HtmlNode&FlowCategory|String>[] visitDocument(Document document) => 
+			[for (child in document.children)
 					if (is FlowCategory|String ch = child.accept(this)) ch];
-		}
-	}
 	
 	shared actual HtmlNode visitEmphasis(Emphasis emphasis) => Em {
 		children = [for (child in emphasis.children)

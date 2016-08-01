@@ -1,5 +1,5 @@
 shared interface Visitor<Type> {
-	shared formal String visitText(Text text);
+	shared formal Type visitText(Text text);
 	shared formal Type visitParagraph(Paragraph paragraph);
 	shared formal Type visitBlockQuote(BlockQuote blockQuote);
 	shared formal Type visitDocument(Document document);
@@ -14,7 +14,7 @@ shared interface Visitor<Type> {
 	shared formal Type visitLink(Link link);
 	shared formal Type visitOrderedList(OrderedList orderedList);
 	shared formal Type visitListItem(ListItem listItem);
-	shared formal String visitSoftBreak(SoftBreak softBreak);
+	shared formal Type visitSoftBreak(SoftBreak softBreak);
 	shared formal Type visitStrongEmphasis(StrongEmphasis strongEmphasis);
 	shared formal Type visitThematicBreak(ThematicBreak thematicBreak);
 	shared formal Type visitUnorderedList(UnorderedList unorderedList);
