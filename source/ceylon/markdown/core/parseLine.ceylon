@@ -52,7 +52,7 @@ void parseLine(variable String line, Block parent) {
 		return;
 	}
 	
-	if (!lastBlock is FencedCode) {
+	if (if (is FencedCode|HtmlBlock block = lastBlock) then !block.open else true) {
 		line = trimSpaces(line); //trim first 3 spaces in the beginning
 	}
 	 
@@ -63,10 +63,6 @@ void parseLine(variable String line, Block parent) {
 		block.closeBlock();
 		
 		return;
-	}
-	
-	if (is HtmlBlock block = lastBlock, block.open) {
-		line = line.trimLeading(' '.equals).trimTrailing(' '.equals);
 	}
 	
 	//TODO Nested list item
@@ -89,6 +85,9 @@ void parseLine(variable String line, Block parent) {
 			lineBlock = Paragraph();
 			lineBlock.appendChild(Text(line));
 		}
+		line = "";
+	} else if (is HtmlBlock block = lastBlock, block.open) {
+		lineBlock = HtmlBlock(line, block.type);
 		line = "";
 	} else if (!lastBlock is FencedCode, fencedCodeblockPattern.test(line)) {
 		lineBlock = FencedCode("", line.count(('\`'.equals)));
@@ -168,9 +167,6 @@ void parseLine(variable String line, Block parent) {
 			p.appendChild(Text(line));
 			lineBlock.appendChild(p);
 		}
-		line = "";
-	} else if (is HtmlBlock block = lastBlock, block.open) {
-		lineBlock = HtmlBlock(line, block.type);
 		line = "";
 	} else if (is FencedCode block = lastBlock, block.open) {
 		lineBlock = FencedCode(line, block.fenceLevel);

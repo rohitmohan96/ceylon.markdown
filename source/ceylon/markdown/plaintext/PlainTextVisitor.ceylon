@@ -37,9 +37,9 @@ shared class PlainTextVisitor() satisfies Visitor<String> {
 	
 	shared actual String visitHeading(Heading heading) => visitChildren(heading);
 	
-	shared actual String visitHtmlBlock(HtmlBlock htmlBlock) => visitChildren(htmlBlock);
+	shared actual String visitHtmlBlock(HtmlBlock htmlBlock) => htmlBlock.text;
 	
-	shared actual String visitHtmlInline(HtmlInline htmlInline) => visitChildren(htmlInline);
+	shared actual String visitHtmlInline(HtmlInline htmlInline) => htmlInline.text;
 	
 	shared actual String visitImage(Image image) => visitChildren(image);
 	
@@ -64,17 +64,18 @@ shared class PlainTextVisitor() satisfies Visitor<String> {
 	shared actual String visitUnorderedList(UnorderedList unorderedList) => visitChildren(unorderedList) + "\n";
 	
 	shared String visitChildren(Node node) {
-		variable String str = "";
+		value builder = StringBuilder();
+
 		variable Integer i = 0;
 		for(child in node.children) {
 			if(is OrderedList node) {
-				str += (node.startsWith + i++).string + node.delimeter.string + " ";
+				builder.append((node.startsWith + i++).string + node.delimeter.string + " ");
 			} else if(is UnorderedList node) {
-				str += node.bulletChar.string + " ";
+				builder.append(node.bulletChar.string + " ");
 			}
-			str += child.accept(this);
+			builder.append(child.accept(this));
 		}
 		
-		return str;
+		return builder.string;
 	}
 }

@@ -300,11 +300,11 @@ String htmlBlockTree = "Document:
                         \t\t\"</div>\"
                         \tHtmlBlock: 
                         \t\t\"<table>
-                        <tr>
-                        <td>
-                        **test**
-                        </td>
-                        </tr>
+                          <tr>
+                            <td>
+                              **test**
+                            </td>
+                          </tr>
                         </table>\"
                         \tHtmlBlock: 
                         \t\t\"<table>\"

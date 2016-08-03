@@ -83,7 +83,7 @@ void parseReference(Node node) {
 	}
 }
 
-shared void parseInlines(Node node, Node parent) {
+void parseInlines(Node node, Node parent) {
 	variable Delimiter? lastDelimiter = null;
 	
 	if (is Text node) {
@@ -642,7 +642,7 @@ shared Document inlineParser(Document document) {
 	return document;
 }
 
-shared DelimiterRun scanDelimiters(String text, variable Integer index, Character delimiterChar) {
+DelimiterRun scanDelimiters(String text, variable Integer index, Character delimiterChar) {
 	variable Integer delimiterCount = 0;
 	Integer startIndex = index;
 	while (exists ch = text[index], ch == delimiterChar) {
@@ -676,7 +676,7 @@ shared DelimiterRun scanDelimiters(String text, variable Integer index, Characte
 	return DelimiterRun(delimiterCount, canOpen, canClose);
 }
 
-shared void processEmphasis(Node parent, Delimiter? stackBottom, variable Delimiter? lastDelimiter) {
+void processEmphasis(Node parent, Delimiter? stackBottom, variable Delimiter? lastDelimiter) {
 	variable Delimiter? currentPosition;
 	variable Delimiter? opener;
 	variable Integer useDelims;
@@ -782,7 +782,7 @@ void removeDelimitersBetween(Delimiter opener, Delimiter closer) {
 	}
 }
 
-shared Delimiter? removeLastBracket(Delimiter del, variable Delimiter? lastDelimiter) {
+Delimiter? removeLastBracket(Delimiter del, variable Delimiter? lastDelimiter) {
 	if (exists prev = del.previous, exists next = del.next) {
 		prev.next = del.next;
 		next.previous = prev;
@@ -801,10 +801,10 @@ shared Delimiter? removeLastBracket(Delimiter del, variable Delimiter? lastDelim
 	return lastDelimiter;
 }
 
-shared String normalizeReference(String str) =>
+String normalizeReference(String str) =>
 	whitespace.replace(str.trimmed.lowercased, " ");
 
-shared String unescapeString(String str) {
+String unescapeString(String str) {
 	StringBuilder sb = StringBuilder();
 	variable Integer lastEnd = 0;
 	
