@@ -11,14 +11,17 @@ import ceylon.markdown.core {
 import ceylon.markdown.html {
 	HtmlVisitor
 }
-
+import java.lang {
+	JString=String
+}
 import com.redhat.ceylon.common.tool {
 	CeylonBaseTool,
 	argument=argument__SETTER,
 	description__SETTER,
 	option=option__SETTER,
 	summary,
-	description
+	description,
+	optionArgument__SETTER
 }
 
 summary ("Convert Markdown to HTML")
@@ -30,13 +33,14 @@ shared class CeylonMarkdownTool() extends CeylonBaseTool() {
 	}
 	shared variable String arguments = "";
 	
-	description__SETTER ("Generate Partial HTML, use `--partialHtml`")
-	option
-	shared variable Boolean partialHtml = false;
+	option { shortName = 'o'; }
+	optionArgument__SETTER
+	description__SETTER ("Output file, use `--output=file.html`")
+	shared variable String? output = null;
 	
 	shared actual void run() {
 		value filePath = current.childPath(arguments);
-		value newPath = current.childPath(arguments + ".html");
+		value newPath = current.childPath(output else (arguments + ".html"));
 		StringBuilder builder = StringBuilder();
 		
 		if (is File file = filePath.resource) {
@@ -48,8 +52,7 @@ shared class CeylonMarkdownTool() extends CeylonBaseTool() {
 		
 		value tree = parse(builder.string);
 		
-		value html = if (!partialHtml) then HtmlVisitor().renderCompleteHtml(tree)
-		else HtmlVisitor().renderPartialHtml(tree);
+		value html = HtmlVisitor().renderCompleteHtml(tree);
 		
 		if (is File|Nil res = newPath.resource) {
 			value file = createFileIfNil(res);
