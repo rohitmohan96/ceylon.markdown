@@ -1,0 +1,4 @@
+;Convert Markdown to HTML
+summary=Convert Markdown to HTML
+module=ceylon.markdown.cli/1.0.0
+class=ceylon.markdown.cli.CeylonMarkdownTool
