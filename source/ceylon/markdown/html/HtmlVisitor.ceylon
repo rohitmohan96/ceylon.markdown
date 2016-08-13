@@ -49,10 +49,12 @@ import ceylon.markdown.core {
 	HtmlInline
 }
 
+shared alias HtmlChildren => HtmlNode&FlowCategory|CharacterData|String;
+
 "An implementation of the Markdown [[Visitor]] that converts Markdown to HTMl.
  This class can be used to generate both partial and complete HTML."
 shared class HtmlVisitor()
-		satisfies Visitor<HtmlNode|String|<HtmlNode&FlowCategory|CharacterData|String>[]> {
+		satisfies Visitor<HtmlNode|String|HtmlChildren[]> {
 	
 	shared actual HtmlNode visitBlockQuote(BlockQuote blockQuote) => Blockquote {
 		children = [for (child in blockQuote.children)
@@ -63,7 +65,7 @@ shared class HtmlVisitor()
 		children = code.text.linesWithBreaks;
 	};
 	
-	shared actual <HtmlNode&FlowCategory|CharacterData|String>[] visitDocument(Document document) =>
+	shared actual HtmlChildren[] visitDocument(Document document) =>
 		[for (child in document.children)
 				if (is CharacterData|FlowCategory|String ch = child.accept(this)) ch];
 	
