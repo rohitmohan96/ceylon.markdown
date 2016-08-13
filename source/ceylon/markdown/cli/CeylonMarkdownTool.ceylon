@@ -11,18 +11,24 @@ import ceylon.markdown.core {
 import ceylon.markdown.html {
 	HtmlVisitor
 }
+
 import com.redhat.ceylon.common.tool {
 	CeylonBaseTool,
 	argument=argument__SETTER,
 	description__SETTER,
-	option=option__SETTER,
 	summary,
 	description,
-	optionArgument__SETTER
+	optionArgument=optionArgument__SETTER
 }
 
 summary ("Convert Markdown to HTML")
-description ("ceylon markdown file.md")
+description ("    ceylon markdown file.md
+              
+              This will generate an output file named file.md.html
+              
+              To use a different name, use the output option:
+              
+                  ceylon markdown file.md --output=file.html")
 shared class CeylonMarkdownTool() extends CeylonBaseTool() {
 
 	argument { multiplicity = "1";
@@ -30,7 +36,7 @@ shared class CeylonMarkdownTool() extends CeylonBaseTool() {
 	}
 	shared variable String arguments = "";
 
-	optionArgument__SETTER { shortName = 'o'; }
+	optionArgument { shortName = 'o'; argumentName = "file"; }
 	description__SETTER ("Output file, use `--output=file.html`")
 	shared variable String? output = null;
 
