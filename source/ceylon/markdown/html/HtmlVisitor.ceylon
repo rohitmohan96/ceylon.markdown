@@ -6,12 +6,9 @@ import ceylon.html {
 	P,
 	PhrasingCategory,
 	Br,
-	Body,
 	Li,
 	Hr,
 	Ul,
-	Html,
-	Head,
 	Em,
 	Strong,
 	Pre,
@@ -56,25 +53,6 @@ import ceylon.markdown.core {
  This class can be used to generate both partial and complete HTML."
 shared class HtmlVisitor()
 		satisfies Visitor<HtmlNode|String|<HtmlNode&FlowCategory|CharacterData|String>[]> {
-	
-	"Render Markdown as a complete HTML document. This method returns an [[Html]] object.
-	       
-	            value html = HtmlVisitor().renderCompleteHtml(tree);"
-	shared HtmlNode renderCompleteHtml(Document document) {
-		return Html {
-			Head { },
-			Body {
-				children = visitDocument(document);
-			}
-		};
-	}
-	
-	"Render Markdown as a list of HTML elements. This method returns a sequence.
-	       
-	           value nodes = HtmlVisitor().renderPartialHtml(tree);"
-	shared <HtmlNode&FlowCategory|CharacterData|String>[] renderPartialHtml(Document document) {
-		return visitDocument(document);
-	}
 	
 	shared actual HtmlNode visitBlockQuote(BlockQuote blockQuote) => Blockquote {
 		children = [for (child in blockQuote.children)

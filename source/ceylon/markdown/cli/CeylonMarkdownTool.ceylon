@@ -9,7 +9,7 @@ import ceylon.markdown.core {
 	parse
 }
 import ceylon.markdown.html {
-	HtmlVisitor
+	renderCompleteHtml
 }
 
 import com.redhat.ceylon.common.tool {
@@ -54,7 +54,7 @@ shared class CeylonMarkdownTool() extends CeylonBaseTool() {
 
 		value tree = parse(builder.string);
 
-		value html = HtmlVisitor().renderCompleteHtml(tree);
+		value html = renderCompleteHtml(tree);
 
 		if (is File|Nil res = newPath.resource) {
 			value file = createFileIfNil(res);
