@@ -52,8 +52,6 @@ import ceylon.markdown.core {
 	HtmlInline
 }
 
-// shared alias CharacterData => String|Raw|Comment|ProcessingInstruction;
-
 "An implementation of the Markdown [[Visitor]] that converts Markdown to HTMl.
  This class can be used to generate both partial and complete HTML."
 shared class HtmlVisitor()

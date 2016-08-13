@@ -22,60 +22,78 @@ import ceylon.markdown.core {
 	UnorderedList,
 	Node
 }
-shared class PlainTextVisitor() satisfies Visitor<String> {
-	shared actual String visitBlockQuote(BlockQuote blockQuote) => visitChildren(blockQuote) + "\n";
-	
-	shared actual String visitCode(Code code) => code.text;
-	
-	shared actual String visitDocument(Document document) => visitChildren(document);
-	
-	shared actual String visitEmphasis(Emphasis emphasis) => visitChildren(emphasis);
-	
-	shared actual String visitFencedCode(FencedCode fencedCode) => fencedCode.text;
-	
-	shared actual String visitHardBreak(HardBreak hardBreak) => "\n";
-	
-	shared actual String visitHeading(Heading heading) => visitChildren(heading);
-	
-	shared actual String visitHtmlBlock(HtmlBlock htmlBlock) => htmlBlock.text;
-	
-	shared actual String visitHtmlInline(HtmlInline htmlInline) => htmlInline.text;
-	
-	shared actual String visitImage(Image image) => visitChildren(image);
-	
-	shared actual String visitIndentedCode(IndentedCode indentedCode) => indentedCode.text;
-	
-	shared actual String visitLink(Link link) => visitChildren(link);
-	
-	shared actual String visitListItem(ListItem listItem) => visitChildren(listItem) + "\n";
-	
-	shared actual String visitOrderedList(OrderedList orderedList) => visitChildren(orderedList) + "\n";
-	
-	shared actual String visitParagraph(Paragraph paragraph) => visitChildren(paragraph);
-	
-	shared actual String visitSoftBreak(SoftBreak softBreak) => " ";
-	
-	shared actual String visitStrongEmphasis(StrongEmphasis strongEmphasis) => visitChildren(strongEmphasis);
-	
-	shared actual String visitText(Text text) => text.text;
-	
-	shared actual String visitThematicBreak(ThematicBreak thematicBreak) => "***";
-	
-	shared actual String visitUnorderedList(UnorderedList unorderedList) => visitChildren(unorderedList) + "\n";
-	
-	shared String visitChildren(Node node) {
-		value builder = StringBuilder();
 
-		variable Integer i = 0;
-		for(child in node.children) {
-			if(is OrderedList node) {
-				builder.append((node.startsWith + i++).string + node.delimeter.string + " ");
-			} else if(is UnorderedList node) {
-				builder.append(node.bulletChar.string + " ");
-			}
-			builder.append(child.accept(this));
-		}
-		
-		return builder.string;
+shared class PlainTextVisitor(void write(String string)) satisfies Visitor<Anything> {
+	shared actual void visitBlockQuote(BlockQuote blockQuote) {
+		visitChildren(blockQuote);
+		write("\n");
 	}
+	
+	shared actual void visitCode(Code code) => write(code.text);
+	
+	shared actual void visitDocument(Document document) => visitChildren(document);
+	
+	shared actual void visitEmphasis(Emphasis emphasis) => visitChildren(emphasis);
+	
+	shared actual void visitFencedCode(FencedCode fencedCode) => write(fencedCode.text);
+	
+	shared actual void visitHardBreak(HardBreak hardBreak) => write("\n");
+	
+	shared actual void visitHeading(Heading heading) => visitChildren(heading);
+	
+	shared actual void visitHtmlBlock(HtmlBlock htmlBlock) => write(htmlBlock.text);
+	
+	shared actual void visitHtmlInline(HtmlInline htmlInline) => write(htmlInline.text);
+	
+	shared actual void visitImage(Image image) => visitChildren(image);
+	
+	shared actual void visitIndentedCode(IndentedCode indentedCode) => write(indentedCode.text);
+	
+	shared actual void visitLink(Link link) => visitChildren(link);
+	
+	shared actual void visitListItem(ListItem listItem) {
+		visitChildren(listItem);
+		write("\n");
+	}
+	
+	shared actual void visitOrderedList(OrderedList orderedList) {
+		visitChildren(orderedList);
+		write("\n");
+	}
+	
+	shared actual void visitParagraph(Paragraph paragraph) {
+		visitChildren(paragraph);
+		write("\n");
+	}
+	
+	shared actual void visitSoftBreak(SoftBreak softBreak) => write(" ");
+	
+	shared actual void visitStrongEmphasis(StrongEmphasis strongEmphasis) => visitChildren(strongEmphasis);
+	
+	shared actual void visitText(Text text) => write(text.text);
+	
+	shared actual void visitThematicBreak(ThematicBreak thematicBreak) => write("***");
+	
+	shared actual void visitUnorderedList(UnorderedList unorderedList) {
+		visitChildren(unorderedList);
+		write("\n");
+	}
+	
+	shared void visitChildren(Node node) {
+		
+		variable Integer i = 0;
+		for (child in node.children) {
+			if (is OrderedList node) {
+				write((node.startsWith + i++).string + node.delimeter.string + " ");
+			} else if (is UnorderedList node) {
+				write(node.bulletChar.string + " ");
+			}
+			child.accept(this);
+		}
+	}
+	
+}
+
+shared void renderPlainText(Node node, void write(String string)) {
+	node.accept(PlainTextVisitor(write));
 }
