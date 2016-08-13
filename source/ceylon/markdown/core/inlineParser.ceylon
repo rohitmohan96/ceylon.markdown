@@ -651,7 +651,7 @@ DelimiterRun scanDelimiters(String text, variable Integer index, Character delim
 	}
 	
 	String before = startIndex == 0 then "\n" else text[startIndex-1 .. startIndex];
-	Character charAfter = text[index + 1] else '\n';
+	Character charAfter = text[index] else '\n';
 	String after = charAfter.string;
 	
 	Boolean beforeIsPunctuation = punctuation.test(before);
@@ -663,6 +663,7 @@ DelimiterRun scanDelimiters(String text, variable Integer index, Character delim
 	Boolean rightFlanking = !beforeIsWhitespace && !(beforeIsPunctuation && !afterIsWhitespace && !afterIsPunctuation);
 	variable Boolean canOpen;
 	variable Boolean canClose;
+	
 	if (delimiterChar == '_') {
 		canOpen = leftFlanking && (!rightFlanking || beforeIsPunctuation);
 		canClose = rightFlanking && (!leftFlanking || afterIsPunctuation);
