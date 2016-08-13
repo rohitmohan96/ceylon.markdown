@@ -38,11 +38,23 @@ shared class PlainTextVisitor(void write(String string)) satisfies Visitor<Anyth
 	
 	shared actual void visitEmphasis(Emphasis emphasis) => visitChildren(emphasis);
 	
-	shared actual void visitFencedCode(FencedCode fencedCode) => write(fencedCode.text);
+	shared actual void visitFencedCode(FencedCode fencedCode) {
+		write(fencedCode.text);
+		write("\n");
+	}
 	
 	shared actual void visitHardBreak(HardBreak hardBreak) => write("\n");
 	
-	shared actual void visitHeading(Heading heading) => visitChildren(heading);
+	shared actual void visitHeading(Heading heading) {
+		visitChildren(heading);
+		write("\n");
+		if (heading.level > 1) {
+			write("-----");
+		} else {
+			write("=====");
+		}
+		write("\n\n");
+	}
 	
 	shared actual void visitHtmlBlock(HtmlBlock htmlBlock) => write(htmlBlock.text);
 	
@@ -50,13 +62,15 @@ shared class PlainTextVisitor(void write(String string)) satisfies Visitor<Anyth
 	
 	shared actual void visitImage(Image image) => visitChildren(image);
 	
-	shared actual void visitIndentedCode(IndentedCode indentedCode) => write(indentedCode.text);
+	shared actual void visitIndentedCode(IndentedCode indentedCode) {
+		write(indentedCode.text);
+		write("\n");
+	}
 	
 	shared actual void visitLink(Link link) => visitChildren(link);
 	
 	shared actual void visitListItem(ListItem listItem) {
 		visitChildren(listItem);
-		write("\n");
 	}
 	
 	shared actual void visitOrderedList(OrderedList orderedList) {
@@ -75,7 +89,7 @@ shared class PlainTextVisitor(void write(String string)) satisfies Visitor<Anyth
 	
 	shared actual void visitText(Text text) => write(text.text);
 	
-	shared actual void visitThematicBreak(ThematicBreak thematicBreak) => write("***");
+	shared actual void visitThematicBreak(ThematicBreak thematicBreak) => write("*****\n\n");
 	
 	shared actual void visitUnorderedList(UnorderedList unorderedList) {
 		visitChildren(unorderedList);
