@@ -23,6 +23,9 @@ import ceylon.markdown.core {
 	Node
 }
 
+"""
+   An implementation of the Markdown [[Visitor]] that converts Markdown to plain text.
+"""
 shared class PlainTextVisitor(void write(String string)) satisfies Visitor<Anything> {
 	shared actual void visitBlockQuote(BlockQuote blockQuote) {
 		visitChildren(blockQuote);
@@ -94,6 +97,13 @@ shared class PlainTextVisitor(void write(String string)) satisfies Visitor<Anyth
 	
 }
 
+"Render Markdown as plain text.
+ 
+ Usage: 
+     value sb = StringBuilder();
+     
+     renderPlainText(tree, sb.append);
+     "
 shared void renderPlainText(Node node, void write(String string)) {
 	node.accept(PlainTextVisitor(write));
 }
