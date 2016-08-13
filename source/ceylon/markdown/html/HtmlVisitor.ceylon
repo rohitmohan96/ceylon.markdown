@@ -58,8 +58,8 @@ shared class HtmlVisitor()
 		satisfies Visitor<HtmlNode|String|<HtmlNode&FlowCategory|CharacterData|String>[]> {
 	
 	"Render Markdown as a complete HTML document. This method returns an [[Html]] object.
-	    
-	         value html = HtmlVisitor().renderCompleteHtml(tree);"
+	       
+	            value html = HtmlVisitor().renderCompleteHtml(tree);"
 	shared HtmlNode renderCompleteHtml(Document document) {
 		return Html {
 			Head { },
@@ -70,8 +70,8 @@ shared class HtmlVisitor()
 	}
 	
 	"Render Markdown as a list of HTML elements. This method returns a sequence.
-	    
-	        value nodes = HtmlVisitor().renderPartialHtml(tree);"
+	       
+	           value nodes = HtmlVisitor().renderPartialHtml(tree);"
 	shared <HtmlNode&FlowCategory|CharacterData|String>[] renderPartialHtml(Document document) {
 		return visitDocument(document);
 	}
@@ -179,7 +179,8 @@ shared class HtmlVisitor()
 			for (child in listItem.children) {
 				value ch = child.accept(this);
 				if (is P ch) {
-					children = children.append([for (c in ch.children) if (is Em|Strong|A|Img|String c) c]);
+					children = children.append(
+						[for (c in ch.children) if (is Em|Strong|A|HtmlCode|Img|String c) c]);
 				} else if (is FlowCategory|String ch) {
 					children = children.append([ch]);
 				}
