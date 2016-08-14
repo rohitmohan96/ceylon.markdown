@@ -1,39 +1,51 @@
+import ceylon.language.meta {
+	type
+}
 String treeToString(Node node, Integer level = 0) {
-	String name = className(node)
-		.split('.'.equals)
-		.last
-		.split(':'.equals)
-		.last;
+	String name = type(node).declaration.name;
 	
-	variable String string = "\t".repeat(level) + name;
+	value sb = StringBuilder();
 	
-	if (is Text n = node) {
-		string += ": \n" + "\t".repeat(level + 1) + "\"``n.text``\"" + "\n";
-	} else if (is CodeBlock n = node) {
-		string += ": \n" + "\t".repeat(level + 1) + "\"``n.text``\"" + "\n";
-	} else if (is Code n = node) {
-		string += ": \n" + "\t".repeat(level + 1) + "\"``n.text``\"" + "\n";
-	}else if (is Heading n = node) {
-		string += " (``n.level``): \n";
-	} else if (is HtmlBlock n = node) {
-		string += ": \n" + "\t".repeat(level + 1) + "\"``n.text``\"" + "\n";
-	} else if (is HtmlInline n = node) {
-		string += ": \n" + "\t".repeat(level + 1) + "\"``n.text``\"" + "\n";
-	} else if (is OrderedList n = node) {
-		string += " (start=``n.startsWith``, delimeter='``n.delimeter``', tight='``n.tight``'): \n";
-	} else if(is UnorderedList n = node) {
-		string += " (bulletChar='``n.bulletChar``', tight='``n.tight``'): \n";
-	} else if(is Link n = node) {
-		string += " (destination='``n.destination``', title='``n.title``'): \n";
-	} else if(is Image n = node) {
-		string += " (destination='``n.destination``', title='``n.title``'): \n";
-	} else {
-		string += ": \n";
+	sb.append("\t".repeat(level) + name);
+	
+	switch (node)
+	case (is Text) {
+		sb.append(": \n" + "\t".repeat(level + 1) + "\"``node.text``\"" + "\n");
+	}
+	case (is CodeBlock) {
+		sb.append(": \n" + "\t".repeat(level + 1) + "\"``node.text``\"" + "\n");
+	}
+	case (is Code) {
+		sb.append(": \n" + "\t".repeat(level + 1) + "\"``node.text``\"" + "\n");
+	}
+	case (is Heading) {
+		sb.append(" (``node.level``): \n");
+	}
+	case (is HtmlBlock) {
+		sb.append(": \n" + "\t".repeat(level + 1) + "\"``node.text``\"" + "\n");
+	}
+	case (is HtmlInline) {
+		sb.append(": \n" + "\t".repeat(level + 1) + "\"``node.text``\"" + "\n");
+	}
+	case (is OrderedList) {
+		sb.append(" (start=``node.startsWith``, delimeter='``node.delimeter``', tight='``node.tight``'): \n");
+	}
+	case (is UnorderedList) {
+		sb.append(" (bulletChar='``node.bulletChar``', tight='``node.tight``'): \n");
+	}
+	case (is Link) {
+		sb.append(" (destination='``node.destination``', title='``node.title``'): \n");
+	}
+	case (is Image) {
+		sb.append(" (destination='``node.destination``', title='``node.title``'): \n");
+	}
+	else {
+		sb.append(": \n");
 	}
 	
 	for (c in node.children) {
-		string += treeToString(c, level + 1);
+		sb.append(treeToString(c, level + 1));
 	}
 	
-	return string;
+	return sb.string;
 }
