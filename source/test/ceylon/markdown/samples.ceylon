@@ -621,3 +621,520 @@ String autolinkTree = "Document:
                        \t\tText: 
                        \t\t\t\"boolean >\"
                        ";
+
+String emphasisMd = "*this* *is* *your* *basic* *boring* *emphasis*
+                     
+                     _this_ _is_ _your_ _basic_ _boring_ _emphasis_
+                     
+                     **this** **is** **your** **basic** **boring** **emphasis**";
+
+String emphasisTree = "Document: 
+                       \tParagraph: 
+                       \t\tEmphasis: 
+                       \t\t\tText: 
+                       \t\t\t\t\"this\"
+                       \t\tText: 
+                       \t\t\t\" \"
+                       \t\tEmphasis: 
+                       \t\t\tText: 
+                       \t\t\t\t\"is\"
+                       \t\tText: 
+                       \t\t\t\" \"
+                       \t\tEmphasis: 
+                       \t\t\tText: 
+                       \t\t\t\t\"your\"
+                       \t\tText: 
+                       \t\t\t\" \"
+                       \t\tEmphasis: 
+                       \t\t\tText: 
+                       \t\t\t\t\"basic\"
+                       \t\tText: 
+                       \t\t\t\" \"
+                       \t\tEmphasis: 
+                       \t\t\tText: 
+                       \t\t\t\t\"boring\"
+                       \t\tText: 
+                       \t\t\t\" \"
+                       \t\tEmphasis: 
+                       \t\t\tText: 
+                       \t\t\t\t\"emphasis\"
+                       \tParagraph: 
+                       \t\tEmphasis: 
+                       \t\t\tText: 
+                       \t\t\t\t\"this\"
+                       \t\tText: 
+                       \t\t\t\" \"
+                       \t\tEmphasis: 
+                       \t\t\tText: 
+                       \t\t\t\t\"is\"
+                       \t\tText: 
+                       \t\t\t\" \"
+                       \t\tEmphasis: 
+                       \t\t\tText: 
+                       \t\t\t\t\"your\"
+                       \t\tText: 
+                       \t\t\t\" \"
+                       \t\tEmphasis: 
+                       \t\t\tText: 
+                       \t\t\t\t\"basic\"
+                       \t\tText: 
+                       \t\t\t\" \"
+                       \t\tEmphasis: 
+                       \t\t\tText: 
+                       \t\t\t\t\"boring\"
+                       \t\tText: 
+                       \t\t\t\" \"
+                       \t\tEmphasis: 
+                       \t\t\tText: 
+                       \t\t\t\t\"emphasis\"
+                       \tParagraph: 
+                       \t\tStrongEmphasis: 
+                       \t\t\tText: 
+                       \t\t\t\t\"this\"
+                       \t\tText: 
+                       \t\t\t\" \"
+                       \t\tStrongEmphasis: 
+                       \t\t\tText: 
+                       \t\t\t\t\"is\"
+                       \t\tText: 
+                       \t\t\t\" \"
+                       \t\tStrongEmphasis: 
+                       \t\t\tText: 
+                       \t\t\t\t\"your\"
+                       \t\tText: 
+                       \t\t\t\" \"
+                       \t\tStrongEmphasis: 
+                       \t\t\tText: 
+                       \t\t\t\t\"basic\"
+                       \t\tText: 
+                       \t\t\t\" \"
+                       \t\tStrongEmphasis: 
+                       \t\t\tText: 
+                       \t\t\t\t\"boring\"
+                       \t\tText: 
+                       \t\t\t\" \"
+                       \t\tStrongEmphasis: 
+                       \t\t\tText: 
+                       \t\t\t\t\"emphasis\"
+                       ";
+
+String nestedEmphasisMd = "*this *is *a *bunch* of* nested* emphases*
+                           
+                           __this __is __a __bunch__ of__ nested__ emphases__
+                           
+                           ***this ***is ***a ***bunch*** of*** nested*** emphases***";
+
+String nestedEmphasisTree = "Document: 
+                             \tParagraph: 
+                             \t\tEmphasis: 
+                             \t\t\tText: 
+                             \t\t\t\t\"this \"
+                             \t\t\tEmphasis: 
+                             \t\t\t\tText: 
+                             \t\t\t\t\t\"is \"
+                             \t\t\t\tEmphasis: 
+                             \t\t\t\t\tText: 
+                             \t\t\t\t\t\t\"a \"
+                             \t\t\t\t\tEmphasis: 
+                             \t\t\t\t\t\tText: 
+                             \t\t\t\t\t\t\t\"bunch\"
+                             \t\t\t\t\tText: 
+                             \t\t\t\t\t\t\" of\"
+                             \t\t\t\tText: 
+                             \t\t\t\t\t\" nested\"
+                             \t\t\tText: 
+                             \t\t\t\t\" emphases\"
+                             \tParagraph: 
+                             \t\tStrongEmphasis: 
+                             \t\t\tText: 
+                             \t\t\t\t\"this \"
+                             \t\t\tStrongEmphasis: 
+                             \t\t\t\tText: 
+                             \t\t\t\t\t\"is \"
+                             \t\t\t\tStrongEmphasis: 
+                             \t\t\t\t\tText: 
+                             \t\t\t\t\t\t\"a \"
+                             \t\t\t\t\tStrongEmphasis: 
+                             \t\t\t\t\t\tText: 
+                             \t\t\t\t\t\t\t\"bunch\"
+                             \t\t\t\t\tText: 
+                             \t\t\t\t\t\t\" of\"
+                             \t\t\t\tText: 
+                             \t\t\t\t\t\" nested\"
+                             \t\t\tText: 
+                             \t\t\t\t\" emphases\"
+                             \tParagraph: 
+                             \t\tStrongEmphasis: 
+                             \t\t\tEmphasis: 
+                             \t\t\t\tText: 
+                             \t\t\t\t\t\"this \"
+                             \t\t\t\tEmphasis: 
+                             \t\t\t\t\tText: 
+                             \t\t\t\t\t\t\"is \"
+                             \t\t\t\t\tEmphasis: 
+                             \t\t\t\t\t\tText: 
+                             \t\t\t\t\t\t\t\"a \"
+                             \t\t\t\t\t\tEmphasis: 
+                             \t\t\t\t\t\t\tText: 
+                             \t\t\t\t\t\t\t\t\"bunch\"
+                             \t\t\t\t\t\tText: 
+                             \t\t\t\t\t\t\t\" of\"
+                             \t\t\t\t\tText: 
+                             \t\t\t\t\t\t\" nested\"
+                             \t\t\t\tText: 
+                             \t\t\t\t\t\" emphases\"
+                             ";
+
+String emphasisWorstMd = "*this *is *a *worst *case *for *em *backtracking
+                          
+                          __this __is __a __worst __case __for __em __backtracking
+                          
+                          ***this ***is ***a ***worst ***case ***for ***em ***backtracking";
+
+String emphasisWorstTree = "Document: 
+                            \tParagraph: 
+                            \t\tText: 
+                            \t\t\t\"*\"
+                            \t\tText: 
+                            \t\t\t\"this \"
+                            \t\tText: 
+                            \t\t\t\"*\"
+                            \t\tText: 
+                            \t\t\t\"is \"
+                            \t\tText: 
+                            \t\t\t\"*\"
+                            \t\tText: 
+                            \t\t\t\"a \"
+                            \t\tText: 
+                            \t\t\t\"*\"
+                            \t\tText: 
+                            \t\t\t\"worst \"
+                            \t\tText: 
+                            \t\t\t\"*\"
+                            \t\tText: 
+                            \t\t\t\"case \"
+                            \t\tText: 
+                            \t\t\t\"*\"
+                            \t\tText: 
+                            \t\t\t\"for \"
+                            \t\tText: 
+                            \t\t\t\"*\"
+                            \t\tText: 
+                            \t\t\t\"em \"
+                            \t\tText: 
+                            \t\t\t\"*\"
+                            \t\tText: 
+                            \t\t\t\"backtracking\"
+                            \tParagraph: 
+                            \t\tText: 
+                            \t\t\t\"__\"
+                            \t\tText: 
+                            \t\t\t\"this \"
+                            \t\tText: 
+                            \t\t\t\"__\"
+                            \t\tText: 
+                            \t\t\t\"is \"
+                            \t\tText: 
+                            \t\t\t\"__\"
+                            \t\tText: 
+                            \t\t\t\"a \"
+                            \t\tText: 
+                            \t\t\t\"__\"
+                            \t\tText: 
+                            \t\t\t\"worst \"
+                            \t\tText: 
+                            \t\t\t\"__\"
+                            \t\tText: 
+                            \t\t\t\"case \"
+                            \t\tText: 
+                            \t\t\t\"__\"
+                            \t\tText: 
+                            \t\t\t\"for \"
+                            \t\tText: 
+                            \t\t\t\"__\"
+                            \t\tText: 
+                            \t\t\t\"em \"
+                            \t\tText: 
+                            \t\t\t\"__\"
+                            \t\tText: 
+                            \t\t\t\"backtracking\"
+                            \tParagraph: 
+                            \t\tText: 
+                            \t\t\t\"***\"
+                            \t\tText: 
+                            \t\t\t\"this \"
+                            \t\tText: 
+                            \t\t\t\"***\"
+                            \t\tText: 
+                            \t\t\t\"is \"
+                            \t\tText: 
+                            \t\t\t\"***\"
+                            \t\tText: 
+                            \t\t\t\"a \"
+                            \t\tText: 
+                            \t\t\t\"***\"
+                            \t\tText: 
+                            \t\t\t\"worst \"
+                            \t\tText: 
+                            \t\t\t\"***\"
+                            \t\tText: 
+                            \t\t\t\"case \"
+                            \t\tText: 
+                            \t\t\t\"***\"
+                            \t\tText: 
+                            \t\t\t\"for \"
+                            \t\tText: 
+                            \t\t\t\"***\"
+                            \t\tText: 
+                            \t\t\t\"em \"
+                            \t\tText: 
+                            \t\t\t\"***\"
+                            \t\tText: 
+                            \t\t\t\"backtracking\"
+                            ";
+
+String escapesMd = "\\t\\e\\s\\t\\i\\n\\g \\e\\s\\c\\a\\p\\e \\s\\e\\q\\u\\e\\n\\c\\e\\s
+                    
+                    \\!\\\\\\\"\\#\\$\\%\\&\\'\\(\\)\\*\\+\\,\\.\\/\\:\\;\\<\\=\\>\\?
+                    
+                    \\@ \\[ \\] \\^ \\_ \\\` \\{ \\| \\} \\~ \\- \\'
+                    
+                    \\
+                    \\\\
+                    \\\\\\
+                    \\\\\\\\
+                    \\\\\\\\\\
+                    
+                    \\<this\\> \\<is\\> \\<not\\> \\<html\\>";
+
+String escapesTree = "Document: 
+                      \tParagraph: 
+                      \t\tText: 
+                      \t\t\t\"\\\"
+                      \t\tText: 
+                      \t\t\t\"t\"
+                      \t\tText: 
+                      \t\t\t\"\\\"
+                      \t\tText: 
+                      \t\t\t\"e\"
+                      \t\tText: 
+                      \t\t\t\"\\\"
+                      \t\tText: 
+                      \t\t\t\"s\"
+                      \t\tText: 
+                      \t\t\t\"\\\"
+                      \t\tText: 
+                      \t\t\t\"t\"
+                      \t\tText: 
+                      \t\t\t\"\\\"
+                      \t\tText: 
+                      \t\t\t\"i\"
+                      \t\tText: 
+                      \t\t\t\"\\\"
+                      \t\tText: 
+                      \t\t\t\"n\"
+                      \t\tText: 
+                      \t\t\t\"\\\"
+                      \t\tText: 
+                      \t\t\t\"g \"
+                      \t\tText: 
+                      \t\t\t\"\\\"
+                      \t\tText: 
+                      \t\t\t\"e\"
+                      \t\tText: 
+                      \t\t\t\"\\\"
+                      \t\tText: 
+                      \t\t\t\"s\"
+                      \t\tText: 
+                      \t\t\t\"\\\"
+                      \t\tText: 
+                      \t\t\t\"c\"
+                      \t\tText: 
+                      \t\t\t\"\\\"
+                      \t\tText: 
+                      \t\t\t\"a\"
+                      \t\tText: 
+                      \t\t\t\"\\\"
+                      \t\tText: 
+                      \t\t\t\"p\"
+                      \t\tText: 
+                      \t\t\t\"\\\"
+                      \t\tText: 
+                      \t\t\t\"e \"
+                      \t\tText: 
+                      \t\t\t\"\\\"
+                      \t\tText: 
+                      \t\t\t\"s\"
+                      \t\tText: 
+                      \t\t\t\"\\\"
+                      \t\tText: 
+                      \t\t\t\"e\"
+                      \t\tText: 
+                      \t\t\t\"\\\"
+                      \t\tText: 
+                      \t\t\t\"q\"
+                      \t\tText: 
+                      \t\t\t\"\\\"
+                      \t\tText: 
+                      \t\t\t\"u\"
+                      \t\tText: 
+                      \t\t\t\"\\\"
+                      \t\tText: 
+                      \t\t\t\"e\"
+                      \t\tText: 
+                      \t\t\t\"\\\"
+                      \t\tText: 
+                      \t\t\t\"n\"
+                      \t\tText: 
+                      \t\t\t\"\\\"
+                      \t\tText: 
+                      \t\t\t\"c\"
+                      \t\tText: 
+                      \t\t\t\"\\\"
+                      \t\tText: 
+                      \t\t\t\"e\"
+                      \t\tText: 
+                      \t\t\t\"\\\"
+                      \t\tText: 
+                      \t\t\t\"s\"
+                      \tParagraph: 
+                      \t\tText: 
+                      \t\t\t\"!\"
+                      \t\tText: 
+                      \t\t\t\"\\\"
+                      \t\tText: 
+                      \t\t\t\"\"\"
+                      \t\tText: 
+                      \t\t\t\"#\"
+                      \t\tText: 
+                      \t\t\t\"$\"
+                      \t\tText: 
+                      \t\t\t\"%\"
+                      \t\tText: 
+                      \t\t\t\"&\"
+                      \t\tText: 
+                      \t\t\t\"'\"
+                      \t\tText: 
+                      \t\t\t\"(\"
+                      \t\tText: 
+                      \t\t\t\")\"
+                      \t\tText: 
+                      \t\t\t\"*\"
+                      \t\tText: 
+                      \t\t\t\"+\"
+                      \t\tText: 
+                      \t\t\t\",\"
+                      \t\tText: 
+                      \t\t\t\".\"
+                      \t\tText: 
+                      \t\t\t\"/\"
+                      \t\tText: 
+                      \t\t\t\":\"
+                      \t\tText: 
+                      \t\t\t\";\"
+                      \t\tText: 
+                      \t\t\t\"<\"
+                      \t\tText: 
+                      \t\t\t\"=\"
+                      \t\tText: 
+                      \t\t\t\">\"
+                      \t\tText: 
+                      \t\t\t\"?\"
+                      \tParagraph: 
+                      \t\tText: 
+                      \t\t\t\"@\"
+                      \t\tText: 
+                      \t\t\t\" \"
+                      \t\tText: 
+                      \t\t\t\"[\"
+                      \t\tText: 
+                      \t\t\t\" \"
+                      \t\tText: 
+                      \t\t\t\"]\"
+                      \t\tText: 
+                      \t\t\t\" \"
+                      \t\tText: 
+                      \t\t\t\"^\"
+                      \t\tText: 
+                      \t\t\t\" \"
+                      \t\tText: 
+                      \t\t\t\"_\"
+                      \t\tText: 
+                      \t\t\t\" \"
+                      \t\tText: 
+                      \t\t\t\"\`\"
+                      \t\tText: 
+                      \t\t\t\" \"
+                      \t\tText: 
+                      \t\t\t\"{\"
+                      \t\tText: 
+                      \t\t\t\" \"
+                      \t\tText: 
+                      \t\t\t\"|\"
+                      \t\tText: 
+                      \t\t\t\" \"
+                      \t\tText: 
+                      \t\t\t\"}\"
+                      \t\tText: 
+                      \t\t\t\" \"
+                      \t\tText: 
+                      \t\t\t\"~\"
+                      \t\tText: 
+                      \t\t\t\" \"
+                      \t\tText: 
+                      \t\t\t\"-\"
+                      \t\tText: 
+                      \t\t\t\" \"
+                      \t\tText: 
+                      \t\t\t\"'\"
+                      \tParagraph: 
+                      \t\tHardBreak: 
+                      \t\tText: 
+                      \t\t\t\"\\\"
+                      \t\tSoftBreak: 
+                      \t\tText: 
+                      \t\t\t\"\\\"
+                      \t\tHardBreak: 
+                      \t\tText: 
+                      \t\t\t\"\\\"
+                      \t\tText: 
+                      \t\t\t\"\\\"
+                      \t\tSoftBreak: 
+                      \t\tText: 
+                      \t\t\t\"\\\"
+                      \t\tText: 
+                      \t\t\t\"\\\"
+                      \t\tText: 
+                      \t\t\t\"\\\"
+                      \tParagraph: 
+                      \t\tText: 
+                      \t\t\t\"<\"
+                      \t\tText: 
+                      \t\t\t\"this\"
+                      \t\tText: 
+                      \t\t\t\">\"
+                      \t\tText: 
+                      \t\t\t\" \"
+                      \t\tText: 
+                      \t\t\t\"<\"
+                      \t\tText: 
+                      \t\t\t\"is\"
+                      \t\tText: 
+                      \t\t\t\">\"
+                      \t\tText: 
+                      \t\t\t\" \"
+                      \t\tText: 
+                      \t\t\t\"<\"
+                      \t\tText: 
+                      \t\t\t\"not\"
+                      \t\tText: 
+                      \t\t\t\">\"
+                      \t\tText: 
+                      \t\t\t\" \"
+                      \t\tText: 
+                      \t\t\t\"<\"
+                      \t\tText: 
+                      \t\t\t\"html\"
+                      \t\tText: 
+                      \t\t\t\">\"
+                      ";

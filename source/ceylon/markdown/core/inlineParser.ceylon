@@ -114,6 +114,7 @@ void parseInlines(Node node, Node parent) {
 					parent.appendChild(Text(next.string));
 				} else {
 					parent.appendChild(Text(ch.string));
+					i--;
 				}
 				
 				str = "";

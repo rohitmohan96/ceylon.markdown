@@ -78,3 +78,27 @@ shared void testAutolinks() => assertEquals {
 	actual = parse(autolinkMd).string;
 	expected = autolinkTree;
 };
+
+test
+shared void testEmphasis() => assertEquals {
+	actual = parse(emphasisMd).string;
+	expected = emphasisTree;
+};
+
+test
+shared void testNestedEmphasis() => assertEquals {
+	actual = parse(nestedEmphasisMd).string;
+	expected = nestedEmphasisTree;
+};
+
+test
+shared void testEmphasisWorst() => assertEquals {
+	actual = parse(emphasisWorstMd).string;
+	expected = emphasisWorstTree;
+};
+
+test
+shared void testEscapes() => assertEquals {
+	actual = parse(escapesMd).string;
+	expected = escapesTree;
+};
