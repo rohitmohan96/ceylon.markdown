@@ -550,7 +550,7 @@ void parseInlines(Node node, Node parent) {
 	}
 }
 
-shared Document inlineParser(Document document) {
+Document inlineParser(Document document) {
 	parseReference(document);
 	
 	parseInlines(document, document);

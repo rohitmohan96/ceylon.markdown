@@ -1,3 +1,6 @@
+"""
+   An AST visitor for Markdown.
+"""
 shared interface Visitor<Type> {
 	shared formal Type visitText(Text text);
 	shared formal Type visitParagraph(Paragraph paragraph);
