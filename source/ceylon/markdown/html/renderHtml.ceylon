@@ -1,17 +1,21 @@
 import ceylon.html {
 	Head,
 	Body,
-	Html
+	Html,
+	Meta
 }
 import ceylon.markdown.core {
 	Document
 }
 
-"Render Markdown as a complete HTML document. This method returns an [[Html]] object.
+"Render Markdown as a complete HTML document. This method returns an [[Html]] object
+ using the `utf-8` charset.
         
      value html = renderCompleteHtml(tree);"
 shared Html renderCompleteHtml(Document document) => Html {
-	Head { },
+	Head { 
+		Meta { charset="utf-8"; }
+	},
 	Body {
 		children = HtmlVisitor().visitDocument(document);
 	}
