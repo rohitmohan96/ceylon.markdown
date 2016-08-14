@@ -121,14 +121,16 @@ void parseLine(variable String line, Block parent) {
 		lineBlock.appendChild(Text(text));
 		
 		line = "";
-	} else if (orderedListPattern.test(line)) {
+	} else if (exists find = orderedListPattern.find(line)) {
+		
+		value startsWith = parseInteger(find.groups[0] else "0");
 		
 		lineBlock = OrderedList {
-			 startsWith = parseInteger(regex("[.)]").split(line)[0] else "0") else 0;
-			 delimeter = (regex("\\d").split(line)[1] else ".").get(0) else '.';
+			 startsWith = startsWith else 0;
+			 delimeter = find.groups[0]?.get(0) else '.';
 		};
 		
-		line = regex("[.)]").split(line)[1] else "";
+		line = line[find.end ...];
 	} else if (!lastBlock is FencedCode,
 		if (is Paragraph block = lastBlock) then !block.open else true,
 		line.startsWith(" "),
