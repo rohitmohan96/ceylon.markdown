@@ -283,13 +283,15 @@ void parseInlines(Node node, Node parent) {
 				variable Delimiter? delimiter = lastDelimiter;
 				
 				while (exists del = delimiter) {
+					Boolean isLink = del.delimiterChar == '[';
+					Boolean isImage = del.delimiterChar == '!';
 					if ((del.delimiterChar=='[' || del.delimiterChar=='!') && !del.active) {
 						lastDelimiter = removeLastBracket(del, lastDelimiter);
 						
 						delimiter = null;
 						
 						break;
-					} else if (del.delimiterChar == '[') {
+					} else if (isLink || isImage) {
 						if (exists next = text.get(i + 1), next == '(') {
 							Integer init = i;
 							i++;
@@ -344,7 +346,14 @@ void parseInlines(Node node, Node parent) {
 							}
 							
 							if (reference.trimmed.startsWith(")")) {
-								Link link = Link(unescapeString(destination), unescapeString(title));
+								Node link;
+								
+								if (isLink) {
+									link = Link(unescapeString(destination), unescapeString(title));
+								} else {
+									link = Image(unescapeString(destination), unescapeString(title));
+								}
+								
 								value firstIndexWhere = parent.children.firstIndexWhere((Node element) => element == del.node) else 0;
 								link.children = parent.children[firstIndexWhere+1 ...];
 								parent.children = parent.children[...firstIndexWhere];
@@ -354,14 +363,16 @@ void parseInlines(Node node, Node parent) {
 									link.appendChild(Text(str));
 								}
 								
-								variable Delimiter? prev = del;
-								
-								// set all previous [ to inactive to prevent nested links
-								while (exists d = prev) {
-									if (d.delimiterChar == '[') {
-										d.active = false;
+								if (isLink) {
+									variable Delimiter? prev = del;
+									
+									// set all previous [ to inactive to prevent nested links
+									while (exists d = prev) {
+										if (d.delimiterChar == '[') {
+											d.active = false;
+										}
+										prev = d.previous;
 									}
-									prev = d.previous;
 								}
 								
 								parent.removeChild(del.node);
@@ -379,7 +390,14 @@ void parseInlines(Node node, Node parent) {
 								i = init;
 							}
 						} else if (exists link = referenceMap.get(normalizeReference(str))) {
-							Link newLink = Link(link.destination, link.title);
+							Node newLink;
+							
+							if (isLink) {
+								newLink = Link(link.destination, link.title);
+							} else {
+								newLink = Image(link.destination, link.title);
+							}
+							
 							parent.appendChild(newLink);
 							// children to be appended to newLink and not link
 							newLink.appendChild(Text(str));
@@ -389,29 +407,7 @@ void parseInlines(Node node, Node parent) {
 							
 							lastDelimiter = removeLastBracket(del, lastDelimiter);
 							
-							variable Delimiter? prev = del;
-							
-							// set all previous [ to inactive to prevent nested links
-							while (exists d = prev) {
-								if (d.delimiterChar == '[') {
-									d.active = false;
-								}
-								prev = d.previous;
-							}
-						} else if (exists find = linkLabelPattern.find(text[i+1 ...])) {
-							String label = find.matched[1 .. find.end-2];
-							
-							if (exists link = referenceMap.get(normalizeReference(label))) {
-								Link newLink = Link(link.destination, link.title);
-								parent.appendChild(newLink);
-								// children to be appended to newLink and not link
-								newLink.appendChild(Text(str));
-								parent.removeChild(del.node);
-								
-								processEmphasis(newLink, del, lastDelimiter);
-								
-								lastDelimiter = removeLastBracket(del, lastDelimiter);
-								
+							if (isLink) {
 								variable Delimiter? prev = del;
 								
 								// set all previous [ to inactive to prevent nested links
@@ -421,121 +417,40 @@ void parseInlines(Node node, Node parent) {
 									}
 									prev = d.previous;
 								}
-								
-								i += find.end;
-							} else {
-								lastDelimiter = removeLastBracket(del, lastDelimiter);
-								if (str != "") {
-									parent.appendChild(Text(str));
-								}
-								parent.appendChild(Text(ch.string));
-							}
-						} else {
-							lastDelimiter = removeLastBracket(del, lastDelimiter);
-							delimiter = null;
-						}
-						
-						break;
-					} else if (del.delimiterChar == '!') {
-						if (exists next = text.get(i + 1), next == '(') {
-							//TODO: Cleanup repetition
-							Integer init = i;
-							i++;
-							variable String reference = text[i+1 ...];
-							variable String destination = "";
-							variable String title = "";
-							
-							MatchResult? destBraces = linkDestinationBraces.find(reference);
-							
-							MatchResult? dest = linkDestination.find(reference);
-							
-							if (exists destBraces) {
-								destination = destBraces
-									.matched
-									.replaceFirst("<", "")
-									.replaceLast(">", "");
-								
-								reference = reference[destBraces.end...];
-								
-								i += destBraces.end;
-								
-								if (exists spnl = spnl.find(reference)) {
-									i += spnl.end;
-									reference = reference[spnl.end...];
-								}
-							} else if (exists dest) {
-								destination = dest.matched;
-								
-								reference = reference[dest.end...];
-								i += dest.end;
-								
-								if (exists spnl = spnl.find(reference)) {
-									i += spnl.end;
-									reference = reference[spnl.end...];
-								}
 							}
 							
-							MatchResult? linkTitle = linkTitlePattern.find(reference);
-							
-							if (destination != "") {
-								if (exists linkTitle) {
-									title = linkTitle.matched[1 .. linkTitle.end-2];
-									
-									reference = reference[linkTitle.end...];
-									i += linkTitle.end;
-									
-									if (exists spnl = spnl.find(reference)) {
-										i += spnl.end;
-										reference = reference[spnl.end...];
-									}
-								}
-							}
-							if (reference.trimmed.startsWith(")")) {
-								Image link = Image(unescapeString(destination), unescapeString(title));
-								value firstIndexWhere = parent.children.firstIndexWhere((Node element) => element == del.node) else 0;
-								link.children = parent.children[firstIndexWhere+1 ...];
-								parent.children = parent.children[...firstIndexWhere];
-								parent.appendChild(link);
-								
-								if (str != "") {
-									link.appendChild(Text(str));
-								}
-								
-								parent.removeChild(del.node);
-								
-								processEmphasis(link, del, lastDelimiter);
-								
-								lastDelimiter = removeLastBracket(del, lastDelimiter);
-								
-								i++;
-							} else {
-								if (str != "") {
-									parent.appendChild(Text(str));
-								}
-								parent.appendChild(Text(ch.string));
-								i = init;
-							}
-						} else if (exists link = referenceMap.get(normalizeReference(str))) {
-							Image image = Image(link.destination, link.title);
-							parent.appendChild(image);
-							image.appendChild(Text(str));
-							parent.removeChild(del.node);
-						
-							processEmphasis(image, del, lastDelimiter);
-							
-							lastDelimiter = removeLastBracket(del, lastDelimiter);
 						} else if (exists find = linkLabelPattern.find(text[i+1 ...])) {
 							String label = find.matched[1 .. find.end-2];
 							
 							if (exists link = referenceMap.get(normalizeReference(label))) {
-								Image image = Image(link.destination, link.title);
-								parent.appendChild(image);
-								image.appendChild(Text(str));
+								Node newLink;
+								
+								if (isLink) {
+									newLink = Link(link.destination, link.title);
+								} else {
+									newLink = Image(link.destination, link.title);
+								}
+								
+								parent.appendChild(newLink);
+								// children to be appended to newLink and not link
+								newLink.appendChild(Text(str));
 								parent.removeChild(del.node);
 								
-								processEmphasis(image, del, lastDelimiter);
+								processEmphasis(newLink, del, lastDelimiter);
 								
 								lastDelimiter = removeLastBracket(del, lastDelimiter);
+								
+								if (isLink) {
+									variable Delimiter? prev = del;
+									
+									// set all previous [ to inactive to prevent nested links
+									while (exists d = prev) {
+										if (d.delimiterChar == '[') {
+											d.active = false;
+										}
+										prev = d.previous;
+									}
+								}
 								
 								i += find.end;
 							} else {
@@ -635,7 +550,7 @@ void parseInlines(Node node, Node parent) {
 	}
 }
 
-Document inlineParser(Document document) {
+shared Document inlineParser(Document document) {
 	parseReference(document);
 	
 	parseInlines(document, document);
