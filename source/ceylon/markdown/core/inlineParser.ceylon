@@ -99,7 +99,8 @@ void parseInlines(Node node, Node parent) {
 				if (str != "") {
 					parent.appendChild(Text(str.trimTrailing(' '.equals)));
 				}
-				parent.appendChild(str.endsWith("  ") then HardBreak() else SoftBreak());
+				parent.appendChild(str.endsWith("  ")
+							then HardBreak() else SoftBreak());
 				str = "";
 			}
 			case ('\\') {
@@ -110,7 +111,8 @@ void parseInlines(Node node, Node parent) {
 				i++;
 				if (exists next = text[i], next == '\n') {
 					parent.appendChild(HardBreak());
-				} else if (exists next = text[i], reEscapable.test(next.string)) {
+				} else if (exists next = text[i],
+					reEscapable.test(next.string)) {
 					parent.appendChild(Text(next.string));
 				} else {
 					parent.appendChild(Text(ch.string));
@@ -141,7 +143,9 @@ void parseInlines(Node node, Node parent) {
 							parent.appendChild(
 								Code {
 									text = whitespace.replace {
-										input = text[afterOpenTicks:matched.start].trimmed;
+										input = text[afterOpenTicks:matched.start]
+											.trimmed;
+										
 										replacement = " ";
 									};
 								});
@@ -166,10 +170,9 @@ void parseInlines(Node node, Node parent) {
 					parent.appendChild(Text(str));
 				}
 				
-				value res = scanDelimiters(text, i, ch);
+				value [numDelims, canOpen, canClose] = scanDelimiters(text, i, ch);
 				
 				Integer startIndex = i;
-				Integer numDelims = res.count;
 				i += numDelims-1;
 				
 				Text textNode = Text(text[startIndex..i]);
@@ -183,8 +186,8 @@ void parseInlines(Node node, Node parent) {
 						numOfDelimiters = numDelims;
 						previous = last;
 						next = null;
-						canOpen = res.canOpen;
-						canClose = res.canClose;
+						canOpen = canOpen;
+						canClose = canClose;
 					};
 					
 					last.next = delimiter;
@@ -197,8 +200,8 @@ void parseInlines(Node node, Node parent) {
 						numOfDelimiters = numDelims;
 						previous = null;
 						next = null;
-						canOpen = res.canOpen;
-						canClose = res.canClose;
+						canOpen = canOpen;
+						canClose = canClose;
 					};
 				}
 				
@@ -285,7 +288,8 @@ void parseInlines(Node node, Node parent) {
 				while (exists del = delimiter) {
 					Boolean isLink = del.delimiterChar == '[';
 					Boolean isImage = del.delimiterChar == '!';
-					if ((del.delimiterChar=='[' || del.delimiterChar=='!') && !del.active) {
+					if ((del.delimiterChar=='[' || del.delimiterChar=='!') &&
+								!del.active) {
 						lastDelimiter = removeLastBracket(del, lastDelimiter);
 						
 						delimiter = null;
@@ -354,7 +358,12 @@ void parseInlines(Node node, Node parent) {
 									link = Image(unescapeString(destination), unescapeString(title));
 								}
 								
-								value firstIndexWhere = parent.children.firstIndexWhere((Node element) => element == del.node) else 0;
+								value firstIndexWhere = parent
+									.children
+									.firstIndexWhere((Node element) =>
+										element == del.node)
+										else 0;
+								
 								link.children = parent.children[firstIndexWhere+1 ...];
 								parent.children = parent.children[...firstIndexWhere];
 								parent.appendChild(link);
@@ -376,7 +385,7 @@ void parseInlines(Node node, Node parent) {
 								}
 								
 								parent.removeChild(del.node);
-
+								
 								processEmphasis(link, del, lastDelimiter);
 								
 								lastDelimiter = removeLastBracket(del, lastDelimiter);
@@ -418,7 +427,6 @@ void parseInlines(Node node, Node parent) {
 									prev = d.previous;
 								}
 							}
-							
 						} else if (exists find = linkLabelPattern.find(text[i+1 ...])) {
 							String label = find.matched[1 .. find.end-2];
 							
@@ -558,7 +566,7 @@ Document inlineParser(Document document) {
 	return document;
 }
 
-DelimiterRun scanDelimiters(String text, variable Integer index, Character delimiterChar) {
+[Integer, Boolean, Boolean] scanDelimiters(String text, variable Integer index, Character delimiterChar) {
 	variable Integer delimiterCount = 0;
 	Integer startIndex = index;
 	while (exists ch = text[index], ch == delimiterChar) {
@@ -575,10 +583,17 @@ DelimiterRun scanDelimiters(String text, variable Integer index, Character delim
 	Boolean afterIsPunctuation = punctuation.test(after);
 	Boolean afterIsWhitespace = unicodeWhitespaceChar.test(after);
 	
-	Boolean leftFlanking = !afterIsWhitespace && !(afterIsPunctuation && !beforeIsWhitespace && !beforeIsPunctuation);
-	Boolean rightFlanking = !beforeIsWhitespace && !(beforeIsPunctuation && !afterIsWhitespace && !afterIsPunctuation);
-	variable Boolean canOpen;
-	variable Boolean canClose;
+	Boolean leftFlanking = !afterIsWhitespace &&
+			!(afterIsPunctuation &&
+				!beforeIsWhitespace &&
+				!beforeIsPunctuation);
+	Boolean rightFlanking = !beforeIsWhitespace &&
+			!(beforeIsPunctuation &&
+				!afterIsWhitespace &&
+				!afterIsPunctuation);
+	
+	Boolean canOpen;
+	Boolean canClose;
 	
 	if (delimiterChar == '_') {
 		canOpen = leftFlanking && (!rightFlanking || beforeIsPunctuation);
@@ -590,7 +605,7 @@ DelimiterRun scanDelimiters(String text, variable Integer index, Character delim
 	
 	// index = startIndex;
 	
-	return DelimiterRun(delimiterCount, canOpen, canClose);
+	return [delimiterCount, canOpen, canClose];
 }
 
 void processEmphasis(Node parent, Delimiter? stackBottom, variable Delimiter? lastDelimiter) {
@@ -603,8 +618,8 @@ void processEmphasis(Node parent, Delimiter? stackBottom, variable Delimiter? la
 		currentPosition = stackBottom.next;
 	} else {
 		variable Delimiter? del = null;
-		while (exists delimiter = lastDelimiter, 
-			delimiter.delimiterChar == '*' || delimiter.delimiterChar == '_') {
+		while (exists delimiter = lastDelimiter,
+			delimiter.delimiterChar=='*' || delimiter.delimiterChar=='_') {
 			del = delimiter;
 			lastDelimiter = delimiter.previous;
 		}

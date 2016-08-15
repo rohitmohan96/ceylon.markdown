@@ -1,4 +1,4 @@
-shared class Delimiter(shared Text node,
+class Delimiter(shared Text node,
 	shared Character delimiterChar,
 	shared variable Integer numOfDelimiters,
 	shared variable Delimiter? previous,

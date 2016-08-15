@@ -1,6 +1,3 @@
-import ceylon.regex {
-	regex
-}
 
 String trimSpaces(String line) {
 	

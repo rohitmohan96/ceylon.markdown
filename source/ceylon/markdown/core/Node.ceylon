@@ -1,6 +1,11 @@
+"""
+   Abstract superclass of all AST nodes.
+"""
 shared abstract class Node() {
+	"The child nodes of this node."
 	shared formal variable Node[] children;
 	
+	"This node's parent"
 	shared variable Node? parent = null;
 	
 	shared void appendChild(Node node) {
