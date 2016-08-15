@@ -11,7 +11,7 @@ shared abstract class Node() {
 	shared void removeChild(Node node) => 
 			children = [for (ele in children) ele != node then ele else null].coalesced.sequence();
 	
-	shared formal Type|String accept<Type>(Visitor<Type> visitor);
+	shared formal Type accept<Type>(Visitor<Type> visitor);
 	
 	string => treeToString(this);
 }

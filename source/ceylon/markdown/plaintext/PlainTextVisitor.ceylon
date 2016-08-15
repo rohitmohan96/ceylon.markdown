@@ -108,16 +108,16 @@ shared class PlainTextVisitor(void write(String string)) satisfies Visitor<Anyth
 			child.accept(this);
 		}
 	}
-	
 }
 
-"Render Markdown as plain text.
- 
- Usage: 
-     value sb = StringBuilder();
-     
-     renderPlainText(tree, sb.append);
-     "
+"""
+   Render Markdown as plain text.
+   
+   Usage: 
+       value sb = StringBuilder();
+       
+       renderPlainText(tree, sb.append);
+"""
 shared void renderPlainText(Node node, void write(String string)) {
 	node.accept(PlainTextVisitor(write));
 }
