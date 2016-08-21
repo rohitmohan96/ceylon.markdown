@@ -15,8 +15,16 @@ This repository contains 4 Ceylon modules:
 
 ## To be done
 
-- Handle sublists and lists with multiple children. 
+- Sublists are not handled ([#1])
+- List item with multiple children does not work ([#2])
+- List references after list items do not work ([#3])
+- Some js tests do not pass ([#4])
 
 [source]: https://github.com/rohitmohan96/ceylon.markdown/tree/master/
 [spec]: http://spec.commonmark.org/0.26/
 [commits]: https://github.com/rohitmohan96/ceylon.markdown/commits/master?author=rohitmohan96
+
+[#1]: https://github.com/rohitmohan96/ceylon.markdown/issues/1
+[#2]: https://github.com/rohitmohan96/ceylon.markdown/issues/2
+[#3]: https://github.com/rohitmohan96/ceylon.markdown/issues/3
+[#4]: https://github.com/rohitmohan96/ceylon.markdown/issues/4
