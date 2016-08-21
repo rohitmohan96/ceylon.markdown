@@ -1,4 +1,3 @@
-
 String trimSpaces(String line) {
 	
 	variable Integer count = 0;
@@ -37,8 +36,8 @@ void parseLine(variable String line, Block parent) {
 		if (is CodeBlock block = lastBlock, block.open) {
 			block.text += "\n";
 		}
-		if(is List block = lastBlock, block.open) {
-			if(!blankLine) {
+		if (is List block = lastBlock, block.open) {
+			if (!blankLine) {
 				blankLine = true;
 			} else {
 				block.closeBlock();
@@ -52,7 +51,7 @@ void parseLine(variable String line, Block parent) {
 	if (if (is FencedCode|HtmlBlock block = lastBlock) then !block.open else true) {
 		line = trimSpaces(line); //trim first 3 spaces in the beginning
 	}
-	 
+	
 	//close fenced code blocks
 	if (is FencedCode block = lastBlock,
 		closingCodeblockPattern.test(line),
@@ -63,8 +62,8 @@ void parseLine(variable String line, Block parent) {
 	}
 	
 	//TODO Nested list item
-	if (line.startsWith("<"), 
-		if(is Paragraph pblock = lastBlock) then !pblock.open else true) {
+	if (line.startsWith("<"),
+		if (is Paragraph pblock = lastBlock) then !pblock.open else true) {
 		for (i in 0:7) {
 			if (is HtmlBlock block = lastBlock,
 				block.open, exists htmlTest = htmlBlockClose[i],
@@ -89,7 +88,10 @@ void parseLine(variable String line, Block parent) {
 	} else if (!lastBlock is FencedCode, fencedCodeblockPattern.test(line)) {
 		lineBlock = FencedCode("", line.count(('\`'.equals)));
 		line = "";
-	} else if (is Paragraph block = lastBlock, block.open, setextHeadingPattern.test(line), is Text last = block.children.last) {
+	} else if (is Paragraph block = lastBlock,
+		block.open,
+		setextHeadingPattern.test(line),
+		is Text last = block.children.last) {
 		
 		lineBlock = Heading {
 			level = if (line.startsWith("=")) then 1 else 2;
@@ -112,7 +114,7 @@ void parseLine(variable String line, Block parent) {
 		if (atxTrailingPattern.test(text)) {
 			text = atxTrailingPattern.split(text)[0] else "";
 		}
-				
+		
 		lineBlock = Heading(find.matched.count('#'.equals));
 		
 		lineBlock.appendChild(Text(text));
@@ -123,11 +125,11 @@ void parseLine(variable String line, Block parent) {
 		value startsWith = parseInteger(find.groups[0] else "0");
 		
 		lineBlock = OrderedList {
-			 startsWith = startsWith else 0;
-			 delimeter = find.groups[0]?.get(0) else '.';
+			startsWith = startsWith else 0;
+			delimeter = find.groups[0]?.get(0) else '.';
 		};
 		
-		line = line[find.end ...];
+		line = line[find.end...];
 	} else if (!lastBlock is FencedCode,
 		if (is Paragraph block = lastBlock) then !block.open else true,
 		line.startsWith(" "),
@@ -136,9 +138,9 @@ void parseLine(variable String line, Block parent) {
 		lineBlock = IndentedCode(line[1...]);
 		line = "";
 	} else if (line.startsWith(">")) {
-		if(is List parent) {
+		if (is List parent) {
 			line = line.trimLeading(' '.equals).trimTrailing(' '.equals);
-			if(blankLine) {
+			if (blankLine) {
 				parent.tight = false;
 				blankLine = false;
 			}
@@ -156,7 +158,7 @@ void parseLine(variable String line, Block parent) {
 		line = line.trimLeading(' '.equals).trimTrailing(' '.equals);
 		lineBlock = ListItem();
 		
-		if(blankLine) {
+		if (blankLine) {
 			parent.tight = false;
 			blankLine = false;
 		}
@@ -189,12 +191,12 @@ void parseLine(variable String line, Block parent) {
 			Node? text = block.children.last;
 			Node? last = lineBlock.children.last;
 			if (is Text text, is Text last) {
-				text.text += "\n"+last.text; 
+				text.text += "\n"+last.text;
 				noLastBlock = false;
 			}
 			break;
 		} else if (is CodeBlock block, is CodeBlock lineBlock) {
-			if(block.text == "") {
+			if (block.text == "") {
 				block.text += lineBlock.text;
 			} else {
 				block.text += "\n"+lineBlock.text;
@@ -213,11 +215,11 @@ void parseLine(variable String line, Block parent) {
 	if (noLastBlock) {
 		parent.appendChild(lineBlock);
 		
-		if(is List parent, exists last = lineBlock.children.last, is Block last) {
+		if (is List parent, exists last = lineBlock.children.last, is Block last) {
 			parseLine(line, last);
 		} else {
-		parseLine(line, lineBlock);
-		}	
+			parseLine(line, lineBlock);
+		}
 	}
 }
 
@@ -229,4 +231,4 @@ Boolean sameListType(Block b1, Block b2) =>
 	if (is UnorderedList b1, is UnorderedList b2) then b1.bulletChar == b2.bulletChar else true;
 
 Boolean sameOrderedListType(Block b1, Block b2) =>
-	if(is OrderedList b1, is OrderedList b2) then b1.delimeter == b2.delimeter else true;
+	if (is OrderedList b1, is OrderedList b2) then b1.delimeter == b2.delimeter else true;
