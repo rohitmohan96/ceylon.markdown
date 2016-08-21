@@ -2,6 +2,8 @@
 
 A Markdown processor written in Ceylon.
 
+## Overview
+
 [This project][source] contains a Markdown processor written in Ceylon as my project for GSoC 2016. This project will
 be part of the Ceylon SDK. All of my work in this project can be found [here][commits].
 The Markdown parser is mainly based on the [CommonMark spec][spec]. 
@@ -12,6 +14,14 @@ This repository contains 4 Ceylon modules:
 - `ceylon.markdown.html` - Module to convert Markdown to HTML. This module uses `ceylon.html` to generate the output HTML.
 - `ceylon.markdown.plaintext` - Module to convert Markdown to plain text.
 - `ceylon.markdown.cli` - Contains the command line Markdown tool to generate HTML from a Markdown file.
+
+### Using the CLI tool
+
+To use the CLI tool, install it using
+
+```
+ceylon plugin install ceylon.markdown.cli
+```
 
 ## To be done
 
