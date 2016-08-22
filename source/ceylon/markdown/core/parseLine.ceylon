@@ -86,7 +86,7 @@ void parseLine(variable String line, Block parent) {
 		lineBlock = HtmlBlock(line, block.type);
 		line = "";
 	} else if (!lastBlock is FencedCode, fencedCodeblockPattern.test(line)) {
-		lineBlock = FencedCode("", line.count(('\`'.equals)));
+		lineBlock = FencedCode("", line.trimLeading((ch) => ch == '`'), line.count(('\`'.equals)));
 		line = "";
 	} else if (is Paragraph block = lastBlock,
 		block.open,
@@ -170,7 +170,7 @@ void parseLine(variable String line, Block parent) {
 		}
 		line = "";
 	} else if (is FencedCode block = lastBlock, block.open) {
-		lineBlock = FencedCode(line, block.fenceLevel);
+		lineBlock = FencedCode(line, block.infoString, block.fenceLevel);
 		
 		line = "";
 	} else {
