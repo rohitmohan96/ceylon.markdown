@@ -22,7 +22,7 @@ void parseLine(variable String line, Block parent) {
 	Block lineBlock;
 	variable Node? lastBlock = parent.children.last;
 	
-	if (line.equals(""), !is List parent) {
+	if (line.trimmed.equals(""), !is List parent) {
 		if (is Paragraph|BlockQuote block = lastBlock, !is ListItem parent) {
 			block.closeBlock();
 		}
