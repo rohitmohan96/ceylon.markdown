@@ -56,33 +56,33 @@ shared alias HtmlChildren => HtmlNode&FlowCategory|CharacterData|String;
 shared class HtmlVisitor()
 		satisfies Visitor<HtmlNode|String|HtmlChildren[]> {
 	
-	shared actual HtmlNode visitBlockQuote(BlockQuote blockQuote) => Blockquote {
+	shared actual default HtmlNode visitBlockQuote(BlockQuote blockQuote) => Blockquote {
 		children = [for (child in blockQuote.children)
 				if (is CharacterData|FlowCategory|String ch = child.accept(this)) ch];
 	};
 	
-	shared actual HtmlNode visitCode(Code code) => HtmlCode {
+	shared actual default HtmlNode visitCode(Code code) => HtmlCode {
 		children = code.text.linesWithBreaks;
 	};
 	
-	shared actual HtmlChildren[] visitDocument(Document document) =>
+	shared actual default HtmlChildren[] visitDocument(Document document) =>
 		[for (child in document.children)
 				if (is CharacterData|FlowCategory|String ch = child.accept(this)) ch];
 	
-	shared actual HtmlNode visitEmphasis(Emphasis emphasis) => Em {
+	shared actual default HtmlNode visitEmphasis(Emphasis emphasis) => Em {
 		children = [for (child in emphasis.children)
 				if (is CharacterData|PhrasingCategory|String ch = child.accept(this)) ch];
 	};
 	
-	shared actual HtmlNode visitFencedCode(FencedCode fencedCode) => Pre {
+	shared actual default HtmlNode visitFencedCode(FencedCode fencedCode) => Pre {
 		HtmlCode {
 			children = fencedCode.text.linesWithBreaks;
 		}
 	};
 	
-	shared actual HtmlNode visitHardBreak(HardBreak hardBreak) => Br();
+	shared actual default HtmlNode visitHardBreak(HardBreak hardBreak) => Br();
 	
-	shared actual HtmlNode visitHeading(Heading heading) {
+	shared actual default HtmlNode visitHeading(Heading heading) {
 		value children = [for (child in heading.children)
 				if (is PhrasingCategory|CharacterData|String ch = child.accept(this)) ch];
 		
@@ -110,11 +110,11 @@ shared class HtmlVisitor()
 		}
 	}
 	
-	shared actual HtmlNode visitHtmlBlock(HtmlBlock htmlBlock) => Raw(htmlBlock.text);
+	shared actual default HtmlNode visitHtmlBlock(HtmlBlock htmlBlock) => Raw(htmlBlock.text);
 	
-	shared actual HtmlNode visitHtmlInline(HtmlInline htmlInline) => Raw(htmlInline.text);
+	shared actual default HtmlNode visitHtmlInline(HtmlInline htmlInline) => Raw(htmlInline.text);
 	
-	shared actual HtmlNode visitImage(Image image) {
+	shared actual default HtmlNode visitImage(Image image) {
 		String text = getText(P {
 				children = [for (child in image.children)
 						if (is CharacterData|PhrasingCategory|String ch = child.accept(this)) ch];
@@ -140,20 +140,20 @@ shared class HtmlVisitor()
 		return text.string;
 	}
 	
-	shared actual HtmlNode visitIndentedCode(IndentedCode indentedCode) => Pre {
+	shared actual default HtmlNode visitIndentedCode(IndentedCode indentedCode) => Pre {
 		HtmlCode {
 			children = indentedCode.text.linesWithBreaks;
 		}
 	};
 	
-	shared actual HtmlNode visitLink(Link link) => A {
+	shared actual default HtmlNode visitLink(Link link) => A {
 		href = link.destination;
 		title = if (link.title == "") then null else link.title;
 		children = [for (child in link.children)
 				if (is FlowCategory|String ch = child.accept(this)) ch];
 	};
 	
-	shared actual HtmlNode visitListItem(ListItem listItem) {
+	shared actual default HtmlNode visitListItem(ListItem listItem) {
 		if (is List parent = listItem.parent, parent.tight) {
 			variable <HtmlNode&FlowCategory|String>[] children = [];
 			for (child in listItem.children) {
@@ -177,28 +177,28 @@ shared class HtmlVisitor()
 		};
 	}
 	
-	shared actual HtmlNode visitOrderedList(OrderedList orderedList) => Ol {
+	shared actual default HtmlNode visitOrderedList(OrderedList orderedList) => Ol {
 		children = [for (child in orderedList.children)
 				if (is Li|String ch = child.accept(this)) ch];
 	};
 	
-	shared actual HtmlNode visitParagraph(Paragraph paragraph) => P {
+	shared actual default HtmlNode visitParagraph(Paragraph paragraph) => P {
 		children = [for (child in paragraph.children)
 				if (is PhrasingCategory|String ch = child.accept(this)) ch];
 	};
 	
-	shared actual String visitSoftBreak(SoftBreak softBreak) => "\n";
+	shared actual default String visitSoftBreak(SoftBreak softBreak) => "\n";
 	
-	shared actual HtmlNode visitStrongEmphasis(StrongEmphasis strongEmphasis) => Strong {
+	shared actual default HtmlNode visitStrongEmphasis(StrongEmphasis strongEmphasis) => Strong {
 		children = [for (child in strongEmphasis.children)
 				if (is PhrasingCategory|String ch = child.accept(this)) ch];
 	};
 	
-	shared actual String visitText(Text text) => text.text;
+	shared actual default String visitText(Text text) => text.text;
 	
-	shared actual HtmlNode visitThematicBreak(ThematicBreak thematicBreak) => Hr();
+	shared actual default HtmlNode visitThematicBreak(ThematicBreak thematicBreak) => Hr();
 	
-	shared actual HtmlNode visitUnorderedList(UnorderedList unorderedList) => Ul {
+	shared actual default HtmlNode visitUnorderedList(UnorderedList unorderedList) => Ul {
 		children = [for (child in unorderedList.children)
 				if (is CharacterData|Li|String ch = child.accept(this)) ch];
 	};
