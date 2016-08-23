@@ -654,10 +654,10 @@ void processEmphasis(Node parent, Delimiter? stackBottom, variable Delimiter? la
 			}
 			oldCloser = cp;
 			
-			if (exists op = opener, delimiterChar=='*' || delimiterChar=='_') {
+			if (delimiterChar=='*' || delimiterChar=='_') {
 				if (!openerFound) {
 					currentPosition = cp.next;
-				} else {
+				} else if (exists op = opener) {
 					if (cp.numOfDelimiters<3 || op.numOfDelimiters<3) {
 						useDelims = cp.numOfDelimiters <= op.numOfDelimiters then cp.numOfDelimiters else op.numOfDelimiters;
 					} else {
