@@ -7,12 +7,10 @@ import ceylon.markdown.html {
 }
 import ceylon.test {
 	test,
-	assertEquals,
-	tag
+	assertEquals
 }
 
 test
-tag("unstable")
 shared void testHtmlSample1() => assertEquals {
 	actual = renderCompleteHtml(parse(sample1Md)).string;
 	expected = sample1Html;

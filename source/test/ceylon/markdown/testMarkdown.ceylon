@@ -4,12 +4,10 @@ import ceylon.markdown.core {
 }
 import ceylon.test {
 	test,
-	assertEquals,
-	tag
+	assertEquals
 }
 
 test
-tag("unstable")
 shared void testSample1() => assertEquals {
 	actual = parse(sample1Md).string;
 	expected = sample1Tree;
@@ -82,21 +80,18 @@ shared void testAutolinks() => assertEquals {
 };
 
 test
-tag("unstable")
 shared void testEmphasis() => assertEquals {
 	actual = parse(emphasisMd).string;
 	expected = emphasisTree;
 };
 
 test
-tag("unstable")
 shared void testNestedEmphasis() => assertEquals {
 	actual = parse(nestedEmphasisMd).string;
 	expected = nestedEmphasisTree;
 };
 
 test
-tag("unstable")
 shared void testEmphasisWorst() => assertEquals {
 	actual = parse(emphasisWorstMd).string;
 	expected = emphasisWorstTree;
