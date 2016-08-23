@@ -667,17 +667,17 @@ void processEmphasis(Node parent, Delimiter? stackBottom, variable Delimiter? la
 					op.numOfDelimiters -= useDelims;
 					cp.numOfDelimiters -= useDelims;
 					
-					op.node.text = op.node.text[... (op.node.text.size - useDelims)];
-					cp.node.text = cp.node.text[... (cp.node.text.size - useDelims)];
-					
+					op.node.text = op.node.text[... (op.node.text.size - useDelims - 1)];
+					cp.node.text = cp.node.text[... (cp.node.text.size - useDelims - 1)];
+
 					Node emph = useDelims == 1 then Emphasis() else StrongEmphasis();
 					
-					value first = parent.children.firstIndexWhere((Node element) => element == op.node) else 0;
-					value last = parent.children.firstIndexWhere((Node element) => element == cp.node) else 0;
-					
+					value first = parent.children.firstIndexWhere((element) => element == op.node) else 0;
+					value last = parent.children.firstIndexWhere((element) => element == cp.node) else 0;
+
 					emph.children = parent.children[first+1 .. last-1];
-					value rest = parent.children[last+1 ...];
-					parent.children = parent.children[... first-1];
+					value rest = parent.children[last ...];
+					parent.children = parent.children[... first];
 					parent.appendChild(emph);
 					for (r in rest) {
 						parent.appendChild(r);

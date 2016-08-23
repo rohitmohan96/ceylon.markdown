@@ -768,19 +768,22 @@ String nestedEmphasisTree = """Document:
                                			Emphasis: 
                                				Text: 
                                					"this "
-                               				Emphasis: 
-                               					Text: 
-                               						"is "
+                               				StrongEmphasis: 
                                					Emphasis: 
                                						Text: 
-                               							"a "
-                               						Emphasis: 
-                               							Text: 
-                               								"bunch"
+                               							"is "
+                               						StrongEmphasis: 
+                               							Emphasis: 
+                               								Text: 
+                               									"a "
+                               								StrongEmphasis: 
+                               									Emphasis: 
+                               										Text: 
+                               											"bunch"
+                               								Text: 
+                               									" of"
                                						Text: 
-                               							" of"
-                               					Text: 
-                               						" nested"
+                               							" nested"
                                				Text: 
                                					" emphases"
                                """;
