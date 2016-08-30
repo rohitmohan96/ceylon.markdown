@@ -62,7 +62,11 @@ void parseLine(variable String line, Block parent) {
 	}
 	
 	//TODO Nested list item
-	if (line.startsWith("<"),
+    if (is FencedCode block = lastBlock, block.open) {
+        lineBlock = FencedCode(line, block.infoString, block.fenceLevel);
+
+        line = "";
+    } else if (line.startsWith("<"),
 		if (is Paragraph pblock = lastBlock) then !pblock.open else true) {
 		for (i in 0:7) {
 			if (is HtmlBlock block = lastBlock,
@@ -168,10 +172,6 @@ void parseLine(variable String line, Block parent) {
 			p.appendChild(Text(line));
 			lineBlock.appendChild(p);
 		}
-		line = "";
-	} else if (is FencedCode block = lastBlock, block.open) {
-		lineBlock = FencedCode(line, block.infoString, block.fenceLevel);
-		
 		line = "";
 	} else {
 		lineBlock = Paragraph();
