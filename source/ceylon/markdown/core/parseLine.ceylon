@@ -121,7 +121,7 @@ void parseLine(variable String line, Block parent) {
 		
 		lineBlock = Heading(find.matched.count('#'.equals));
 		
-		lineBlock.appendChild(Text(text));
+		lineBlock.appendChild(Text(text.trimmed));
 		
 		line = "";
 	} else if (exists find = orderedListPattern.find(line)) {
