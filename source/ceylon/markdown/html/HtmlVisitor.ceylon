@@ -71,7 +71,7 @@ shared class HtmlVisitor()
 	
 	shared actual default HtmlNode visitEmphasis(Emphasis emphasis) => Em {
 		children = [for (child in emphasis.children)
-				if (is CharacterData|PhrasingCategory|String ch = child.accept(this)) ch];
+				if (is PhrasingCategory|CharacterData|String ch = child.accept(this)) ch];
 	};
 	
 	shared actual default HtmlNode visitFencedCode(FencedCode fencedCode) => Pre {
@@ -117,7 +117,7 @@ shared class HtmlVisitor()
 	shared actual default HtmlNode visitImage(Image image) {
 		String text = getText(P {
 				children = [for (child in image.children)
-						if (is CharacterData|PhrasingCategory|String ch = child.accept(this)) ch];
+						if (is PhrasingCategory|CharacterData|String ch = child.accept(this)) ch];
 			});
 		
 		return Img {
@@ -173,25 +173,25 @@ shared class HtmlVisitor()
 		
 		return Li {
 			children = [for (child in listItem.children)
-					if (is FlowCategory|String ch = child.accept(this)) ch];
+					if (is CharacterData|FlowCategory|String ch = child.accept(this)) ch];
 		};
 	}
 	
 	shared actual default HtmlNode visitOrderedList(OrderedList orderedList) => Ol {
 		children = [for (child in orderedList.children)
-				if (is Li|String ch = child.accept(this)) ch];
+				if (is CharacterData|Li|String ch = child.accept(this)) ch];
 	};
 	
 	shared actual default HtmlNode visitParagraph(Paragraph paragraph) => P {
 		children = [for (child in paragraph.children)
-				if (is PhrasingCategory|String ch = child.accept(this)) ch];
+				if (is PhrasingCategory|CharacterData|String ch = child.accept(this)) ch];
 	};
 	
 	shared actual default String visitSoftBreak(SoftBreak softBreak) => "\n";
 	
 	shared actual default HtmlNode visitStrongEmphasis(StrongEmphasis strongEmphasis) => Strong {
 		children = [for (child in strongEmphasis.children)
-				if (is PhrasingCategory|String ch = child.accept(this)) ch];
+				if (is PhrasingCategory|CharacterData|String ch = child.accept(this)) ch];
 	};
 	
 	shared actual default String visitText(Text text) => text.text;
