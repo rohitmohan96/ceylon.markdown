@@ -52,7 +52,7 @@ String attribute = "(?:" + "\\s+" + attributeName + attributeValueSpec
 String openTag = "<" + tagName + attribute + "*" + "\\s*/?>";
 String closeTag = "</" + tagName + "\\s*[>]";
 
-Regex atxHeadingPattern = regex("^#{1,6}(?: +|$)");
+Regex atxHeadingPattern = regex("^#{1,6}(?:[ \t]+|$)");
 
 Regex atxTrailingPattern = regex("(^| ) *#+ *$");
 
@@ -66,7 +66,7 @@ Regex fencedCodeblockPattern = regex("^`{3,}(?!.*`)|^~{3,}(?!.*~)");
 
 Regex closingCodeblockPattern = regex("^(?:\`{3,}|~{3,})(?= *$)");
 
-Regex thematicBreakPattern = regex("^(?:(?:\\* *){3,}|(?:_ *){3,}|(?:- *){3,}) *$");
+Regex thematicBreakPattern = regex("^(?:(?:\\*[ \t]*){3,}|(?:_[ \t]*){3,}|(?:-[ \t]*){3,})[ \t]*$");
 
 Regex[] htmlBlockOpen = [
 	regex { expression = "^<(?:script|pre|style)(?:\\s|>|$)"; ignoreCase = true; },

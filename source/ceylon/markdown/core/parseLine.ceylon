@@ -136,7 +136,7 @@ void parseLine(variable String line, Block parent) {
 		line = line[find.end...];
 	} else if (!lastBlock is FencedCode,
 		if (is Paragraph block = lastBlock) then !block.open else true,
-		line.startsWith(" "),
+		line.startsWith(" ") || line.startsWith("\t"),
 		(line.trimLeading(' '.equals).trimTrailing(' '.equals)) != "") {
 		
 		lineBlock = IndentedCode(line[1...]);
