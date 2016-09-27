@@ -1,7 +1,7 @@
 String trimSpaces(String line) {
-	
+
 	variable Integer count = 0;
-	
+
 	//check for 3 spaces
 	for (ch in line) {
 		if (ch==' ' && count<3) {
@@ -10,21 +10,26 @@ String trimSpaces(String line) {
 			break;
 		}
 	}
-	
+
 	return line[count...];
 }
 
 variable Boolean blankLine = false;
+variable Integer spaces = 0;
 
 void parseLine(variable String line, Block parent) {
 	variable Boolean noLastBlock = true;
-	
+
 	Block lineBlock;
 	variable Node? lastBlock = parent.children.last;
-	
+
 	if (line.trimmed.equals(""), !is List parent) {
-		if (is Paragraph|BlockQuote block = lastBlock, !is ListItem parent) {
-			block.closeBlock();
+		variable Node? lb = lastBlock;
+		while (is Block block = lb, !is ListItem parent) {
+			if (is Paragraph|BlockQuote block) {
+				block.closeBlock();
+			}
+			lb = block.children.last;
 		}
 		if (is HtmlBlock block = lastBlock) {
 			if (block.type >= 5) {
@@ -42,25 +47,33 @@ void parseLine(variable String line, Block parent) {
 			} else {
 				block.closeBlock();
 				blankLine = false;
+				spaces = 0;
 			}
 		}
-		
+
 		return;
 	}
-	
+
+	if (is List block = lastBlock, block.open, is ListItem last = block.children.last) {
+		if (is Integer first = line.firstIndexWhere((ch) => ch != ' '), first >= spaces, first != 0) {
+			parseLine(line[spaces...], last);
+			return;
+		}
+	}
+
 	if (if (is FencedCode|HtmlBlock block = lastBlock) then !block.open else true) {
 		line = trimSpaces(line); //trim first 3 spaces in the beginning
 	}
-	
+
 	//close fenced code blocks
 	if (is FencedCode block = lastBlock,
 		closingCodeblockPattern.test(line),
 		block.fenceLevel <= line.count('\`'.equals)) {
 		block.closeBlock();
-		
+
 		return;
 	}
-	
+
 	//TODO Nested list item
     if (is FencedCode block = lastBlock, block.open) {
         lineBlock = FencedCode(line, block.infoString, block.fenceLevel);
@@ -73,7 +86,7 @@ void parseLine(variable String line, Block parent) {
 				block.open, exists htmlTest = htmlBlockClose[i],
 				htmlTest.test(line),
 				block.type == i) {
-				
+
 				block.text += "\n"+line;
 				block.closeBlock();
 				return;
@@ -96,49 +109,61 @@ void parseLine(variable String line, Block parent) {
 		block.open,
 		setextHeadingPattern.test(line),
 		is Text last = block.children.last) {
-		
+
 		lineBlock = Heading {
 			level = if (line.startsWith("=")) then 1 else 2;
 		};
-		
+
 		lineBlock.appendChild(Text(last.text));
-		
+
 		parent.children = [for (e in parent.children) e == block then lineBlock else e];
-		
+
 		return;
 	} else if (thematicBreakPattern.test(line)) {
 		lineBlock = ThematicBreak();
-		
+
 		lineBlock.closeBlock();
-		
+
 		line = "";
 	} else if (exists find = atxHeadingPattern.find(line)) {
 		variable String text = atxHeadingPattern.split(line)[1] else "";
-		
+
 		if (atxTrailingPattern.test(text)) {
 			text = atxTrailingPattern.split(text)[0] else "";
 		}
-		
+
 		lineBlock = Heading(find.matched.count('#'.equals));
-		
+
 		lineBlock.appendChild(Text(text.trimmed));
-		
+
 		line = "";
 	} else if (exists find = orderedListPattern.find(line)) {
-		
-		value startsWith = parseInteger(find.groups[0] else "0");
-		
+
+		assert(is String sw = find.groups[0],
+               is Character del = find.groups[1]?.get(0));
+
+		spaces = sw.size + 1;
+		value startsWith = parseInteger(sw);
+		assert(exists startsWith);
+
 		lineBlock = OrderedList {
-			startsWith = startsWith else 0;
-			delimeter = find.groups[0]?.get(0) else '.';
+			startsWith = startsWith;
+			delimeter = del;
 		};
-		
+
 		line = line[find.end...];
+
+		if (is Integer first = line.firstIndexWhere((ch) => ch != ' ')) {
+			spaces += if (first > 4) then 4 else first;
+			if (first >= 4) {
+				line = line[1...];
+			}
+		}
 	} else if (!lastBlock is FencedCode,
 		if (is Paragraph block = lastBlock) then !block.open else true,
 		line.startsWith(" ") || line.startsWith("\t"),
 		(line.trimLeading(' '.equals).trimTrailing(' '.equals)) != "") {
-		
+
 		lineBlock = IndentedCode(line[1...]);
 		line = "";
 	} else if (line.startsWith(">")) {
@@ -153,20 +178,23 @@ void parseLine(variable String line, Block parent) {
 		} else {
 			lineBlock = BlockQuote();
 		}
-		
+
 		line = line[1...]; //trim the starting ">"
+		if (line.startsWith(" ")) {
+			line = line[1...]; // trim first space
+		}
 	} else if (bulletListPattern.test(line)) {
 		lineBlock = UnorderedList(line.get(0) else ' ');
 		line = line[2...]; //trim the starting "- "
 	} else if (is List parent) {
 		line = line.trimLeading(' '.equals).trimTrailing(' '.equals);
 		lineBlock = ListItem();
-		
+
 		if (blankLine) {
 			parent.tight = false;
 			blankLine = false;
 		}
-		
+
 		if (!line.equals("")) {
 			Block p = Paragraph();
 			p.appendChild(Text(line));
@@ -176,10 +204,10 @@ void parseLine(variable String line, Block parent) {
 	} else {
 		lineBlock = Paragraph();
 		lineBlock.appendChild(Text(line.trimLeading(' '.equals)));
-		
+
 		line = "";
 	}
-	
+
 	//Check if block is already open
 	while (is Block block = lastBlock, block.open) {
 		if (sameType(block, lineBlock), !is ListItem|Paragraph|CodeBlock|Heading|HtmlBlock block) {
@@ -208,13 +236,13 @@ void parseLine(variable String line, Block parent) {
 			noLastBlock = false;
 			break;
 		}
-		
+
 		lastBlock = block.children.last;
 	}
-	
+
 	if (noLastBlock) {
 		parent.appendChild(lineBlock);
-		
+
 		if (is List parent, exists last = lineBlock.children.last, is Block last) {
 			parseLine(line, last);
 		} else {
