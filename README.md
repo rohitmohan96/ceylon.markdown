@@ -26,8 +26,6 @@ ceylon plugin install ceylon.markdown.cli
 ## To be done
 
 - Sublists are not handled ([#1])
-- List item with multiple children does not work ([#2])
-- List references after list items do not work ([#3])
 - Some js tests do not pass ([#4])
 
 
