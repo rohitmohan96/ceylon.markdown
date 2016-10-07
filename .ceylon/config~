@@ -2,9 +2,13 @@
 [compiler]
 source=source
 resource=resource
+source=script
 
 [defaults]
 encoding=UTF-8
+offline=false
+flatclasspath=false
+autoexportmavendependencies=false
 
 [formattool]
 profile=default
