@@ -5,7 +5,7 @@ import ceylon.collection {
 	HashMap
 }
 
-void parseReference(Node node) {
+void parseReference(Node node, HashMap<String, Link> referenceMap) {
 	
 	variable String key;
 	variable String destination;
@@ -75,7 +75,7 @@ void parseReference(Node node) {
 	}
 	
 	for (child in node.children) {
-		parseReference(child);
+		parseReference(child, referenceMap);
 		
 		if (is Paragraph child, is Text c = child.children[0], c.text == "") {
 			node.removeChild(child);
@@ -83,7 +83,7 @@ void parseReference(Node node) {
 	}
 }
 
-void parseInlines(Node node, Node parent) {
+void parseInlines(Node node, Node parent, HashMap<String, Link> referenceMap) {
 	variable Delimiter? lastDelimiter = null;
 	
 	if (is Text node) {
@@ -554,14 +554,14 @@ void parseInlines(Node node, Node parent) {
 	}
 	
 	for (child in node.children) {
-		parseInlines(child, node);
+		parseInlines(child, node, referenceMap);
 	}
 }
 
-Document inlineParser(Document document) {
-	parseReference(document);
+Document inlineParser(Document document, HashMap<String, Link> referenceMap) {
+	parseReference(document, referenceMap);
 	
-	parseInlines(document, document);
+	parseInlines(document, document, referenceMap);
 	
 	return document;
 }

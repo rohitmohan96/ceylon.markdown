@@ -14,10 +14,7 @@ String trimSpaces(String line) {
 	return line[count...];
 }
 
-variable Boolean blankLine = false;
-variable Integer spaces = 0;
-
-void parseLine(variable String line, Block parent) {
+void parseLine(variable String line, Block parent, variable Boolean blankLine = false, variable Integer spaces = 0) {
 	variable Boolean noLastBlock = true;
 
 	Block lineBlock;
@@ -56,7 +53,7 @@ void parseLine(variable String line, Block parent) {
 
 	if (is List block = lastBlock, block.open, is ListItem last = block.children.last) {
 		if (is Integer first = line.firstIndexWhere((ch) => ch != ' '), first >= spaces, first != 0) {
-			parseLine(line[spaces...], last);
+			parseLine(line[spaces...], last, blankLine, spaces);
 			return;
 		}
 	}
@@ -143,8 +140,7 @@ void parseLine(variable String line, Block parent) {
                is Character del = find.groups[1]?.get(0));
 
 		spaces = sw.size + 1;
-		value startsWith = parseInteger(sw);
-		assert(exists startsWith);
+		assert(is Integer startsWith = Integer.parse(sw));
 
 		lineBlock = OrderedList {
 			startsWith = startsWith;
@@ -211,7 +207,7 @@ void parseLine(variable String line, Block parent) {
 	//Check if block is already open
 	while (is Block block = lastBlock, block.open) {
 		if (sameType(block, lineBlock), !is ListItem|Paragraph|CodeBlock|Heading|HtmlBlock block) {
-			parseLine(line, block);
+			parseLine(line, block, blankLine, spaces);
 			noLastBlock = false;
 			break;
 		} else if (is Paragraph block, is Paragraph lineBlock) {
@@ -244,9 +240,9 @@ void parseLine(variable String line, Block parent) {
 		parent.appendChild(lineBlock);
 
 		if (is List parent, exists last = lineBlock.children.last, is Block last) {
-			parseLine(line, last);
+			parseLine(line, last, blankLine, spaces);
 		} else {
-			parseLine(line, lineBlock);
+			parseLine(line, lineBlock, blankLine, spaces);
 		}
 	}
 }
