@@ -24,5 +24,5 @@ license ("https://www.apache.org/licenses/LICENSE-2.0.html")
 suppressWarnings("ceylonNamespace")
 module ceylon.markdown.html "1.0.0" {
 	shared import ceylon.markdown.core "1.0.0";
-	shared import ceylon.html "1.3.1";
+	shared import ceylon.html "1.3.1-SNAPSHOT";
 }
