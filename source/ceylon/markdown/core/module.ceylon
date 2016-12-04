@@ -24,6 +24,6 @@ by ("Rohit Mohan")
 license ("https://www.apache.org/licenses/LICENSE-2.0.html")
 suppressWarnings ("ceylonNamespace")
 module ceylon.markdown.core "1.0.0" {
-	import ceylon.regex "1.3.1-SNAPSHOT";
-	import ceylon.collection "1.3.1-SNAPSHOT";
+	import ceylon.regex "1.3.2-SNAPSHOT";
+	import ceylon.collection "1.3.2-SNAPSHOT";
 }
