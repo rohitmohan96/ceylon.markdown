@@ -21,7 +21,7 @@ void parseReference(Node node, HashMap<String, Link> referenceMap) {
 				.matched
 				.replaceFirst("[", "")
 				.replaceLast("]:", "");
-			
+
 			text = text[linkRef.end...]
 				.trimLeading('\n'.equals)
 				.trimLeading(' '.equals);
@@ -90,6 +90,7 @@ void parseInlines(Node node, Node parent, HashMap<String, Link> referenceMap) {
 		String text = node.text;
 		variable String str = "";
 		variable Integer i = 0;
+		variable Integer pos = 0;
 		
 		while (i < text.size) {
 			Character ch = text[i] else ' ';
@@ -208,6 +209,7 @@ void parseInlines(Node node, Node parent, HashMap<String, Link> referenceMap) {
 				str = "";
 			}
 			case ('[') {
+				pos = i;
 				parent.removeChild(node);
 				if (str != "") {
 					parent.appendChild(Text(str));
@@ -358,11 +360,10 @@ void parseInlines(Node node, Node parent, HashMap<String, Link> referenceMap) {
 									link = Image(unescapeString(destination), unescapeString(title));
 								}
 								
-								value firstIndexWhere = parent
+								assert(is Integer firstIndexWhere = parent
 									.children
 									.firstIndexWhere((Node element) =>
-										element == del.node)
-										else 0;
+										element == del.node));
 								
 								link.children = parent.children[firstIndexWhere+1 ...];
 								parent.children = parent.children[...firstIndexWhere];
@@ -398,7 +399,7 @@ void parseInlines(Node node, Node parent, HashMap<String, Link> referenceMap) {
 								parent.appendChild(Text(ch.string));
 								i = init;
 							}
-						} else if (exists link = referenceMap.get(normalizeReference(str))) {
+						} else if (exists link = referenceMap.get(normalizeReference(text[pos+1..i-1]))) {
 							Node newLink;
 							
 							if (isLink) {
@@ -406,7 +407,14 @@ void parseInlines(Node node, Node parent, HashMap<String, Link> referenceMap) {
 							} else {
 								newLink = Image(link.destination, link.title);
 							}
-							
+
+							assert(is Integer firstIndexWhere = parent
+								.children
+								.firstIndexWhere((Node element) =>
+							element == del.node));
+
+							newLink.children = parent.children[firstIndexWhere+1 ...];
+							parent.children = parent.children[...firstIndexWhere];
 							parent.appendChild(newLink);
 							// children to be appended to newLink and not link
 							newLink.appendChild(Text(str));
@@ -438,7 +446,14 @@ void parseInlines(Node node, Node parent, HashMap<String, Link> referenceMap) {
 								} else {
 									newLink = Image(link.destination, link.title);
 								}
-								
+
+								assert(is Integer firstIndexWhere = parent
+									.children
+									.firstIndexWhere((Node element) =>
+								element == del.node));
+
+								newLink.children = parent.children[firstIndexWhere+1 ...];
+								parent.children = parent.children[...firstIndexWhere];
 								parent.appendChild(newLink);
 								// children to be appended to newLink and not link
 								newLink.appendChild(Text(str));
@@ -560,7 +575,7 @@ void parseInlines(Node node, Node parent, HashMap<String, Link> referenceMap) {
 
 Document inlineParser(Document document, HashMap<String, Link> referenceMap) {
 	parseReference(document, referenceMap);
-	
+
 	parseInlines(document, document, referenceMap);
 	
 	return document;
